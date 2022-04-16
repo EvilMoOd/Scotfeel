@@ -20,11 +20,11 @@
         </view>
         <view class="post-state">
           <view class="co">
-            <uni-icons type="chat" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="chat" size="4vh" class="icon-search" color="#117986"></uni-icons>
             评论
           </view>
           <view class="co">
-            <uni-icons type="heart" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="heart" size="4vh" class="icon-search" color="#117986"></uni-icons>
             点赞
           </view>
           <view class="time">30分钟前</view>
@@ -42,11 +42,11 @@
         </view>
         <view class="post-state">
           <view class="co">
-            <uni-icons type="chat" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="chat" size="4vh" class="icon-search" color="#117986"></uni-icons>
             评论
           </view>
           <view class="co">
-            <uni-icons type="heart" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="heart" size="4vh" class="icon-search" color="#117986"></uni-icons>
             点赞
           </view>
           <view class="time">30分钟前</view>
@@ -64,11 +64,11 @@
         </view>
         <view class="post-state">
           <view class="co">
-            <uni-icons type="chat" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="chat" size="4vh" class="icon-search" color="#117986"></uni-icons>
             评论
           </view>
           <view class="co">
-            <uni-icons type="heart" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="heart" size="4vh" class="icon-search" color="#117986"></uni-icons>
             点赞
           </view>
           <view class="time">30分钟前</view>
@@ -86,11 +86,11 @@
         </view>
         <view class="post-state">
           <view class="co">
-            <uni-icons type="chat" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="chat" size="4vh" class="icon-search" color="#117986"></uni-icons>
             评论
           </view>
           <view class="co">
-            <uni-icons type="heart" size="4vh" class="icon-search" color="$color-sf"></uni-icons>
+            <uni-icons type="heart" size="4vh" class="icon-search" color="#117986"></uni-icons>
             点赞
           </view>
           <view class="time">30分钟前</view>

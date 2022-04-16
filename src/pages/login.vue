@@ -97,7 +97,7 @@
     <uni-icons type="arrow-right" :size="30" color="white" />
   </button>
   <view class="footer">
-    <radio class="agree" color="$color-sf" :checked="checked" @tap.once="changeChecked" />
+    <radio class="agree" color="#117986" :checked="checked" @tap.once="changeChecked" />
     <text>我已阅读并同意</text>
     <navigator url="/pages/" hover-class="navigator-hover">
       <text class="nav">Scotfeel用户协议</text>

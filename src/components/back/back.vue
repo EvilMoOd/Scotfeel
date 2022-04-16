@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// 返回
 function goBack() {
 	uni.navigateBack({
 		delta: 1,

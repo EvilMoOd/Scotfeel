@@ -25,7 +25,8 @@ export const useUserStore = defineStore('user', {
 		async userGetAuthCode(phone: number) {
 			let result = await reqAuthCode(phone);
 			if (result.code == 200) {
-				this.$state.authCode = result.data.authCode;
+				this.$state.authCode = result.data;
+				console.log(result)
 			} else {
 				return Promise.reject(new Error("获取验证码失败"));
 			}

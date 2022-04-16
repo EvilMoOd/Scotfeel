@@ -1,5 +1,5 @@
 <script setup lang="ts">
-//群名片卡片
+//空间名片卡片
 const props = defineProps<{
 	img: string;
 }>();
@@ -31,6 +31,7 @@ function goSpace() {
 
 	.space-img {
 		width: 96rpx;
+		height: 96rpx;
 		border-radius: 30rpx;
 		margin-bottom: 10rpx;
 	}

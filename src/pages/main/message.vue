@@ -7,20 +7,20 @@
   </view>
   <view class="function">
     <view>
-      <uni-icons type="person" color="$color-sf" size="30" />
+      <uni-icons type="person" color="#117986" size="30" />
       <view>申请</view>
     </view>
 
     <view>
-      <uni-icons type="chat" color="$color-sf" size="30" />
+      <uni-icons type="chat" color="#117986" size="30" />
       <view>评论</view>
     </view>
     <view>
-      <uni-icons type="heart" color="$color-sf" size="30" />
+      <uni-icons type="heart" color="#117986" size="30" />
       <view>点赞</view>
     </view>
     <view>
-      <uni-icons type="star" color="$color-sf" size="30" />
+      <uni-icons type="star" color="#117986" size="30" />
       <view>订阅</view>
     </view>
   </view>

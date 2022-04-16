@@ -1,8 +1,6 @@
 import { request } from '../http'
 
-export interface AuthCode {
-  authCode: number;
-}
+export type AuthCode = number
 
 //获取验证码
 export const reqAuthCode = (phone: number) => (

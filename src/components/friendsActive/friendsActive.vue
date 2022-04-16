@@ -1,5 +1,5 @@
 <script setup lang="ts">
-//朋友动态
+//朋友动态栏
 import { ref } from "vue";
 
 //前往朋友动态

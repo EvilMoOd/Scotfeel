@@ -10,7 +10,7 @@
   <view class="list">
     <view class="item">
       <text>消息免打扰</text>
-      <switch color="$color-sf" style="transform: scale(0.5); float: right; margin-top: -10rpx" />
+      <switch color="#117986" style="transform: scale(0.5); float: right; margin-top: -10rpx" />
     </view>
     <view class="item">
       <text>设置群里的昵称</text>

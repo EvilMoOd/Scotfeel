@@ -34,7 +34,7 @@ function goBack() {
   <view class="introduction">这是一段个人介绍</view>
   <topTab>
     <template v-slot:s1>
-      <spaceCard img="/src/assets/head.png" />
+      <spaceCard img="/src/assets/images/head.png" />
     </template>
     <template v-slot:s2>
       <view>动态</view>

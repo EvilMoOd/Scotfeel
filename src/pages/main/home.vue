@@ -249,13 +249,12 @@
       <!-- 订阅空间 -->
       <scroll-view scroll-y class="space-show" v-show="spaceShow">
         <view class="space-place">
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
-          <spaceCard img="/src/assets/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
+          <spaceCard img="/src/assets/images/head.png" />
         </view>
       </scroll-view>
       <!-- 菜单项 -->
