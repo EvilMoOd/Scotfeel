@@ -2,8 +2,10 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
   import { useUserStore } from '../../store/modules/userStore';
+  import { useInitStore } from '../../store/modules/initStore';
 
   const userStore = useUserStore();
+  const initStore = useInitStore();
 
   // 展示person
   let isShow = ref(false);
@@ -69,9 +71,7 @@
 
   onLoad(() => {
     //TODO初始化
-    if (!uni.getStorageSync('user')) {
-      uni.redirectTo({ url: '/pages/login' });
-    }
+    initStore.login();
   });
 </script>
 

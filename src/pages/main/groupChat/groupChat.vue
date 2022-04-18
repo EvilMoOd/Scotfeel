@@ -32,7 +32,7 @@ function goGroupIntroduction() {
 .header {
   @include header;
   display: flex;
-  align-items: end;
+  align-items: flex-end;
 
   .back {
     margin: 30rpx 20rpx;

@@ -73,6 +73,7 @@ function goBack() {
     right: 1rpx;
     top: 66rpx;
     background-color: #fff;
+    box-shadow: 0 0 4rpx $color-sf;
 
     text {
       margin: 10rpx 0;

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { onLoad } from "@dcloudio/uni-app";
 import { ref } from "vue";
 
 let msg = ref("");
@@ -11,6 +12,16 @@ function goBack() {
 function goFriendPerson() {
 	uni.navigateTo({ url: "/pages/main/personChat/friendPerson" });
 }
+
+onLoad(() => {
+	uni.connectSocket({
+	url: 'wss://localhost:8088',
+	header: {
+		'content-type': 'application/json'
+	},
+	method: 'GET'
+})
+})
 </script>
 
 <template>
@@ -50,7 +61,7 @@ function goFriendPerson() {
 .header {
 	@include header;
 	display: flex;
-	align-items: end;
+	align-items: flex-end;
 	.back {
 		margin: 30rpx 20rpx;
 	}

@@ -6,7 +6,7 @@
   //修改手机号地区类型
   let type = ref(0);
   let phoneTypes = reactive(['+86']);
-  function changePhoneType(e:any) {
+  function changePhoneType(e: any) {
     type.value = e.detail.value;
   }
   //登录信息
@@ -16,6 +16,7 @@
 
   //登录
   async function login() {
+    uni.redirectTo({ url: '/pages/main/home' });
     const phonePattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
     if (!phonePattern.test(userPhone.value)) {
       uni.showModal({ title: '请输入正确手机号' });
@@ -40,7 +41,7 @@
     const AuthPattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
     if (AuthPattern.test(userPhone.value)) {
       try {
-        await store.userGetAuthCode (userPhone.value);
+        await store.userGetAuthCode(userPhone.value);
         //设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {

@@ -72,7 +72,7 @@
   background-color: $color-sf;
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-end;
 
   .back {
     margin: 20rpx;

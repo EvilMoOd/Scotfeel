@@ -1,6 +1,7 @@
 <script setup lang="ts">
 function goFriendPerson() {
-  uni.navigateTo({ url: '/pages/main/personChat/friendPerson' });
+	plus.gallery.pick(console.log(1), console.log(2)            );
+  // uni.navigateTo({ url: '/pages/main/personChat/friendPerson' });
 }
 </script>
 

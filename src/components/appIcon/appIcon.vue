@@ -6,7 +6,9 @@
 </script>
 
 <template>
-  <span class="iconify" :data-icon="props.icon"></span>
+  <i class="iconify" :data-icon="props.icon"></i>
 </template>
 
 <style lang="scss" scoped></style>
+
+
