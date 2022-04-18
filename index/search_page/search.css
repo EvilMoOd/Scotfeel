@@ -1,0 +1,90 @@
+.body{
+    font-family: Arial;
+    font-size: 13px;
+    font-style: normal;
+}
+.container{
+    width: 375px;
+    height: 667px;
+    border: solid 1px #000;
+}
+.header{
+    width: 375px;
+    height: 72px;
+    background-color: #008c8c;
+}
+.header #left_icon{
+    float: left;
+    margin: 43px 0 7px 4px;
+    width: 22px;
+    height: 22px;
+    background-color:#fff;
+}
+
+.header #center input{
+    float: left;
+    width: 292px;
+    height: 28px;
+    padding-color:#fff;
+    margin: 37px 0 1px 11px;
+    border-radius: 18px;
+    border-color: #fff;
+}
+
+.header #right_icon{
+    float: left;
+    background-color: #fff;
+    width: 20px;
+    height: 20px;
+    margin: 43px 0 9px 6px;
+} 
+
+#content{
+    background-color: #F2F2F2;
+    width: 326px;
+    height: 219px;
+    margin: 43px 0 0 27px;
+    border-radius: 10px 10px 0 0;
+
+}
+#content img{
+    background-color: #fff;
+    width: 326px;
+    height: 133px;
+    border-radius: 10px 10px 0 0;
+}
+
+.container #content #text1{
+    float: left;
+    font-family: 仿宋_GB2312;
+    font-size: 13px;
+    width: 46px;
+    height: 15px;
+    margin: 5px 0 0 219px;
+}
+
+.container #content #text2{
+    float: left;
+    font-family: 思源黑体 CN;
+    font-size: 13px;
+    width: 44px;
+    height: 15px;
+    margin: 5px 0 0 13px;
+}
+
+.container #content #picture{
+    float: left;
+    background-color: #fff;
+    width: 33px;
+    height: 34px;
+    border-radius: 6px;
+    margin: 23px 0 6px 10px;
+}
+
+.container #content p{
+    font-size: 14px;
+    float: left;
+    width: 126px;
+    height: 16px;
+    margin: 28px 0 18px 18px;
+}
