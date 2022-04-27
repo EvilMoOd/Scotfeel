@@ -1,10 +1,5 @@
-<script setup lang='ts'>
+<script setup lang="ts"></script>
 
-</script>
+<template>订阅空间</template>
 
-<template>
-    订阅空间
-</template>
-
-<style lang='scss' scoped>
-</style>
+<style lang="scss" scoped></style>

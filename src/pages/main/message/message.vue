@@ -1,12 +1,16 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  function goApply() {
+    uni.navigateTo({ url: '/pages/main/message/apply' });
+  }
+</script>
 
 <template>
   <view class="header">
-    <back />
+    <Back />
     <view class="title">消息</view>
   </view>
   <view class="function">
-    <view>
+    <view @click="goApply">
       <uni-icons type="person" color="#117986" size="30" />
       <view>申请</view>
     </view>

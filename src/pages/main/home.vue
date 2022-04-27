@@ -16,7 +16,7 @@
 
   //打开消息列表
   function goMessage() {
-    uni.navigateTo({ url: '/pages/main/message' });
+    uni.navigateTo({ url: '/pages/main/message/message' });
   }
   //前往聊天页详情
   function goChat() {
@@ -29,14 +29,9 @@
   function openSpace() {
     spaceShow.value = !spaceShow.value;
   }
-
   //前往个人主页
   function goPerson() {
     uni.navigateTo({ url: '/pages/menu/person' });
-  }
-  // 前往订阅空间
-  function goSpace() {
-    uni.navigateTo({ url: '/pages/menu/space' });
   }
   //前往通讯录
   function goMailList() {
@@ -71,7 +66,7 @@
 
   onLoad(() => {
     //TODO初始化
-    initStore.login();
+    u
   });
 </script>
 
@@ -81,17 +76,17 @@
     <view class="header">
       <text class="title" @tap="displayPerson">Scotfeel</text>
       <uni-icons
-        @tap="goMessage"
         type="notification"
         size="4vh"
         class="icon-bell"
         color="#fff"
+        @tap="goMessage"
       ></uni-icons>
       <uni-icons type="search" size="4vh" class="icon-search" color="#fff"></uni-icons>
     </view>
     <!-- 聊天列表 -->
     <scroll-view scroll-y="true" class="main">
-      <friendsActive />
+      <FriendsActive />
       <view class="chat-list">
         <view class="chat1" @tap="goChat">
           <image src="@/assets/images/img1.png" class="user-head" />
@@ -231,10 +226,10 @@
 
   <!-- 个人中心 -->
   <transition name="menu">
-    <view class="menu" v-show="isShow">
+    <view v-show="isShow" class="menu">
       <view class="person-top">
         <view class="person-place" @tap="goPerson">
-          <image src="@/assets/images/myhead.png" class="person-head" />
+          <image src="@/assets/images/myhead.png" class="avatar" />
           <view class="person-msg">
             <view class="name">木有鱼丸</view>
             <view class="idCard">@pdd</view>
@@ -247,16 +242,21 @@
         </view>
       </view>
       <!-- 订阅空间 -->
-      <scroll-view scroll-y class="space-show" v-show="spaceShow">
-        <view class="space-place">
-          <spaceCard img="/src/assets/images/head.png" />
-          <spaceCard img="/src/assets/images/head.png" />
-          <spaceCard img="/src/assets/images/head.png" />
-          <spaceCard img="/src/assets/images/head.png" />
-          <spaceCard img="/src/assets/images/head.png" />
-          <spaceCard img="/src/assets/images/head.png" />
-        </view>
-      </scroll-view>
+      <transition name="space">
+        <scroll-view v-show="spaceShow" scroll-y class="space-show">
+          <view class="space-place">
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceCard img="/src/assets/images/head.png" />
+          </view>
+        </scroll-view>
+      </transition>
       <!-- 菜单项 -->
       <view class="function-place">
         <view class="function">
@@ -291,9 +291,9 @@
     </view>
   </transition>
   <!-- 遮罩 -->
-  <view class="mask" v-show="isShow" @tap="displayPerson"></view>
+  <view v-show="isShow" class="mask" @tap="displayPerson"></view>
   <view class="subscribe" @tap="goSubscribe">
-    <appIcon icon="mdi:arrow-right-thin" class="icon-arrow"></appIcon>
+    <AppIcon icon="mdi:arrow-right-thin" class="icon-arrow"></AppIcon>
   </view>
 </template>
 
@@ -342,12 +342,12 @@
             width: 96rpx;
             height: 96rpx;
             border-radius: 50%;
-            margin: 32rpx;
+            margin: 27rpx;
           }
 
           .chat-place {
             width: 560rpx;
-            padding: 32rpx;
+            padding: 27rpx;
             padding-left: 0;
             border-bottom: solid 2rpx #f2f2f2;
 
@@ -363,6 +363,7 @@
             }
 
             .content {
+              color: #aaa;
               font-size: 26rpx;
             }
 
@@ -387,11 +388,13 @@
     height: 100vh;
     width: 65%;
     position: absolute;
-    z-index: 10;
+    z-index: 20;
     background-color: #fff;
     animation: moveIn 0.2s linear;
 
     .person-top {
+      position: absolute;
+      z-index: 20;
       width: 100%;
       height: 150rpx;
       background-color: $color-sf;
@@ -401,7 +404,7 @@
       .person-place {
         display: flex;
 
-        .person-head {
+        .avatar {
           margin: 0 30rpx 0 24rpx;
           width: 80rpx;
           height: 80rpx;
@@ -447,7 +450,7 @@
       padding: 10rpx 10rpx 0 10rpx;
       background-color: #f2f2f2;
       border-radius: 30rpx;
-
+      margin-top: 200rpx;
       .space-place {
         display: flex;
         flex-wrap: wrap;
@@ -455,8 +458,11 @@
     }
 
     .function-place {
+      position: absolute;
+      z-index: 5;
       height: 620rpx;
       padding: 20rpx;
+      margin-top: 200rpx;
 
       .function {
         width: 100%;
@@ -483,6 +489,7 @@
     }
 
     .logout {
+      margin-top: 880rpx;
       text-align: center;
       color: #f25b6c;
       font-size: 28rpx;
@@ -518,27 +525,33 @@
   }
 
   //个人中心弹窗动画
-  .menu-enter-from {
+  .menu-enter-from,
+  .menu-leave-to {
     left: -65vw;
   }
 
-  .menu-enter-active {
-    transition: all 0.3s ease-out;
-  }
-
-  .menu-enter-to {
-    left: 0vw;
-  }
-
-  .menu-leave-from {
-    left: 0vw;
-  }
-
+  .menu-enter-active,
   .menu-leave-active {
     transition: all 0.3s ease-out;
   }
 
-  .menu-leave-to {
-    left: -65vw;
+  .menu-enter-to,
+  .menu-leave-from {
+    left: 0vw;
+  }
+
+  .space-enter-from,
+  .space-leave-to {
+    top: -800rpx;
+  }
+
+  .space-enter-active,
+  .space-leave-active {
+    transition: all 0.3s ease-out;
+  }
+
+  .space-enter-to,
+  .space-leave-from {
+    top: 0;
   }
 </style>

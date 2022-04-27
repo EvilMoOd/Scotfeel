@@ -1,12 +1,25 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+</script>
 
 <template>
   <view class="header">
     <Back class="back" />
-    <text class="title">添加好友</text>
+    <text class="title">消息</text>
+    <uni-icons
+      type="more-filled"
+      color="#fff"
+      style="
+        font-size: 60rpx;
+        position: absolute;
+        top: 80rpx;
+        left: 680rpx;
+        transform: rotate(90deg);
+      "
+    />
   </view>
   <view class="main">
-    <text>发送添加邀请</text>
+    <text>申请理由</text>
     <textarea class="applyReason" cols="30" rows="10"></textarea>
   </view>
 </template>

@@ -20,7 +20,14 @@
 			}
 		},
 		{
-			"path": "pages/main/message",
+			"path": "pages/main/message/message",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/main/message/apply",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -35,13 +42,6 @@
 		},
 		{
 			"path": "pages/main/personChat/chat",
-			"style": {
-				"navigationStyle": "custom",
-				"scrollIndicator": "none"
-			}
-		},
-		{
-			"path": "pages/main/personChat/friendPerson",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -63,13 +63,6 @@
 		},
 		{
 			"path": "pages/menu/person",
-			"style": {
-				"navigationStyle": "custom",
-				"scrollIndicator": "none"
-			}
-		},
-		{
-			"path": "pages/menu/space",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -105,6 +98,20 @@
 		},
 		{
 			"path": "pages/menu/setting",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/space/space",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/space/applySpace",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

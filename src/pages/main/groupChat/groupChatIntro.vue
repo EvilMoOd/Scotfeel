@@ -1,9 +1,24 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { ref } from 'vue';
+
+  const isShow = ref(false);
+</script>
 
 <template>
   <view class="header">
-    <back />
-    <uni-icons type="more-filled" color="#fff" size="28" class="more" />
+    <Back />
+    <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="isShow = true" />
+    <transition name="more">
+      <view v-show="isShow" class="more">
+        <text>
+          进群审核
+          <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+        </text>
+        <text>修改群聊昵称</text>
+        <text>设置头像</text>
+        <text style="color: #d9001b">解散</text>
+      </view>
+    </transition>
     <image src="@/assets/images/head.png" class="head" />
     <view>AMCC肌肉车俱乐部</view>
   </view>
@@ -14,7 +29,7 @@
     </view>
     <view class="item">
       <text>设置群里的昵称</text>
-      <appIcon icon="fa:pencil" class="pencil"></appIcon>
+      <AppIcon icon="fa:pencil" class="pencil"></AppIcon>
     </view>
   </view>
   <view class="br"></view>
@@ -50,6 +65,7 @@
       <text>法医</text>
     </view>
   </view>
+  <view v-show="isShow" class="mask" @click="isShow = false"></view>
 </template>
 
 <style lang="scss" scoped>
@@ -65,10 +81,29 @@
       margin-top: 60rpx;
     }
 
-    .more {
+    .more-icon {
       float: right;
       margin-right: 24rpx;
       margin-top: 60rpx;
+    }
+    .more {
+      padding: 18rpx 6rpx;
+      width: 234rpx;
+      font-size: 26rpx;
+      border-radius: 20rpx;
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      z-index: 100;
+      right: 1rpx;
+      top: 66rpx;
+      background-color: #fff;
+      box-shadow: 0 0 4rpx $color-sf;
+      color: #000;
+
+      text {
+        margin: 10rpx 0;
+      }
     }
 
     .head {
@@ -134,6 +169,41 @@
         vertical-align: middle;
         margin-right: 20rpx;
       }
+    }
+  }
+  .mask {
+    width: 750rpx;
+    height: 1334rpx;
+    position: absolute;
+    top: 0;
+    z-index: 90;
+  }
+
+  .more-enter-active {
+    animation: bounce-in 0.5s;
+  }
+
+  .more-leave-active {
+    transition: opacity 0.5s ease;
+    animation: bounce-in 0.5s reverse;
+  }
+
+  .more-enter-from,
+  .more-leave-to {
+    opacity: 0;
+  }
+
+  @keyframes bounce-in {
+    0% {
+      transform: scale(0);
+    }
+
+    50% {
+      transform: scale(1.25);
+    }
+
+    100% {
+      transform: scale(1);
     }
   }
 </style>

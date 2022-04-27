@@ -64,22 +64,22 @@
     <text class="title">Scotfeel</text>
   </view>
   <view class="main">
-    <picker mode="selector" :range="phoneTypes" @change="changePhoneType" class="phone-types">
+    <picker mode="selector" :range="phoneTypes" class="phone-types" @change="changePhoneType">
       {{ phoneTypes[type] }}
     </picker>
     <input
+      v-model="userPhone"
       type="text"
       class="username"
       placeholder="请输入手机号"
       placeholder-class="placeholder"
-      v-model="userPhone"
     />
     <input
+      v-model="userAuthCode"
       type="text"
       class="code"
       placeholder="请输入验证码"
       placeholder-class="placeholder"
-      v-model="userAuthCode"
     />
     <!-- 获取验证码 -->
     <button

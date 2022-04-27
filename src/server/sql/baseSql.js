@@ -32,7 +32,7 @@ async function executeSql(sql,config={}){	//执行executeSql
 	//console.log('executeSql');
 	return new Promise(( async callback=>{
 		let defaultConfig = {
-			"name" : "chat",
+			"name" : "scotfeel",
 			"path" : '_doc/chat.db'
 		};
 		config = {...defaultConfig,...config}
@@ -71,4 +71,18 @@ async function openDB(config){
 		});
 	})
 }
-module.exports = {selectSql,executeSql,openDB};
+
+// 关闭数据库
+async function closeDB(){
+	plus.sqlite.closeDatabase({
+		name: 'scotfeel',
+		success: function(e){
+			console.log('closeDatabase success!');
+		},
+		fail: function(e){
+			console.log('closeDatabase failed: '+JSON.stringify(e));
+		}
+	});
+}
+
+export default {selectSql,executeSql,openDB,closeDB};
