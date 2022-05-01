@@ -17,7 +17,12 @@
   <view class="main">
     <text>申请理由</text>
     <textarea class="applyReason" cols="30" rows="10"></textarea>
-    <view class="enter" @click="enterInSpace">确定</view>
+    <image
+      src="@/assets/images/determine.jpg"
+      class="determine"
+      mode="aspectFill"
+      @tap="enterInSpace"
+    />
   </view>
 </template>
 
@@ -46,12 +51,10 @@
       border-radius: 40rpx;
       padding: 20rpx;
     }
-    .enter {
-      width: 100rpx;
-      height: 50rpx;
-      text-align: center;
-      line-height: 50rpx;
-      background-color: #aaa;
+    .determine {
+      margin: 500rpx;
+      width: 120rpx;
+      height: 120rpx;
     }
   }
 </style>

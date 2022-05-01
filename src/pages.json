@@ -34,7 +34,7 @@
 			}
 		},
 		{
-			"path": "pages/main/active",
+			"path": "pages/main/friendsActive",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -97,7 +97,7 @@
 			}
 		},
 		{
-			"path": "pages/menu/setting",
+			"path": "pages/menu/personSetting",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -118,7 +118,21 @@
 			}
 		},
 		{
-			"path": "pages/subscribe/subscribe",
+			"path": "pages/space/spaceDetail",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/space/spacePersonality",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
+			"path": "pages/subscribe/subscribeAndRecommand",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

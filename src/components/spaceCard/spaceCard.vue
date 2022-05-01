@@ -1,52 +1,120 @@
 <script setup lang="ts">
-  //空间名片卡片
-  const props = defineProps<{
-    img: string;
-  }>();
+  import { ref } from 'vue';
 
-  // 前往订阅空间
-  function goSpace() {
-    uni.navigateTo({ url: '/pages/space/space' });
-  }
+  const pageIndex = ref(0);
+  const changePage = (e: any) => {
+    pageIndex.value = e.detail.current;
+  };
 </script>
 
 <template>
-  <view class="space-item" @tap="goSpace">
-    <image :src="props.img" class="space-img" />
-    <br />
-    <text>健身俱乐部</text>
-    <view class="identify">管理员</view>
+  <!-- 朋友动态卡片 -->
+  <view class="post">
+    <view class="user">
+      <image src="@/assets/images/head.png" class="avatar" />
+      <view>
+        <text class="username">小妮</text>
+        <br />
+        <text class="time">30分钟前</text>
+      </view>
+    </view>
+    <view><text>盼望着，春天的脚步接近了</text></view>
+    <view class="image-container">
+      <view class="pageindex">{{ pageIndex + 1 }}/2</view>
+      <swiper class="picture" @change="changePage">
+        <swiper-item>
+          <image src="@/assets/images/img1.png" class="post-img" />
+        </swiper-item>
+        <swiper-item>
+          <image src="@/assets/images/img2.jpg" class="post-img" />
+        </swiper-item>
+      </swiper>
+    </view>
+
+    <view class="post-state">
+      <view>
+        <uni-icons type="chat" size="3vh" color="#117986" />
+        评论
+      </view>
+      <view>
+        <uni-icons type="heart" size="3vh" color="#117986" />
+        30
+      </view>
+      <view>
+        <uni-icons type="redo" color="#117986" size="3vh" />
+        30
+      </view>
+    </view>
   </view>
 </template>
 
 <style lang="scss" scoped>
-  .space-item {
-    width: 100rpx;
+  .post {
+    height: 730rpx;
+    width: 678rpx;
+    padding: 60rpx 36rpx;
+    border-radius: 15rpx;
     background-color: #fff;
-    margin: 10rpx 5rpx;
-    padding: 16rpx 26rpx;
-    font-size: 16rpx;
-    text-align: center;
-    border-radius: 30rpx;
-    box-shadow: 1rpx 3rpx 3rpx #aaaa;
+    margin-bottom: 20rpx;
+    font-size: 28rpx;
 
-    .space-img {
-      width: 96rpx;
-      height: 96rpx;
-      border-radius: 30rpx;
+    .user {
+      display: flex;
+      font-size: 28rpx;
       margin-bottom: 10rpx;
+
+      .avatar {
+        height: 66rpx;
+        width: 66rpx;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-right: 30rpx;
+      }
+      view {
+        align-self: center;
+        line-height: 20rpx;
+        .time {
+          color: #aaa;
+          font-size: 10rpx;
+        }
+      }
     }
-    text {
-      font-weight: bold;
+
+    .image-container {
+      position: relative;
+      .pageindex {
+        position: absolute;
+        top: 500rpx;
+        right: 20rpx;
+        z-index: 10;
+        width: 82rpx;
+        height: 46rpx;
+        background-color: #666060;
+        text-align: center;
+        line-height: 46rpx;
+        border-radius: 30rpx;
+        color: #fff;
+        opacity: 0.5;
+      }
+      .picture {
+        height: 566rpx;
+        object-fit: cover;
+        .post-img {
+          height: 100%;
+          width: 100%;
+          border-radius: 10rpx;
+          margin: 2rpx;
+          margin-top: 20rpx;
+        }
+      }
     }
-    .identify {
-      display: inline-block;
-      padding: 4rpx;
-      width: 60rpx;
-      color: $color-sf;
-      border: 1px solid $color-sf;
-      border-radius: 30rpx;
-      margin: 10rpx;
+
+    .post-state {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20rpx;
+      line-height: 1.5em;
+      height: 1.5em;
     }
   }
 </style>

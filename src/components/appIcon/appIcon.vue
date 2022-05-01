@@ -6,6 +6,7 @@
 </script>
 
 <template>
+  <!-- 图标 -->
   <i class="iconify" :data-icon="props.icon"></i>
 </template>
 

@@ -1,7 +1,7 @@
-
-$color-sf: #117986 ;
+$color-sf: #117986;
 //头部
 @mixin header {
-	height: 160rpx;
-	background-color: #117986;
+  height: 160rpx;
+  width: 750rpx;
+  background-color: #117986;
 }

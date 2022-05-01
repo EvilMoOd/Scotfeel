@@ -8,6 +8,7 @@
 </script>
 
 <template>
+  <!-- 返回 -->
   <uni-icons class="back" type="left" size="5vh" color="#fff" @tap="goBack"></uni-icons>
 </template>
 

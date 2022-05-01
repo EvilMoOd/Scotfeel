@@ -1,3 +1,4 @@
+import type { UserInfo } from '../../store/modules/userStore';
 import { request } from '../http';
 
 export type AuthCode = number;
@@ -11,8 +12,20 @@ export const reqAuthCode = (phone: number) =>
   });
 //登录
 export const reqUserLogin = (phone: number, authCode: number) =>
-  request<BasicResponse<AuthCode>>({
+  request<BasicResponse<UserInfo>>({
     url: `/login`,
     method: 'POST',
     data: { phone, authCode },
+  });
+//退出登录
+export const reqUserLogout = () =>
+  request<BasicResponse<null>>({
+    url: `/user/logout`,
+    method: 'GET',
+  });
+// 注销账户
+export const reqUserDestroy = () =>
+  request<BasicResponse<null>>({
+    url: `/cancelAccount`,
+    method: 'GET',
   });

@@ -2,6 +2,12 @@
   //顶部选项卡
   import { ref } from 'vue';
 
+  const props = defineProps<{
+    tab1: string;
+    tab2: string;
+    height: string;
+  }>();
+
   let active = ref(true);
   let currentTab = ref(0);
   function log() {
@@ -16,20 +22,23 @@
 </script>
 
 <template>
+  <!-- swiper+长滚动条 -->
   <view class="space">
-    <text class="swiper-name" @tap="changeCurrent1">订阅空间</text>
-    <text class="swiper-name" @tap="changeCurrent2">动态</text>
+    <view class="tab-name">
+      <text class="swiper-name" @tap="changeCurrent1">{{ props.tab1 }}</text>
+      <text class="swiper-name" @tap="changeCurrent2">{{ props.tab2 }}</text>
+    </view>
     <hr class="line" :class="[active ? 'left' : 'right']" />
-    <swiper class="swiper" :current="currentTab" @change="log">
+    <swiper :current="currentTab" :style="{ height }" @change="log">
       <swiper-item>
         <scroll-view scroll-y>
-          <view class="my-space">
-            <slot name="s1"></slot>
-          </view>
+          <slot name="s1"></slot>
         </scroll-view>
       </swiper-item>
       <swiper-item>
-        <slot name="s2"></slot>
+        <scroll-view scroll-y>
+          <slot name="s2"></slot>
+        </scroll-view>
       </swiper-item>
     </swiper>
   </view>
@@ -37,8 +46,10 @@
 
 <style lang="scss" scoped>
   .space {
-    .swiper-name {
-      margin: 130rpx;
+    margin-top: 20rpx;
+    .tab-name {
+      display: flex;
+      justify-content: space-around;
     }
     .line {
       height: 10rpx;
@@ -48,22 +59,11 @@
     }
     .left {
       transition: transform 0.5s;
-      transform: translate(135rpx);
+      transform: translate(130rpx);
     }
     .right {
       transition: transform 0.5s;
-      transform: translate(495rpx);
-    }
-    .swiper {
-      height: 600rpx;
-      margin-top: 20rpx;
-      .my-space {
-        height: 400rpx;
-        padding: 30rpx;
-        display: flex;
-        align-items: flex-start;
-        flex-wrap: wrap;
-      }
+      transform: translate(500rpx);
     }
   }
 </style>

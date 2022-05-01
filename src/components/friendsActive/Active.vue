@@ -4,11 +4,12 @@
   }>();
   //前往朋友动态
   function goFriendsActive() {
-    uni.navigateTo({ url: '/pages/main/active' });
+    uni.navigateTo({ url: '/pages/main/friendsActive' });
   }
 </script>
 
 <template>
+  <!-- 朋友动态栏中的每个圈 -->
   <view class="active" @tap="goFriendsActive">
     <image :src="props.img" class="avatar" />
     <view class="username">小可莉</view>

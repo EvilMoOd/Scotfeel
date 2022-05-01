@@ -15,7 +15,5 @@
   "requirePragma": false,
   "proseWrap": "never",
   "htmlWhitespaceSensitivity": "ignore",
-  "endOfLine": "auto",
-  "rangeStart": 0,
-  "BracketLine": true
+  "endOfLine": "auto"
 }

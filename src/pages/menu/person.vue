@@ -32,9 +32,11 @@
     </view>
   </view>
   <view class="introduction">这是一段个人介绍</view>
-  <TopTab>
+  <TopTab tab1="订阅空间" tab2="动态" height="600px">
     <template #s1>
-      <SpaceCard img="/src/assets/images/head.png" />
+      <view class="my-space">
+        <SpaceIdCard img="/src/assets/images/head.png" />
+      </view>
     </template>
     <template #s2>
       <view>动态</view>
@@ -100,6 +102,13 @@
     margin: -40rpx 96rpx;
     font-size: 22rpx;
     color: #555;
+  }
+  .my-space {
+    height: 400rpx;
+    padding: 30rpx;
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
   }
 
   .mask {

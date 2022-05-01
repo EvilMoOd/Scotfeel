@@ -9,7 +9,6 @@ export function getNoticeCount() {
   //1、从sqlite中获取该uid下的数据
   //this.applyCount = select..
   // 监听变化
-
 }
 // 获取会话列表
 export function getSessionList() {

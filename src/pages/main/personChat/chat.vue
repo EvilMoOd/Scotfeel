@@ -39,7 +39,7 @@
     </view>
     <view class="chat-me">珠海？</view>
     <view class="msg">
-      <input v-model="msg" class="input-msg" />
+      <input v-model="msg" class="input-msg" focus />
     </view>
   </scroll-view>
 </template>

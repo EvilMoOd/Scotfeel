@@ -34,7 +34,7 @@ interface Init {
 
 export const useInitStore = defineStore('init', {
   state: (): Init => ({
-    url: 'wss://localhost:8088',
+    url: 'ws://localhost:8088',
     webSocket: null,
     systemInfo: [], //设备信息
     currentChatId: null, //当前聊天页面的ID

@@ -18,31 +18,29 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
   // }
   //响应拦截请求
   return new Promise<T>((resolve, reject) => {
-    uni.request({
-      url: 'http://127.0.0.1:4523/mock/613601' + config.url, //默认地址
-      data: config.data || {},
-      header: {
-        token: user.token,
-      },
-      method: config.method,
-      timeout: 20000,
-      dataType: 'json',
-      responseType: 'text',
-      sslVerify: true,
-      withCredentials: false,
-      firstIpv4: false,
-      success(res) {
-        const { statusCode, data } = res;
-        if (statusCode == 200) {
-          resolve(data as T);
-        }
-      },
-      fail(err) {
+    uni
+      .request({
+        url: 'http://127.0.0.1:4523/mock/613601' + config.url, //默认地址
+        data: config.data || {},
+        header: {
+          token: user.token,
+        },
+        method: config.method,
+        timeout: 20000,
+        dataType: 'json',
+        responseType: 'text',
+        sslVerify: true,
+        withCredentials: false,
+        firstIpv4: false,
+      })
+      .then((res: { data: T | PromiseLike<T> }) => {
+        resolve(res.data);
+      })
+      .catch((err: any) => {
         reject(err);
-      },
-      complete() {
+      })
+      .finally(() => {
         uni.hideLoading();
-      },
-    });
+      });
   });
 };

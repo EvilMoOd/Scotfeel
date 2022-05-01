@@ -2,11 +2,12 @@
   import Active from './Active.vue';
   //朋友动态栏
   function goFriendsActive() {
-    uni.navigateTo({ url: '/pages/main/active' });
+    uni.navigateTo({ url: '/pages/main/friendsActive' });
   }
 </script>
 
 <template>
+  <!-- 朋友动态栏 -->
   <view class="friends-active">
     <view class="friend-active">
       <!-- 可能有bug这里 -->

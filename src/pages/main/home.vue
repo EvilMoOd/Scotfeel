@@ -1,12 +1,12 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
+import { useSubscribeSpaceStore } from '../../store/modules/subsribedSpaceStore';
   import { useUserStore } from '../../store/modules/userStore';
-  import { useInitStore } from '../../store/modules/initStore';
+  // import { useInitStore } from '../../store/modules/initStore';
 
   const userStore = useUserStore();
-  const initStore = useInitStore();
-
+  const subscribedSpaceStore = useSubscribeSpaceStore();
   // 展示person
   let isShow = ref(false);
   let spaceShow = ref(false);
@@ -18,13 +18,7 @@
   function goMessage() {
     uni.navigateTo({ url: '/pages/main/message/message' });
   }
-  //前往聊天页详情
-  function goChat() {
-    uni.navigateTo({ url: '/pages/main/personChat/chat' });
-  }
-  function goGroupChat() {
-    uni.navigateTo({ url: '/pages/main/groupChat/groupChat' });
-  }
+
   // 打开订阅空间栏
   function openSpace() {
     spaceShow.value = !spaceShow.value;
@@ -55,18 +49,18 @@
   }
   // 前往订阅页面
   function goSubscribe() {
-    uni.navigateTo({ url: '/pages/subscribe/subscribe' });
+    uni.navigateTo({ url: '/pages/subscribe/subscribeAndRecommand' });
   }
 
   // 退出登录
   function loginOut() {
-    userStore.loginOut();
+    userStore.userLogout();
     uni.redirectTo({ url: '/pages/login' });
   }
 
   onLoad(() => {
     //TODO初始化
-    u
+    // initStore.init();
   });
 </script>
 
@@ -88,138 +82,14 @@
     <scroll-view scroll-y="true" class="main">
       <FriendsActive />
       <view class="chat-list">
-        <view class="chat1" @tap="goChat">
-          <image src="@/assets/images/img1.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">呜呜</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1" @tap="goGroupChat">
-          <image src="@/assets/images/img2.jpg" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">某某群聊</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
-        <view class="chat1">
-          <image src="@/assets/images/head.png" class="user-head" />
-          <view class="chat-place">
-            <view>
-              <text class="nickname">可莉</text>
-              <text class="time">18:22</text>
-            </view>
-            <text class="content">今晚八点一起攻沙</text>
-
-            <view class="msg-tip">19</view>
-          </view>
-        </view>
+        <ChatWithFriends />
+        <GroupChat />
+        <ChatWithFriends />
+        <ChatWithFriends />
+        <ChatWithFriends />
+        <GroupChat />
+        <GroupChat />
+        <GroupChat />
       </view>
     </scroll-view>
   </view>
@@ -229,10 +99,10 @@
     <view v-show="isShow" class="menu">
       <view class="person-top">
         <view class="person-place" @tap="goPerson">
-          <image src="@/assets/images/myhead.png" class="avatar" />
+          <image :src="userStore.avatar" class="avatar" />
           <view class="person-msg">
-            <view class="name">木有鱼丸</view>
-            <view class="idCard">@pdd</view>
+            <view class="name">{{ userStore.nickname }}</view>
+            <view class="idCard">{{ userStore.account }}</view>
           </view>
           <view class="iconfont icon-erweima" :style="{ color: '#fff' }"></view>
         </view>
@@ -245,15 +115,15 @@
       <transition name="space">
         <scroll-view v-show="spaceShow" scroll-y class="space-show">
           <view class="space-place">
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
-            <SpaceCard img="/src/assets/images/head.png" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
           </view>
         </scroll-view>
       </transition>
@@ -333,51 +203,6 @@
 
         @media screen and (min-height: 896px) {
           height: 1280rpx;
-        }
-
-        .chat1 {
-          display: flex;
-
-          .user-head {
-            width: 96rpx;
-            height: 96rpx;
-            border-radius: 50%;
-            margin: 27rpx;
-          }
-
-          .chat-place {
-            width: 560rpx;
-            padding: 27rpx;
-            padding-left: 0;
-            border-bottom: solid 2rpx #f2f2f2;
-
-            .nickname-tip {
-              color: #3ea8c2;
-              font-size: 26rpx;
-            }
-
-            .time {
-              color: #797979;
-              font-size: 26rpx;
-              float: right;
-            }
-
-            .content {
-              color: #aaa;
-              font-size: 26rpx;
-            }
-
-            .msg-tip {
-              width: 36rpx;
-              height: 36rpx;
-              border-radius: 50%;
-              float: right;
-              background-color: #f25b6c;
-              text-align: center;
-              color: #fff;
-              font-size: 26rpx;
-            }
-          }
         }
       }
     }
