@@ -12,18 +12,20 @@ export interface Friend {
   noticeFlag: 0 | 1; //是否设为免打扰，0：否，1：是
 }
 export const useFriendStore = defineStore('friend', {
-  state: (): Friend => ({
-    friendId: '85',
-    nickname: '杜明',
-    remarkName: '起报战议去层定',
-    avatar: 'http://dummyimage.com/100x100',
-    spaceId: '61',
-    isDeletedByFriend: 0,
-    belongToId: '13',
-    account: 'reprehenderit aliqua pariatur esse',
-    backgroundImage: 'http://dummyimage.com/400x400',
-    noticeFlag: 0,
-  }),
+  state: (): Friend[] => [
+    {
+      friendId: '85',
+      nickname: '杜明',
+      remarkName: '起报战议去层定',
+      avatar: 'http://dummyimage.com/100x100',
+      spaceId: '61',
+      isDeletedByFriend: 0,
+      belongToId: '13',
+      account: 'reprehenderit aliqua pariatur esse',
+      backgroundImage: 'http://dummyimage.com/400x400',
+      noticeFlag: 0,
+    },
+  ],
   actions: {},
   getters: {},
 });

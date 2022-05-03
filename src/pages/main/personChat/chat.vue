@@ -10,7 +10,7 @@
   }
   //前往个人介绍页面
   function goFriendPerson() {
-    uni.navigateTo({ url: '/pages/menu/person' });
+    uni.navigateTo({ url: '/pages/main/personChat/friendDetail' });
   }
 
   onLoad(() => {

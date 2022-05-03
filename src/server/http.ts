@@ -1,3 +1,7 @@
+export const DEV_URL = 'http://127.0.0.1:4523/mock/613601';
+export const MASTER_URL = '';
+export const OBS_URL = 'http://obs.scotfeel.com';
+
 //请求参数
 export interface HTTPConfig {
   url: string;
@@ -20,7 +24,7 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
   return new Promise<T>((resolve, reject) => {
     uni
       .request({
-        url: 'http://127.0.0.1:4523/mock/613601' + config.url, //默认地址
+        url: DEV_URL + config.url, //默认地址
         data: config.data || {},
         header: {
           token: user.token,

@@ -2,7 +2,7 @@
   import { ref, reactive } from 'vue';
   import { useUserStore } from '../store/modules/userStore';
 
-  const store = useUserStore();
+  const userStore = useUserStore();
   //修改手机号地区类型
   let type = ref(0);
   let phoneTypes = reactive(['+86']);
@@ -10,25 +10,22 @@
     type.value = e.detail.value;
   }
   //登录信息
-  let userPhone = ref();
+  let userPhone = ref<number>();
   let userAuthCode = ref<number>();
   let checked = ref(false);
 
   //登录
   async function login() {
-    uni.redirectTo({ url: '/pages/main/home' });
     const phonePattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
-    if (!phonePattern.test(userPhone.value)) {
+    if (!phonePattern.test(String(userPhone.value))) {
       uni.showModal({ title: '请输入正确手机号' });
-    } else if (userAuthCode.value == undefined || userAuthCode.value != store.authCode) {
-      uni.showModal({ title: '验证码错误' });
     } else if (checked.value != true) {
       uni.showModal({ title: '请同意相关协议' });
     } else {
       try {
         let phone = userPhone.value;
         let authCode = userAuthCode.value;
-        await store.userLogin(phone, authCode);
+        await userStore.userLogin(phone as number, authCode as number);
         uni.redirectTo({ url: '/pages/main/home' });
       } catch (error) {
         uni.showModal({ title: '网络错误', content: '请检查网络' });
@@ -39,9 +36,9 @@
   let disabled = ref(false);
   async function getAuthCode() {
     const AuthPattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
-    if (AuthPattern.test(userPhone.value)) {
+    if (AuthPattern.test(String(userPhone.value))) {
       try {
-        await store.userGetAuthCode(userPhone.value);
+        await userStore.userGetAuthCode(userPhone.value as number);
         //设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {
@@ -51,7 +48,7 @@
         uni.showModal({ title: '网络错误', content: '请检查网络' });
       }
     } else {
-      uni.showModal({ title: '错误', content: '手机号格式有误' });
+      uni.showModal({ title: '手机号格式有误' });
     }
   }
   //同意协议

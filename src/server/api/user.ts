@@ -1,4 +1,4 @@
-import type { UserInfo } from '../../store/modules/userStore';
+import type { Login } from '../../store/modules/userStore';
 import { request } from '../http';
 
 export type AuthCode = number;
@@ -12,7 +12,7 @@ export const reqAuthCode = (phone: number) =>
   });
 //登录
 export const reqUserLogin = (phone: number, authCode: number) =>
-  request<BasicResponse<UserInfo>>({
+  request<BasicResponse<Login>>({
     url: `/login`,
     method: 'POST',
     data: { phone, authCode },

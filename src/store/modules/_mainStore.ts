@@ -25,14 +25,12 @@ interface Init {
   friendListLetterSort: object[]; //按字母排序的朋友列表
   groupListLetterSort: object[]; //按字母排序的群聊列表
   applyList: object[]; //申请列表
-  commomList: object[]; //评论列表
+  commentList: object[]; //评论列表
   likeList: object[]; //点赞列表
-  subscribList: object[]; //订阅列表
-  subscribSpaceList: object[]; //订阅空间列表
-  momentList: object[]; //呈现在首页的朋友动态列表
+  subscribeList: object[]; //订阅列表
 }
 
-export const useInitStore = defineStore('init', {
+export const useMainStore = defineStore('main', {
   state: (): Init => ({
     url: 'ws://localhost:8088',
     webSocket: null,
@@ -44,11 +42,9 @@ export const useInitStore = defineStore('init', {
     friendListLetterSort: [], //按字母排序的朋友列表
     groupListLetterSort: [], //按字母排序的群聊列表
     applyList: [], //申请列表
-    commomList: [], //评论列表
+    commentList: [], //评论列表
     likeList: [], //点赞列表
-    subscribList: [], //订阅列表
-    subscribSpaceList: [], //订阅空间列表
-    momentList: [], //呈现在首页的朋友动态列表
+    subscribeList: [], //订阅列表
   }),
   actions: {
     init() {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
-import { useSubscribeSpaceStore } from '../../store/modules/subsribedSpaceStore';
+  import { useSubscribeSpaceStore } from '../../store/modules/subscribeSpaceStore';
   import { useUserStore } from '../../store/modules/userStore';
   // import { useInitStore } from '../../store/modules/initStore';
 
@@ -53,7 +53,7 @@ import { useSubscribeSpaceStore } from '../../store/modules/subsribedSpaceStore'
   }
 
   // 退出登录
-  function loginOut() {
+  function logout() {
     userStore.userLogout();
     uni.redirectTo({ url: '/pages/login' });
   }
@@ -99,10 +99,10 @@ import { useSubscribeSpaceStore } from '../../store/modules/subsribedSpaceStore'
     <view v-show="isShow" class="menu">
       <view class="person-top">
         <view class="person-place" @tap="goPerson">
-          <image :src="userStore.avatar" class="avatar" />
+          <image :src="userStore.userInfo.avatar" class="avatar" />
           <view class="person-msg">
-            <view class="name">{{ userStore.nickname }}</view>
-            <view class="idCard">{{ userStore.account }}</view>
+            <view class="name">{{ userStore.userInfo.nickname }}</view>
+            <view class="idCard">{{ userStore.userInfo.account }}</view>
           </view>
           <view class="iconfont icon-erweima" :style="{ color: '#fff' }"></view>
         </view>
@@ -157,7 +157,7 @@ import { useSubscribeSpaceStore } from '../../store/modules/subsribedSpaceStore'
         </view>
       </view>
       <!-- 退出登录 -->
-      <view class="logout" @tap="loginOut">退出登录</view>
+      <view class="logout" @tap="logout">退出登录</view>
     </view>
   </transition>
   <!-- 遮罩 -->

@@ -1,4 +1,24 @@
-<script setip lang="ts"></script>
+<script setup lang="ts">
+  import { reactive } from 'vue';
+
+  const list = reactive([
+    {
+      letter: 'A',
+      data: [
+        '阿克苏机场',
+        '阿拉山口机场',
+        '阿勒泰机场',
+        '阿里昆莎机场',
+        '安庆天柱山机场',
+        '澳门国际机场',
+      ],
+    },
+    {
+      letter: 'Z',
+      data: ['保山机场', '包头机场', '北海福成机场', '北京南苑机场', '北京首都国际机场'],
+    },
+  ]);
+</script>
 
 <template>
   <view class="header">
@@ -7,62 +27,7 @@
     <uni-icons class="back" type="search" size="5vh" color="#fff"></uni-icons>
   </view>
   <scroll-view scroll-y class="main">
-    <view class="top">
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">群聊</text>
-      </view>
-    </view>
-    <view class="mail">
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-    </view>
+    <uni-indexed-list :options="list" :showSelect="false"></uni-indexed-list>
   </scroll-view>
 </template>
 
@@ -90,47 +55,5 @@
   .main {
     height: 1170rpx;
     background-color: #f0f1f2;
-
-    .top {
-      .list {
-        padding: 12rpx 24rpx;
-        background-color: #fff;
-
-        .head {
-          width: 80rpx;
-          height: 80rpx;
-          border-radius: 50%;
-          vertical-align: middle;
-          margin-right: 32rpx;
-        }
-
-        .nickname {
-          font-size: 36rpx;
-          font-weight: bolder;
-        }
-      }
-    }
-
-    .mail {
-      margin-top: 40rpx;
-
-      .list {
-        padding: 12rpx 24rpx;
-        background-color: #fff;
-
-        .head {
-          width: 80rpx;
-          height: 80rpx;
-          border-radius: 50%;
-          vertical-align: middle;
-          margin-right: 32rpx;
-        }
-
-        .nickname {
-          font-size: 36rpx;
-          font-weight: bolder;
-        }
-      }
-    }
   }
 </style>

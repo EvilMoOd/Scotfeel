@@ -10,16 +10,18 @@ export interface GroupChatMember {
   groupId: string; //群聊id
 }
 export const useGroupChatMemberStore = defineStore('groupChatMemberStore', {
-  state: (): GroupChatMember => ({
-    memberId: '65',
-    remarkName: '所何的实因关',
-    role: 0,
-    isExited: 0,
-    belongToId: '79',
-    nickname: '刘芳',
-    avatar: 'http://dummyimage.com/100x100',
-    groupId: '90',
-  }),
+  state: (): GroupChatMember[] => [
+    {
+      memberId: '65',
+      remarkName: '所何的实因关',
+      role: 0,
+      isExited: 0,
+      belongToId: '79',
+      nickname: '刘芳',
+      avatar: 'http://dummyimage.com/100x100',
+      groupId: '90',
+    },
+  ],
   actions: {},
   getters: {},
 });

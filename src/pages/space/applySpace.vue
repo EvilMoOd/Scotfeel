@@ -1,10 +1,9 @@
 <script setup lang="ts">
-  import { useSpaceStore } from '../../store/modules/spaceStore';
+  import { useSubscribeSpaceStore } from '../../store/modules/subscribeSpaceStore';
 
-  const spaceStore = useSpaceStore();
+  const spaceStore = useSubscribeSpaceStore();
 
   function enterInSpace() {
-    spaceStore.inSpace = true;
     uni.navigateTo({ url: '/pages/space/space' });
   }
 </script>

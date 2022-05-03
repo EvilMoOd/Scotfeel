@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { OBS_URL, request } from '../../server/http';
-  import { useUserStore } from '../../store/modules/userStore';
+  import { request, OBS_URL } from '../../../server/http';
+  import { useUserStore } from '../../../store/modules/userStore';
 
   const userStore = useUserStore();
 

@@ -1,9 +1,8 @@
 <script setup lang="ts">
-  import { useSpaceStore } from '../../store/modules/spaceStore';
-  import Avatar from '../../components/Avatar/Avatar.vue';
   import { ref } from 'vue';
+  import { useSubscribeSpaceStore } from '../../store/modules/subscribeSpaceStore';
 
-  const spaceStore = useSpaceStore();
+  const spaceStore = useSubscribeSpaceStore();
 
   const isShow = ref(false);
   function showMember() {

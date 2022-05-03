@@ -15,8 +15,7 @@
         <text class="time">18:22</text>
       </view>
       <text class="content">今晚八点一起攻沙</text>
-
-      <view class="msg-tip">19</view>
+      <uni-badge text="22" size class="msg-tip"></uni-badge>
     </view>
   </view>
 </template>
@@ -55,14 +54,7 @@
       }
 
       .msg-tip {
-        width: 36rpx;
-        height: 36rpx;
-        border-radius: 50%;
         float: right;
-        background-color: #f25b6c;
-        text-align: center;
-        color: #fff;
-        font-size: 26rpx;
       }
     }
   }

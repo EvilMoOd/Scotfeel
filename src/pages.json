@@ -48,6 +48,13 @@
 			}
 		},
 		{
+			"path": "pages/main/personChat/friendDetail",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/main/groupChat/groupChat",
 			"style": {
 				"navigationStyle": "custom",
