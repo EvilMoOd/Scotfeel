@@ -7,6 +7,7 @@
 
   const userStore = useUserStore();
   const subscribedSpaceStore = useSubscribeSpaceStore();
+
   // 展示person
   let isShow = ref(false);
   let spaceShow = ref(false);
@@ -95,71 +96,67 @@
   </view>
 
   <!-- 个人中心 -->
-  <transition name="menu">
-    <view v-show="isShow" class="menu">
-      <view class="person-top">
-        <view class="person-place" @tap="goPerson">
-          <image :src="userStore.userInfo.avatar" class="avatar" />
-          <view class="person-msg">
-            <view class="name">{{ userStore.userInfo.nickname }}</view>
-            <view class="idCard">{{ userStore.userInfo.account }}</view>
-          </view>
-          <view class="iconfont icon-erweima" :style="{ color: '#fff' }"></view>
+  <view class="menu" :class="{ 'show-menu': isShow }">
+    <view class="person-top">
+      <view class="person-place" @tap="goPerson">
+        <image :src="userStore.userInfo?.avatar" class="avatar" />
+        <view class="person-msg">
+          <view class="name">{{ userStore.userInfo?.nickname }}</view>
+          <view class="idCard">{{ userStore.userInfo?.account }}</view>
         </view>
-        <view class="space" @tap="openSpace">
-          订阅空间
-          <uni-icons type="bottom" size="16" class="arrow" :style="{ color: '#fff' }"></uni-icons>
-        </view>
+        <view class="iconfont icon-erweima" :style="{ color: '#fff' }"></view>
       </view>
-      <!-- 订阅空间 -->
-      <transition name="space">
-        <scroll-view v-show="spaceShow" scroll-y class="space-show">
-          <view class="space-place">
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-            <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-          </view>
-        </scroll-view>
-      </transition>
-      <!-- 菜单项 -->
-      <view class="function-place">
-        <view class="function">
-          <view class="fuc">
-            <uni-icons type="scan" size="25"></uni-icons>
-            扫一扫
-          </view>
-          <view class="fuc" @tap="goMailList">
-            <uni-icons type="contact" size="25"></uni-icons>
-            通讯录
-          </view>
-          <view class="fuc" @tap="goAddFriends">
-            <uni-icons type="personadd" size="25"></uni-icons>
-            添加好友
-          </view>
-          <view class="fuc" @tap="goCreateGroupChat">
-            <uni-icons type="staff" size="25"></uni-icons>
-            创建群聊
-          </view>
-          <view class="fuc" @tap="goCreateSpace">
-            <uni-icons type="home" size="25"></uni-icons>
-            创建空间
-          </view>
-        </view>
-        <view class="setup" @tap="goSetting">
-          <uni-icons type="gear" size="25"></uni-icons>
-          设置与隐私
-        </view>
+      <view class="space" @tap="openSpace">
+        订阅空间
+        <uni-icons type="bottom" size="16" class="arrow" :style="{ color: '#fff' }"></uni-icons>
       </view>
-      <!-- 退出登录 -->
-      <view class="logout" @tap="logout">退出登录</view>
     </view>
-  </transition>
+    <!-- 订阅空间 -->
+    <scroll-view scroll-y class="space-hidden" :class="{ 'space-show': spaceShow }">
+      <view class="space-place">
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+      </view>
+    </scroll-view>
+    <!-- 菜单项 -->
+    <view class="function-place">
+      <view class="function">
+        <view class="fuc">
+          <uni-icons type="scan" size="25"></uni-icons>
+          扫一扫
+        </view>
+        <view class="fuc" @tap="goMailList">
+          <uni-icons type="contact" size="25"></uni-icons>
+          通讯录
+        </view>
+        <view class="fuc" @tap="goAddFriends">
+          <uni-icons type="personadd" size="25"></uni-icons>
+          添加好友
+        </view>
+        <view class="fuc" @tap="goCreateGroupChat">
+          <uni-icons type="staff" size="25"></uni-icons>
+          创建群聊
+        </view>
+        <view class="fuc" @tap="goCreateSpace">
+          <uni-icons type="home" size="25"></uni-icons>
+          创建空间
+        </view>
+      </view>
+      <view class="setup" @tap="goSetting">
+        <uni-icons type="gear" size="25"></uni-icons>
+        设置与隐私
+      </view>
+    </view>
+    <!-- 退出登录 -->
+    <view class="logout" @tap="logout">退出登录</view>
+  </view>
   <!-- 遮罩 -->
   <view v-show="isShow" class="mask" @tap="displayPerson"></view>
   <view class="subscribe" @tap="goSubscribe">
@@ -201,8 +198,8 @@
       .chat-list {
         height: 980rpx;
 
-        @media screen and (min-height: 896px) {
-          height: 1280rpx;
+        @media screen and (min-height: 800px) {
+          height: 1260rpx;
         }
       }
     }
@@ -215,8 +212,10 @@
     position: absolute;
     z-index: 20;
     background-color: #fff;
-    animation: moveIn 0.2s linear;
-
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-400rpx);
+    transition: 0.5s;
     .person-top {
       position: absolute;
       z-index: 20;
@@ -265,8 +264,7 @@
         }
       }
     }
-
-    .space-show {
+    .space-hidden {
       position: absolute;
       z-index: 10;
       left: 16vw;
@@ -275,7 +273,16 @@
       padding: 10rpx 10rpx 0 10rpx;
       background-color: #f2f2f2;
       border-radius: 30rpx;
-      margin-top: 200rpx;
+      transform: translateY(-500rpx);
+      visibility: hidden;
+      opacity: 0;
+      transition: 0.5s;
+    }
+
+    .space-show {
+      transform: translateY(200rpx);
+      visibility: visible;
+      opacity: 1;
       .space-place {
         display: flex;
         flex-wrap: wrap;
@@ -321,6 +328,11 @@
       padding: 80rpx 100rpx;
     }
   }
+  .show-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(0);
+  }
 
   .mask {
     width: 100vw;
@@ -347,36 +359,5 @@
       margin-top: -10rpx;
       margin-left: -10rpx;
     }
-  }
-
-  //个人中心弹窗动画
-  .menu-enter-from,
-  .menu-leave-to {
-    left: -65vw;
-  }
-
-  .menu-enter-active,
-  .menu-leave-active {
-    transition: all 0.3s ease-out;
-  }
-
-  .menu-enter-to,
-  .menu-leave-from {
-    left: 0vw;
-  }
-
-  .space-enter-from,
-  .space-leave-to {
-    top: -800rpx;
-  }
-
-  .space-enter-active,
-  .space-leave-active {
-    transition: all 0.3s ease-out;
-  }
-
-  .space-enter-to,
-  .space-leave-from {
-    top: 0;
   }
 </style>

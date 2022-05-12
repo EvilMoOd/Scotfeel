@@ -3,6 +3,7 @@ import App from './App.vue';
 import * as Pinia from 'pinia';
 
 import '@purge-icons/generated'; //icon
+import 'animate.css';
 
 export function createApp() {
   const app = createSSRApp(App);

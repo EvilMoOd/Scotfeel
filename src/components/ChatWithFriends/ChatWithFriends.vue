@@ -16,7 +16,6 @@
       </view>
       <text class="content">今晚八点一起攻沙</text>
       <uni-badge text="1" size class="msg-tip"></uni-badge>
-      c
     </view>
   </view>
 </template>

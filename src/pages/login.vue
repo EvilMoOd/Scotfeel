@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue';
+  import { reqAuthCode } from '../server/api/user';
   import { useUserStore } from '../store/modules/userStore';
 
   const userStore = useUserStore();
@@ -10,14 +11,14 @@
     type.value = e.detail.value;
   }
   //登录信息
-  let userPhone = ref<number>();
-  let userAuthCode = ref<number>();
+  let userPhone = ref<string>('');
+  let userAuthCode = ref<string>('');
   let checked = ref(false);
 
   //登录
   async function login() {
-    const phonePattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
-    if (!phonePattern.test(String(userPhone.value))) {
+    const phonePattern = /^1[3456789]\d{9}$/;
+    if (!phonePattern.test(userPhone.value)) {
       uni.showModal({ title: '请输入正确手机号' });
     } else if (checked.value != true) {
       uni.showModal({ title: '请同意相关协议' });
@@ -25,27 +26,28 @@
       try {
         let phone = userPhone.value;
         let authCode = userAuthCode.value;
-        await userStore.userLogin(phone as number, authCode as number);
+        await userStore.userLogin(phone, authCode);
         uni.redirectTo({ url: '/pages/main/home' });
-      } catch (error) {
-        uni.showModal({ title: '网络错误', content: '请检查网络' });
+      } catch (error: any) {
+        uni.showModal({ title: error });
       }
     }
   }
   //获取验证码
   let disabled = ref(false);
   async function getAuthCode() {
-    const AuthPattern = /^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\d{8}$/;
-    if (AuthPattern.test(String(userPhone.value))) {
+    const AuthPattern = /^1[3456789]\d{9}$/;
+    if (AuthPattern.test(userPhone.value)) {
       try {
-        await userStore.userGetAuthCode(userPhone.value as number);
+        const res = await reqAuthCode(userPhone.value);
+        console.log(res);
         //设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {
           disabled.value = false;
         }, 60000);
-      } catch (error) {
-        uni.showModal({ title: '网络错误', content: '请检查网络' });
+      } catch (error: any) {
+        uni.showModal({ title: error });
       }
     } else {
       uni.showModal({ title: '手机号格式有误' });

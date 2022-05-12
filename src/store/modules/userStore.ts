@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
-import { reqAuthCode, reqUserLogin, reqUserLogout } from '../../server/api/user';
+import { reqUserLogin, reqUserLogout } from '../../server/api/user';
 
 export interface UserInfo {
   mainId: string; //用户mainId
   nickname: string; //用户昵称
   account: string; //用户@id
-  phone: number; //用户手机号
+  phone: string; //用户手机号
   avatar: string; //用户头像
   backgroundImage: string; //用户背景照片
   qrcode: string; //用户二维码
@@ -26,21 +26,20 @@ export const useUserStore = defineStore('user', {
   }),
   actions: {
     //登录
-    async userLogin(phone: number, authCode: number) {
-      let { data } = await reqUserLogin(phone, authCode);
-      uni.setStorageSync('user', data);
-      console.log(data);
-      this.$state = data;
-    },
-    //获取验证码
-    async userGetAuthCode(phone: number) {
-      let result = await reqAuthCode(phone);
-      console.log(result);
+    async userLogin(phone: string, authCode: string) {
+      let {userInfo,token} = await reqUserLogin(phone, authCode);
+      uni.setStorageSync('user', {userInfo,token});
+      this.userInfo = userInfo;
+      this.token = token;
     },
     //退出登录
     async userLogout() {
       await reqUserLogout();
       uni.removeStorageSync('user');
     },
+    //修改头像
+    async changeAvatar(){
+      let  = await 
+    }
   },
 });

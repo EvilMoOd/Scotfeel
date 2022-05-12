@@ -139,15 +139,13 @@
       style="position: absolute; z-index: -100; width: 750rpx; height: 304rpx"
     />
     <uni-icons type="arrow-left" color="#aaa" size="28" class="icon-back" @tap="goBack" />
-    <uni-icons type="more-filled" color="#aaa" size="28" class="icon-more" @click="showConfig" />
-    <transition name="more">
-      <view v-show="isShowConfig" class="more">
-        <text @tap="changeSignature">个性签名</text>
-        <text @tap="showChangeNickname">修改昵称</text>
-        <text @tap="changeBackgoundImg">设置背景</text>
-        <text @tap="changeAvatar">设置头像</text>
-      </view>
-    </transition>
+    <uni-icons type="more-filled" color="#aaa" size="28" class="icon-more" @tap="showConfig" />
+    <view class="more-hidden" :class="{ 'more-show': isShowConfig }">
+      <text @tap="changeSignature">个性签名</text>
+      <text @tap="showChangeNickname">修改昵称</text>
+      <text @tap="changeBackgoundImg">设置背景</text>
+      <text @tap="changeAvatar">设置头像</text>
+    </view>
   </view>
   <view class="id-card">
     <image :src="userStore.userInfo.avatar" mode="scaleToFill" class="avatar" />
@@ -205,7 +203,7 @@
       margin-right: 26rpx;
     }
 
-    .more {
+    .more-hidden {
       padding: 18rpx 36rpx;
       width: 104rpx;
       font-size: 26rpx;
@@ -218,10 +216,13 @@
       top: 66rpx;
       background-color: #fff;
       box-shadow: 0 0 4rpx $color-sf;
-
+      @include hidden;
       text {
         margin: 10rpx 0;
       }
+    }
+    .more-show {
+      @include show;
     }
   }
 
@@ -268,33 +269,5 @@
 
   .space {
     margin-top: 100rpx;
-  }
-
-  .more-enter-active {
-    animation: bounce-in 0.5s;
-  }
-
-  .more-leave-active {
-    transition: opacity 0.5s ease;
-    animation: bounce-in 0.5s reverse;
-  }
-
-  .more-enter-from,
-  .more-leave-to {
-    opacity: 0;
-  }
-
-  @keyframes bounce-in {
-    0% {
-      transform: scale(0);
-    }
-
-    50% {
-      transform: scale(1.25);
-    }
-
-    100% {
-      transform: scale(1);
-    }
   }
 </style>

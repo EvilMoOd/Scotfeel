@@ -1,4 +1,42 @@
-import { groupChatMessage, personChatMessage } from './api/socketType';
+import {
+  applyMessage,
+  beingAgreeByFriend,
+  beingAgreeInSpace,
+  beingAgreeJoinGroupChat,
+  beingDeleteByFriend,
+  beingFriendAdd,
+  beingKickOutGroupChat,
+  beingSubscribe,
+  changeSpaceToPrivate,
+  commentMessage,
+  friendsActiveList,
+  groupBreakOut,
+  groupChatMessage,
+  GroupMemberOut,
+  kickOut,
+  LikeMessage,
+  newGroupMemberJoinIn,
+  personChatMessage,
+  updateFriendAccount,
+  updateFriendAvatar,
+  updateFriendBackgroundImg,
+  updateFriendNickname,
+  updateFriendSignature,
+  updateFriendSpaceId,
+  updateGroupChatAvatar,
+  updateGroupChatNickname,
+  updateGroupCount,
+  updateGroupMember,
+  updateGroupMemberAvatar,
+  updateGroupMemberNickname,
+  updateGroupMemberRemark,
+  updateGroupSpaceAvatar,
+  updateGroupSpaceId,
+  updateGroupSpaceNickname,
+  updateSpaceAvatar,
+  updateSpaceNickname,
+  updateSpaceRole,
+} from './socketType';
 
 let reconnectFlag = true; //是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: any;
@@ -48,43 +86,78 @@ export function connectWebSocket(url: string) {
         content.fromId,
         content.content,
         content.contentType,
-        content.type
+        content.date
       );
     } else if (type === 5) {
+      friendsActiveList(content.friendId);
     } else if (type === 6) {
+      applyMessage();
     } else if (type === 7) {
+      commentMessage();
     } else if (type === 8) {
+      LikeMessage();
     } else if (type === 9) {
+      beingSubscribe();
     } else if (type === 10) {
+      beingFriendAdd();
     } else if (type === 11) {
+      beingAgreeByFriend();
     } else if (type === 12) {
+      beingDeleteByFriend();
     } else if (type === 13) {
+      updateFriendAvatar();
     } else if (type === 14) {
+      updateFriendNickname();
     } else if (type === 15) {
+      updateFriendAccount();
     } else if (type === 16) {
+      updateFriendBackgroundImg;
     } else if (type === 17) {
+      updateFriendSignature();
     } else if (type === 18) {
+      updateFriendSpaceId();
     } else if (type === 19) {
+      beingAgreeJoinGroupChat();
     } else if (type === 20) {
+      beingKickOutGroupChat();
     } else if (type === 21) {
+      updateGroupChatAvatar();
     } else if (type === 22) {
+      updateGroupChatNickname();
     } else if (type === 23) {
+      updateGroupCount();
     } else if (type === 24) {
+      updateGroupSpaceId();
     } else if (type === 25) {
+      updateGroupSpaceNickname();
     } else if (type === 26) {
+      updateGroupSpaceAvatar();
     } else if (type === 27) {
+      newGroupMemberJoinIn();
     } else if (type === 28) {
+      updateGroupMemberAvatar();
     } else if (type === 29) {
+      updateGroupMemberNickname();
     } else if (type === 30) {
+      updateGroupMemberRemark();
     } else if (type === 31) {
+      updateGroupMember();
     } else if (type === 32) {
+      GroupMemberOut();
     } else if (type === 33) {
+      groupBreakOut();
     } else if (type === 34) {
+      beingAgreeInSpace();
     } else if (type === 35) {
+      updateSpaceNickname();
     } else if (type === 36) {
+      updateSpaceAvatar();
     } else if (type === 37) {
+      updateSpaceRole();
     } else if (type === 38) {
+      changeSpaceToPrivate();
     } else if (type === 39) {
+      kickOut();
     } else if (type === 40) {
     }
   }

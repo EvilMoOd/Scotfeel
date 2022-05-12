@@ -8,23 +8,21 @@
   <view class="header">
     <Back />
     <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="isShow = true" />
-    <transition name="more">
-      <view v-show="isShow" class="more">
-        <text>
-          展示在个人主页
-          <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-        </text>
-        <text>
-          首页左滑默认空间
-          <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-        </text>
-        <text>设置空间昵称</text>
-        <text>设置空间背景</text>
-        <text>私密设置</text>
-        <text>设置头像</text>
-        <text>空间认证</text>
-      </view>
-    </transition>
+    <view class="more" :class="{ 'more-show': isShow }">
+      <text>
+        展示在个人主页
+        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+      </text>
+      <text>
+        首页左滑默认空间
+        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+      </text>
+      <text>设置空间昵称</text>
+      <text>设置空间背景</text>
+      <text>私密设置</text>
+      <text>设置头像</text>
+      <text>空间认证</text>
+    </view>
     <image src="@/assets/images/head.png" class="avatar" />
     <view>AMCC肌肉车俱乐部</view>
   </view>
@@ -143,10 +141,14 @@
       background-color: #fff;
       box-shadow: 0 0 4rpx $color-sf;
       color: #000;
+      @include hidden;
 
       text {
         margin: 10rpx 0;
       }
+    }
+    .more-show {
+      @include show;
     }
 
     .avatar {
@@ -225,33 +227,5 @@
     position: absolute;
     top: 0;
     z-index: 90;
-  }
-
-  .more-enter-active {
-    animation: bounce-in 0.5s;
-  }
-
-  .more-leave-active {
-    transition: opacity 0.5s ease;
-    animation: bounce-in 0.5s reverse;
-  }
-
-  .more-enter-from,
-  .more-leave-to {
-    opacity: 0;
-  }
-
-  @keyframes bounce-in {
-    0% {
-      transform: scale(0);
-    }
-
-    50% {
-      transform: scale(1.25);
-    }
-
-    100% {
-      transform: scale(1);
-    }
   }
 </style>

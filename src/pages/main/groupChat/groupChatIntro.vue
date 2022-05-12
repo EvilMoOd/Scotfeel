@@ -8,17 +8,15 @@
   <view class="header">
     <Back />
     <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="isShow = true" />
-    <transition name="more">
-      <view v-show="isShow" class="more">
-        <text>
-          进群审核
-          <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-        </text>
-        <text>修改群聊昵称</text>
-        <text>设置头像</text>
-        <text style="color: #d9001b">解散</text>
-      </view>
-    </transition>
+    <view class="more-hidden" :class="{ 'more-show': isShow }">
+      <text>
+        进群审核
+        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+      </text>
+      <text>修改群聊昵称</text>
+      <text>设置头像</text>
+      <text style="color: #d9001b">解散</text>
+    </view>
     <image src="@/assets/images/head.png" class="head" />
     <view>AMCC肌肉车俱乐部</view>
   </view>
@@ -86,7 +84,7 @@
       margin-right: 24rpx;
       margin-top: 60rpx;
     }
-    .more {
+    .more-hidden {
       padding: 18rpx 6rpx;
       width: 234rpx;
       font-size: 26rpx;
@@ -100,10 +98,13 @@
       background-color: #fff;
       box-shadow: 0 0 4rpx $color-sf;
       color: #000;
-
+      @include hidden;
       text {
         margin: 10rpx 0;
       }
+    }
+    .more-show {
+      @include show;
     }
 
     .head {
@@ -177,33 +178,5 @@
     position: absolute;
     top: 0;
     z-index: 90;
-  }
-
-  .more-enter-active {
-    animation: bounce-in 0.5s;
-  }
-
-  .more-leave-active {
-    transition: opacity 0.5s ease;
-    animation: bounce-in 0.5s reverse;
-  }
-
-  .more-enter-from,
-  .more-leave-to {
-    opacity: 0;
-  }
-
-  @keyframes bounce-in {
-    0% {
-      transform: scale(0);
-    }
-
-    50% {
-      transform: scale(1.25);
-    }
-
-    100% {
-      transform: scale(1);
-    }
   }
 </style>

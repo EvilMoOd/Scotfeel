@@ -6,3 +6,15 @@ $color-sf: #117986;
   background-color: #117986;
 }
 $uni-bg-color: #f7f7f7;
+
+@mixin hidden {
+  transform: scale(0.5);
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.5s;
+}
+@mixin show {
+  transform: scale(1);
+  visibility: visible;
+  opacity: 1;
+}

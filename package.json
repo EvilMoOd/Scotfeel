@@ -46,6 +46,7 @@
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3031320220314002",
     "@dcloudio/uni-ui": "^1.4.12",
     "@iconify/iconify": "^2.2.1",
+    "animate.css": "^4.1.1",
     "pinia": "^2.0.13",
     "sass": "^1.49.9",
     "vue": "^3.2.31",

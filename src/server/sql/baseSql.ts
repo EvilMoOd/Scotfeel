@@ -1,3 +1,4 @@
+//查
 export async function selectSql(
   sql: string,
   config = {
@@ -25,7 +26,7 @@ export async function selectSql(
     });
   });
 }
-
+//增删改
 export async function executeSql(
   sql: string | string[],
   config = { name: 'scotfeel', path: '_doc/chat.db' }

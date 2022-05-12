@@ -51,32 +51,30 @@
       </view>
     </view>
   </scroll-view>
-  <transition name="member">
-    <view v-if="isShow" class="space-member-container">
-      <scroll-view scroll-y class="member-list">
-        <view class="member-item">
-          <Avatar img-src="/src/assets/images/img3.png" :type="1" />
-          <text class="username">里尔</text>
-          <text class="leave">退出</text>
-        </view>
-        <view class="member-item">
-          <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-          <text class="username">里尔</text>
-          <text class="leave">退出</text>
-        </view>
-        <view class="member-item">
-          <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-          <text class="username">里尔</text>
-          <text class="leave">退出</text>
-        </view>
-        <view class="member-item">
-          <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-          <text class="username">里尔</text>
-          <text class="leave">退出</text>
-        </view>
-      </scroll-view>
-    </view>
-  </transition>
+  <view class="space-member-container" :class="{ 'space-member-container-show': isShow }">
+    <scroll-view scroll-y class="member-list">
+      <view class="member-item">
+        <Avatar img-src="/src/assets/images/img3.png" :type="1" />
+        <text class="username">里尔</text>
+        <text class="leave">退出</text>
+      </view>
+      <view class="member-item">
+        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
+        <text class="username">里尔</text>
+        <text class="leave">退出</text>
+      </view>
+      <view class="member-item">
+        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
+        <text class="username">里尔</text>
+        <text class="leave">退出</text>
+      </view>
+      <view class="member-item">
+        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
+        <text class="username">里尔</text>
+        <text class="leave">退出</text>
+      </view>
+    </scroll-view>
+  </view>
   <view v-show="isShow" class="mask" @tap="hiddenMemberList"></view>
 </template>
 
@@ -195,6 +193,7 @@
     background-color: #fff;
     border-radius: 30rpx 30rpx 0 0;
     padding: 0 60rpx;
+    @include hidden;
     .member-list {
       margin-top: 30rpx;
       height: 336rpx;
@@ -211,6 +210,9 @@
       }
     }
   }
+  .space-member-container-show {
+    @include show;
+  }
   .mask {
     width: 100vw;
     height: 100vh;
@@ -218,20 +220,5 @@
     position: absolute;
     top: 0;
     z-index: 10;
-  }
-
-  .member-enter-from,
-  .member-leave-to {
-    top: 1375rpx;
-  }
-
-  .member-enter-active,
-  .member-leave-active {
-    transition: all 0.5s ease-out;
-  }
-
-  .member-enter-to,
-  .member-leave-from {
-    top: 968rpx;
   }
 </style>
