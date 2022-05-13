@@ -36,27 +36,43 @@ export const reqUserDestroy = () =>
 export const reqChangeAvatar = (avatar: string) =>
   request<null>({
     url: `/user/update/avatar`,
-    method: 'GET',
+    method: 'POST',
     data: { avatar },
+    type: 'application/x-www-form-urlencoded',
   });
 //修改昵称
-export const reqChangeNickname = () =>
+export const reqChangeNickname = (nickname: string) =>
   request<null>({
     url: `/user/update/nickname`,
-    method: 'GET',
+    method: 'POST',
+    data: { nickname },
+    type: 'application/x-www-form-urlencoded',
   });
 //修改背景
-export const reqChangeBackground = () =>
+export const reqChangeBackground = (backgroundImg: string) =>
   request<null>({
     url: `/user/update/backgroundImage`,
-    method: 'GET',
+    method: 'POST',
+    data: { backgroundImg },
+    type: 'application/x-www-form-urlencoded',
   });
 //修改个性签名
-export const reqChangeSignal = () =>
+export const reqChangeSignal = (signature: string) =>
   request<null>({
     url: `/user/update/signature`,
-    method: 'GET',
+    method: 'POST',
+    data: { signature },
+    type: 'application/x-www-form-urlencoded',
   });
+//修改@id
+export const reqChangeId = (id: string) =>
+  request<null>({
+    url: `/user/update/account`,
+    method: 'POST',
+    data: { id },
+    type: 'application/x-www-form-urlencoded',
+  });
+//获取个人主页信息
 export interface PersonMessage {
   nickname: string;
   account: string;
@@ -64,7 +80,6 @@ export interface PersonMessage {
   backgroundImage: string;
   signature: string;
 }
-//获取个人主页信息
 export const reqPersonMessage = () =>
   request<PersonMessage>({
     url: `/user/home`,

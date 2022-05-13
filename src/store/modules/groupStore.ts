@@ -14,8 +14,20 @@ export interface GroupChat {
 export const useGroupChatStore = defineStore('groupChatStore', {
   state: (): GroupChat[] => [
     {
-      groupId: '78',
-      nickname: '张霞',
+      groupId: '35',
+      nickname: '考研摆烂',
+      avatar: 'http://dummyimage.com/100x100',
+      memberCount: 'in reprehenderit',
+      spaceId: '29',
+      belongToId: '41',
+      isDismissed: 0,
+      spaceNickname: '金娟',
+      spaceAvatar: 'http://dummyimage.com/100x100',
+      noticeFlag: 1,
+    },
+    {
+      groupId: '45',
+      nickname: 'nighttoken',
       avatar: 'http://dummyimage.com/100x100',
       memberCount: 'in reprehenderit',
       spaceId: '29',

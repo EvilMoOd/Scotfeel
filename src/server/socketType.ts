@@ -1,7 +1,7 @@
 import { useChatRecordStore } from '../store/modules/chatRecordStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
-import type { GroupChat } from '../store/modules/groupChatStore';
-import type { GroupChatMember } from '../store/modules/groupChatMemberStore';
+import type { GroupChat } from '../store/modules/groupStore';
+import type { GroupChatMember } from '../store/modules/groupMemberStore';
 
 const chatRecordStore = useChatRecordStore();
 const momentListStore = useMomentListStore();

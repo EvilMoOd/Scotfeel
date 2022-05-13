@@ -47,8 +47,8 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
       url: MOCK_URL + config.url, //默认地址
       data: config.data || {},
       header: {
-        token: user.token,
-        'custom-type': config.type || 'application/json',
+        Authorization: user.token,
+        'content-type': config.type || 'application/json',
       },
       method: config.method,
       timeout: 20000,

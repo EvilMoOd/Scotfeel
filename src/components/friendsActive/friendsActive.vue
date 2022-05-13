@@ -1,8 +1,13 @@
 <script setup lang="ts">
+  import { useMomentListStore } from '../../store/modules/momemtListStore';
   import Active from './Active.vue';
   //朋友动态栏
-  function goFriendsActive() {
+  const momentList = useMomentListStore();
+  function goAllFriendsActive() {
     uni.navigateTo({ url: '/pages/main/friendsActive' });
+  }
+  function goFriendsActive(params: string) {
+    uni.navigateTo({ url: `/pages/main/friendsActive?${params}` });
   }
 </script>
 
@@ -12,15 +17,15 @@
     <view class="friend-active">
       <!-- 可能有bug这里 -->
       <scroll-view scroll-x="true">
-        <Active img="/src/assets/images/head.png" />
-        <Active img="/src/assets/images/head.png" />
-        <Active img="/src/assets/images/head.png" />
-        <Active img="/src/assets/images/head.png" />
-        <Active img="/src/assets/images/head.png" />
-        <Active img="/src/assets/images/head.png" />
+        <Active
+          v-for="list in momentList.$state"
+          :key="list.id"
+          :list="list"
+          @tap="goFriendsActive(list.friendId)"
+        />
       </scroll-view>
     </view>
-    <view class="more-active" @tap="goFriendsActive">全部</view>
+    <view class="more-active" @tap="goAllFriendsActive">全部</view>
   </view>
 </template>
 

@@ -39,8 +39,7 @@
     const AuthPattern = /^1[3456789]\d{9}$/;
     if (AuthPattern.test(userPhone.value)) {
       try {
-        const res = await reqAuthCode(userPhone.value);
-        console.log(res);
+        await reqAuthCode(userPhone.value);
         //设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {

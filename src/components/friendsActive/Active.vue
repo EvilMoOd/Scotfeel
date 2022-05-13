@@ -1,18 +1,24 @@
 <script setup lang="ts">
+  import { computed } from 'vue';
+  import { useFriendStore } from '../../store/modules/friendStore';
+  import type { MomentList } from '../../store/modules/momemtListStore';
+
   const props = defineProps<{
-    img: string;
+    list: MomentList;
   }>();
-  //前往朋友动态
-  function goFriendsActive() {
-    uni.navigateTo({ url: '/pages/main/friendsActive' });
-  }
+
+  //查找朋友信息
+  const friendStore = useFriendStore();
+  const friendInfo = computed(() =>
+    friendStore.$state.find((item) => item.friendId === props.list.friendId)
+  );
 </script>
 
 <template>
   <!-- 朋友动态栏中的每个圈 -->
-  <view class="active" @tap="goFriendsActive">
-    <image :src="props.img" class="avatar" />
-    <view class="username">小可莉</view>
+  <view class="active">
+    <image :src="friendInfo?.avatar" class="avatar" />
+    <view class="username">{{ friendInfo?.nickname }}</view>
   </view>
 </template>
 
