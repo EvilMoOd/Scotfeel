@@ -37,6 +37,7 @@ import {
   updateSpaceNickname,
   updateSpaceRole,
 } from './socketType';
+import { createUUID } from './utils/uuid';
 
 let reconnectFlag = true; //是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: any;
@@ -65,7 +66,16 @@ export function connectWebSocket(url: string) {
     // 用户上线
     console.log('websocket连接成功');
     //发送信息告诉服务器将离线消息发送过来
-    _sendMessage('isOpen');
+    let messageFromClient = {
+      toId: 'fsdf',
+      content:
+        'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblVzZXIiOnsibWFpbklkIjoiMGQ5NGIxMTI5NjllNGMwYWJmYmQ5NDQ2NDc5NWE5YTIiLCJyb2xlcyI6WyJjb21tb25fdXNlciJdLCJlbmFibGVkIjpmYWxzZSwicGFzc3dvcmQiOm51bGwsInVzZXJuYW1lIjpudWxsLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiY29tbW9uX3VzZXIifV0sImFjY291bnROb25FeHBpcmVkIjpmYWxzZSwiYWNjb3VudE5vbkxvY2tlZCI6ZmFsc2UsImNyZWRlbnRpYWxzTm9uRXhwaXJlZCI6ZmFsc2V9LCJleHAiOjE2NTc3MzgwNzR9.RpKE2Cgq13z_Ml70yJEQi9Jb96XYSumWt6vawhPVnUzv0H8_JPoloPW9goDrTncEt7kZlShlv6KUrZyp9NeQrw',
+      contentType: 0,
+      messageType: 5,
+      time: 723409723432,
+      sequenceId: createUUID(),
+    };
+    _sendMessage(messageFromClient);
     _sendHeart(); //连接服务端成功后开始发送心跳
     _closeConn(); //并打开心跳回复检测
   }
@@ -181,13 +191,22 @@ export function connectWebSocket(url: string) {
 
   //5s发送一个心跳
   function _sendHeart() {
+    let messageFromClient02 = {
+      toId: 'fsdf',
+      content:
+        'Bearer eyJhbGciOiJIUzUxMiJ9.eyJsb2dpblVzZXIiOnsibWFpbklkIjoiMGQ5NGIxMTI5NjllNGMwYWJmYmQ5NDQ2NDc5NWE5YTIiLCJyb2xlcyI6WyJjb21tb25fdXNlciJdLCJlbmFibGVkIjpmYWxzZSwicGFzc3dvcmQiOm51bGwsInVzZXJuYW1lIjpudWxsLCJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiY29tbW9uX3VzZXIifV0sImFjY291bnROb25FeHBpcmVkIjpmYWxzZSwiYWNjb3VudE5vbkxvY2tlZCI6ZmFsc2UsImNyZWRlbnRpYWxzTm9uRXhwaXJlZCI6ZmFsc2V9LCJleHAiOjE2NTc3MzgwNzR9.RpKE2Cgq13z_Ml70yJEQi9Jb96XYSumWt6vawhPVnUzv0H8_JPoloPW9goDrTncEt7kZlShlv6KUrZyp9NeQrw',
+      contentType: 0,
+      messageType: 1,
+      time: 723409723432,
+      sequenceId: createUUID(),
+    };
     sendHeartTime = setInterval(function () {
-      _sendMessage('ping');
+      _sendMessage(JSON.stringify(messageFromClient02));
       console.log('客户端发送心跳ping');
     }, 5000);
   }
   //服务端返回的websocket类型
-  function _sendMessage(message: string) {
+  function _sendMessage(message: any) {
     socketTask.send({
       data: message,
       success() {
@@ -208,10 +227,10 @@ export function connectWebSocket(url: string) {
     }
   }
 }
-
 //退出登录关闭websocket
 export function logoutCloseWebsocket() {
   console.log('正在断开连接，用户退出登录...');
+  reconnectFlag = false; //不需要重连
   _close();
 }
 //10秒后如未收到服务器的回复心跳则断开
@@ -234,7 +253,6 @@ function _close() {
   });
   clearInterval(sendHeartTime); //关掉心跳任务
   clearTimeout(closeConnTime); //关掉定时任务
-  reconnectFlag = false; //不需要重连
   socketTask = null;
 }
 

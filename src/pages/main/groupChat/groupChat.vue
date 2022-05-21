@@ -1,45 +1,122 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { ref } from 'vue';
-  import { useChatRecordStore } from '../../../store/modules/chatRecordStore';
-  import { useChattingStore } from '../../../store/modules/chatting';
-  import type { Login } from '../../../store/modules/userStore';
+  import { ref, reactive, nextTick } from 'vue';
+  // import { useChattingStore } from '../../../store/modules/chatting';
+  import type { User } from '../../../store/modules/userStore';
   import { useFriendStore } from '../../../store/modules/friendStore';
+  import { insert, selectSingleChat } from '../../../server/sql/chatRecord';
 
-  const user: Login = uni.getStorageSync('user');
-  const chatRecordStore = useChatRecordStore();
+  export interface Chat {
+    chatRecord: ChatRecord[];
+    friendInfo: FriendInfo;
+  }
+  export interface ChatRecord {
+    id: number;
+    sessionId: string;
+    userId: string;
+    content: string;
+    contentType: number;
+    belongToId: string;
+    createTime: number;
+  }
+  export interface FriendInfo {
+    friendId: string;
+    nickname: string;
+    remarkName: string;
+    avatar: string;
+    spaceId: string;
+    isDeletedByFriend: 0 | 1;
+    belongToId: string;
+    account: string;
+    backgroundImage: string;
+    noticeFlag: number;
+  }
+
+  const user: User = uni.getStorageSync('user');
   const friendStore = useFriendStore();
-  const chat = useChattingStore();
-
+  let sessionId: string;
+  //输入信息
   let msg = ref('');
+
   //前往群聊介绍页面
   function goGroupIntroduction() {
     uni.navigateTo({ url: '/pages/main/groupChat/groupChatIntro' });
   }
   //过滤对方和自己的消息
-  onLoad((params: any) => {
-    const record = chatRecordStore.$state.filter(
-      (item) => item.sessionId === params.sessionId || item.sessionId === user.userInfo.mainId
-    );
-    let friendInfo = friendStore.$state.filter((item) => item.friendId === params.sessionId);
-    chat.init(record, friendInfo);
+  const scroll = ref(0);
+  const chat = reactive<Chat>({
+    chatRecord: [
+      {
+        id: 1,
+        sessionId: '85',
+        userId: '',
+        content: '吃饭了吗',
+        contentType: 1,
+        belongToId: '20',
+        createTime: 11111111111,
+      },
+    ],
+    friendInfo: {
+      friendId: '85',
+      nickname: '可莉',
+      remarkName: '起报战议去层定',
+      avatar: 'http://dummyimage.com/100x100',
+      spaceId: '61',
+      isDeletedByFriend: 0,
+      belongToId: '13',
+      account: 'reprehenderit aliqua pariatur esse',
+      backgroundImage: 'http://dummyimage.com/400x400',
+      noticeFlag: 0,
+    },
   });
+  onLoad((params: any) => {
+    sessionId = params.sessionId;
+    const friendInfo = friendStore.friendInfo.find((item) => item.friendId === sessionId);
+    init(friendInfo);
+  });
+  //初始化
+  async function init(friendInfo: any) {
+    const record = await selectSingleChat(10000, sessionId, user.userInfo.mainId);
+    console.log(record);
+    chat.chatRecord = record as ChatRecord[];
+    scroll.value += 1000;
+    console.log(chat.chatRecord);
+    chat.friendInfo = friendInfo;
+  }
+  //发送消息
+  function submitMessage(e: any) {
+    const newMsg = {
+      id: 1,
+      sessionId: sessionId,
+      userId: user.userInfo.mainId,
+      belongToId: user.userInfo.mainId,
+      content: e.detail.value,
+      contentType: 0,
+      createTime: 11111111111,
+    };
+    chat.chatRecord.push(newMsg);
+    console.log(chat.chatRecord);
+    msg.value = '';
+    insert(sessionId, user.userInfo.mainId, e.detail.value, 0, 11111111111, user.userInfo.mainId);
+    nextTick(() => (scroll.value += 10000));
+  }
 </script>
 
 <template>
   <view class="header">
     <Back />
     <view class="user" @tap="goGroupIntroduction">
-      <image src="@/assets/images/img1.png" class="avatar" />
-      <text class="nickname">呜呜</text>
+      <image :src="chat.friendInfo.avatar" class="avatar" />
+      <text class="nickname">{{ chat.friendInfo.nickname }}</text>
     </view>
     <uni-icons class="more" type="more-filled" size="5vh" color="#fff"></uni-icons>
   </view>
-  <scroll-view scroll-y class="main">
+
+  <scroll-view scroll-y :scroll-top="scroll" class="main">
     <view v-for="cr in chat.chatRecord" :key="cr.id">
       <!-- 我的消息 -->
 
-      <view v-if="cr.sessionId === user.userInfo.mainId" class="contain">
+      <view v-if="cr.userId === user.userInfo.mainId" class="contain">
         <view :class="cr.contentType === 0 ? 'chat-me' : 'chat-me-img'">
           <view v-if="cr.contentType === 0">{{ cr.content }}</view>
           <image v-if="cr.contentType === 1" :src="cr.content" mode="aspectFit" lazy-load />
@@ -53,7 +130,16 @@
     </view>
   </scroll-view>
   <view class="footer">
-    <input v-model="msg" class="input-msg" />
+    <textarea
+      v-model="msg"
+      class="input-msg"
+      auto-height
+      auto-blur
+      maxlength="-1"
+      confirm-type="send"
+      confirm-hold
+      @confirm="submitMessage"
+    />
   </view>
 </template>
 
@@ -85,7 +171,7 @@
     }
   }
   .main {
-    height: 88vh;
+    height: 78vh;
     background-color: #f6f6f6;
     font-size: 26rpx;
     .chat-friend {
@@ -121,7 +207,8 @@
   }
   .footer {
     width: 100vw;
-    height: 10vh;
+    max-height: 30vh;
+    min-height: 10vh;
     position: fixed;
     background-color: #eee;
     bottom: 0;
@@ -130,8 +217,10 @@
     align-items: center;
 
     .input-msg {
-      height: 76rpx;
+      // height: 76rpx;
+      max-height: 25vh;
       width: 620rpx;
+      padding: 20rpx;
       background-color: #fff;
       border-radius: 50rpx;
       text-indent: 20rpx;

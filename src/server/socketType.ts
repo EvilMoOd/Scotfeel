@@ -1,4 +1,4 @@
-import { useChatRecordStore } from '../store/modules/chatRecordStore';
+import { useChatRecordStore } from '../store/modules/chatStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
 import type { GroupChat } from '../store/modules/groupStore';
 import type { GroupChatMember } from '../store/modules/groupMemberStore';

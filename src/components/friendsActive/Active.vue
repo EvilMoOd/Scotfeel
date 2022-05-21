@@ -1,16 +1,16 @@
 <script setup lang="ts">
   import { computed } from 'vue';
   import { useFriendStore } from '../../store/modules/friendStore';
-  import type { MomentList } from '../../store/modules/momemtListStore';
+  import type { MomentListInfo } from '../../store/modules/momemtListStore';
 
   const props = defineProps<{
-    list: MomentList;
+    list: MomentListInfo;
   }>();
 
   //查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
-    friendStore.$state.find((item) => item.friendId === props.list.friendId)
+    friendStore.friendInfo.find((item) => item.friendId === props.list.friendId)
   );
 </script>
 

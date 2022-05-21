@@ -18,7 +18,7 @@
       <!-- 可能有bug这里 -->
       <scroll-view scroll-x="true">
         <Active
-          v-for="list in momentList.$state"
+          v-for="list in momentList.momentListInfo"
           :key="list.id"
           :list="list"
           @tap="goFriendsActive(list.friendId)"

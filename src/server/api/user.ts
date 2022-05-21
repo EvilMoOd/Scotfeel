@@ -1,4 +1,4 @@
-import type { Login } from '../../store/modules/userStore';
+import type { User } from '../../store/modules/userStore';
 import { request } from '../http';
 
 export type AuthCode = number;
@@ -13,7 +13,7 @@ export const reqAuthCode = (phone: string) =>
   });
 //登录
 export const reqUserLogin = (phone: string, authCode: string) =>
-  request<Login>({
+  request<User>({
     url: `/login`,
     method: 'POST',
     data: { phone, authCode },

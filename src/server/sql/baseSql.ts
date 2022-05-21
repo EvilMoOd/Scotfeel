@@ -1,5 +1,5 @@
 //查
-export async function selectSql(
+export function selectSql(
   sql: string,
   config = {
     name: 'scotfeel',
@@ -17,17 +17,17 @@ export async function selectSql(
     plus.sqlite.selectSql({
       name: config.name,
       sql,
-      success: function (data) {
-        resolve({ code: 1, data, msg: 'selectSql success' });
+      success(data) {
+        resolve(data);
       },
-      fail: function (e) {
+      fail(e) {
         reject({ code: 0, data: [], msg: 'selectSql failed: ' + JSON.stringify(e) });
       },
     });
   });
 }
 //增删改
-export async function executeSql(
+export function executeSql(
   sql: string | string[],
   config = { name: 'scotfeel', path: '_doc/chat.db' }
 ) {
@@ -53,7 +53,12 @@ export async function executeSql(
 }
 
 // 打开数据库
-export function openDB(config = {}) {
+export function openDB(
+  config = {
+    name: 'scotfeel',
+    path: '_doc/chat.db',
+  }
+) {
   return new Promise((resolve, reject) => {
     plus.sqlite.openDatabase({
       ...config,

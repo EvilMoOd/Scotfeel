@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createTable() {
+export async function createSubscribeTable() {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql: 'create table if not exists subscribedSpace("spaceId" VARCHAR(40),	"nickname" VARCHAR(40),	"avatar" VARCHAR(40) , "role" INT(11),"belongToId" VARCHAR(40))',

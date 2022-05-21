@@ -18,15 +18,15 @@ export interface UserInfo {
   signature: string; //用户个性签名
   spaceId: string; //首页左滑默认进入空间ID
 }
-export interface Login {
+export interface User {
   userInfo: UserInfo;
   token: string; //令牌
 }
 //从本地仓库捞数据
-const user: Login = uni.getStorageSync('user');
+const user: User = uni.getStorageSync('user');
 
 export const useUserStore = defineStore('user', {
-  state: (): Login => ({
+  state: (): User => ({
     userInfo: user.userInfo,
     token: user.token,
   }),
@@ -69,12 +69,13 @@ export const useUserStore = defineStore('user', {
         },
         success: (chooseImageRes) => {
           const tempFilePaths = chooseImageRes.tempFilePaths;
+          console.log(tempFilePaths);
           uni.uploadFile({
             url: OBS_URL,
             filePath: tempFilePaths[0],
             name: 'file',
             formData: {
-              key: 'user/avatar.jpg', //地址和文件名,照片名字需以"user/"开头
+              key: 'user/avatar.jpeg', //地址和文件名,照片名字需以"user/"开头
               AccessKeyId: 'Y9CYVOBP0JQG93BXSSQ1', //获取ak
               'x-obs-acl': 'public-read', //设置为公共读
               policy:
@@ -98,7 +99,7 @@ export const useUserStore = defineStore('user', {
       });
     },
     //修改背景
-    changeBackgoundImg() {
+    changeBackgroundImg() {
       uni.chooseImage({
         count: 1,
         success: (chooseImageRes) => {

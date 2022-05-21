@@ -49,8 +49,8 @@
       <FriendsActive />
       <view class="chat-list">
         <view
-          v-for="(list, index) in sessionListStore.$state"
-          :key="sessionListStore.$state[index].sessionId"
+          v-for="(list, index) in sessionListStore.sessionListInfo"
+          :key="sessionListStore.sessionListInfo[index].sessionId"
         >
           <Chat :list="list" />
         </view>

@@ -48,7 +48,7 @@
     <view class="more-hidden" :class="{ 'more-show': isShowConfig }">
       <text @tap="ShowChangeSignature">个性签名</text>
       <text @tap="showChangeNickname">修改昵称</text>
-      <text @tap="userStore.changeBackgoundImg">设置背景</text>
+      <text @tap="userStore.changeBackgroundImg">设置背景</text>
       <text @tap="userStore.changeAvatar">设置头像</text>
     </view>
   </view>

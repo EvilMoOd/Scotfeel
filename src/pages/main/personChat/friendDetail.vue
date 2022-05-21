@@ -1,16 +1,34 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { onLoad } from '@dcloudio/uni-app';
+  import { reactive, ref } from 'vue';
   import { reqChangeFriendRemark } from '../../../server/api/friend';
-  import { useUserStore } from '../../../store/modules/userStore';
+  import type { FriendInfo } from '../../../store/modules/friendStore';
+  import { useFriendStore } from '../../../store/modules/friendStore';
 
-  const userStore = useUserStore();
-
-  const isShow = ref(false);
-  const isShowConfig = ref(false);
-  const isShowChangeNickname = ref(false);
-  const remark = ref('');
+  const friendStore = useFriendStore();
+  let friendInfo = reactive<FriendInfo>({
+    friendId: '85',
+    nickname: '可莉',
+    remarkName: '起报战议去层定',
+    avatar: '',
+    spaceId: '61',
+    isDeletedByFriend: 0,
+    belongToId: '13',
+    account: 'reprehenderit aliqua pariatur esse',
+    backgroundImage: 'http://dummyimage.com/400x400',
+    noticeFlag: 0,
+  });
+  let sessionId: string;
+  onLoad((params: any) => {
+    sessionId = params.sessionId;
+    friendStore.getFriendInfo(sessionId);
+    console.log(friendInfo);
+  });
 
   //展示功能块
+  const isShowChangeNickname = ref(false);
+  const isShow = ref(false);
+  const isShowConfig = ref(false);
   function showConfig() {
     isShowConfig.value = true;
     isShow.value = true;
@@ -26,6 +44,7 @@
     isShowConfig.value = false;
     isShow.value = true;
   }
+  const remark = ref('');
   //修改备注
   async function changeRemark() {
     try {
@@ -40,12 +59,13 @@
     }
   }
   //删除朋友
+  function deleteFriend() {}
 </script>
 
 <template>
   <view class="header">
     <image
-      :src="userStore.userInfo.backgroundImage"
+      :src="friendStore.friendPage.backgroundImage"
       mode="scaleToFill"
       style="position: absolute; z-index: -100; width: 750rpx; height: 304rpx"
     />
@@ -58,12 +78,15 @@
     </view>
   </view>
   <view class="id-card">
-    <image :src="userStore.userInfo.avatar" mode="scaleToFill" class="avatar" />
+    <image :src="friendStore.friendPage.avatar" mode="scaleToFill" class="avatar" />
     <view>
-      <text style="font-size: 34rpx; font-weight: bold; color: #fff">科比</text>
+      <text style="font-size: 34rpx; font-weight: bold; color: #fff">
+        {{ friendStore.friendPage.nickname }}
+      </text>
       <br />
-      <text style="font-size: 28rpx">@kobe</text>
+      <text style="font-size: 28rpx">{{ friendStore.friendPage.account }}</text>
     </view>
+    <view class="send-msg-btn">添加好友</view>
   </view>
   <view class="introduction">这是一段个人介绍</view>
   <TopTab tab1="订阅空间" tab2="动态" height="350px">
@@ -139,6 +162,14 @@
       width: 128rpx;
       height: 128rpx;
       border: 3px solid #fff;
+    }
+    .send-msg-btn {
+      width: 250rpx;
+      height: 60rpx;
+      marigin-left: auto;
+      line-height: 60rpx;
+      text-align: center;
+      border-radius: $color-sf;
     }
   }
 

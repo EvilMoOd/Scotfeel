@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { useSubscribeSpaceStore } from '../../store/modules/subscribeSpaceStore';
+  import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import { useUserStore } from '../../store/modules/userStore';
 
   const userStore = useUserStore();

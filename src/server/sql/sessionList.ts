@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createTable() {
+export async function createSessionListTable() {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:

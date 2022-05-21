@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useFriendStore } from '../../store/modules/friendStore';
-  import type { SessionList } from '../../store/modules/sessionListStore';
+  import type { SessionListInfo } from '../../store/modules/sessionListStore';
   import day from 'dayjs';
   import relativeTime from 'dayjs/plugin/relativeTime';
   import 'dayjs/locale/zh-cn';
@@ -10,17 +10,17 @@
   day.extend(relativeTime);
   day.locale('zh-cn');
   const props = defineProps<{
-    list: SessionList;
+    list: SessionListInfo;
   }>();
   //查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
-    friendStore.$state.find((item) => item.friendId === props.list.sessionId)
+    friendStore.friendInfo.find((item) => item.friendId === props.list.sessionId)
   );
   //查找群聊信息
   const groupStore = useGroupChatStore();
   const groupInfo = computed(() =>
-    groupStore.$state.find((item) => item.groupId === props.list.sessionId)
+    groupStore.groupInfo.find((item) => item.groupId === props.list.sessionId)
   );
   //前往聊天页详情
   function goChat(type: 1 | 2, params: string) {
