@@ -22,17 +22,28 @@
     isShowConfig.value = false;
     isShow.value = false;
   }
-  //修改昵称输入框
+  //展示修改昵称输入框
   function showChangeNickname() {
     isShowChangeNickname.value = true;
     isShowConfig.value = false;
     isShow.value = true;
   }
-  //修改个性签名输入框
+  //展示修改个性签名输入框
   function ShowChangeSignature() {
     isShowChangeSignature.value = true;
     isShowConfig.value = false;
     isShow.value = true;
+  }
+  //修改昵称
+  function changeNickname(e: string) {
+    userStore.changeNickname(e);
+    isShowChangeNickname.value = false;
+    nickname.value = '';
+  }
+  function changeSignature(e: string) {
+    userStore.changeSignature(e);
+    isShowChangeSignature.value = false;
+    signature.value = '';
   }
 </script>
 
@@ -71,26 +82,27 @@
       <view>动态</view>
     </template>
   </TopTab>
-  <uni-easyinput
-    v-if="isShowChangeNickname"
-    v-model="nickname"
-    type="text"
-    placeholder="请输入新昵称"
-    trim
-    class="input"
-    maxlength="10"
-    @confirm="(e:string) => userStore.changeNickname(e)"
-  />
-  <uni-easyinput
-    v-if="isShowChangeSignature"
-    v-model="signature"
-    type="text"
-    placeholder="请输入个性签名"
-    trim
-    class="input"
-    maxlength="30"
-    @confirm="(e:string) => userStore.changeSignature(e)"
-  />
+  <PopWindow :pop-show="isShowChangeNickname">
+    <uni-easyinput
+      v-model="nickname"
+      type="text"
+      placeholder="请输入新昵称"
+      trim
+      maxlength="10"
+      @confirm="(e:string) =>changeNickname(e) "
+    />
+  </PopWindow>
+  <PopWindow :pop-show="isShowChangeSignature">
+    <uni-easyinput
+      v-model="signature"
+      type="text"
+      placeholder="请输入个性签名"
+      trim
+      maxlength="30"
+      @confirm="(e:string) => changeSignature"
+    />
+  </PopWindow>
+
   <view v-show="isShow" class="mask" @click="hiddenAll"></view>
 </template>
 <style lang="scss" scoped>
@@ -159,11 +171,6 @@
     flex-wrap: wrap;
   }
 
-  .input {
-    position: absolute;
-    z-index: 100;
-    top: 10vh;
-  }
   .mask {
     width: 750rpx;
     height: 1334rpx;

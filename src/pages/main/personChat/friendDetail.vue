@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive, ref } from 'vue';
-  import { reqChangeFriendRemark } from '../../../server/api/friend';
   import type { FriendInfo } from '../../../store/modules/friendStore';
   import { useFriendStore } from '../../../store/modules/friendStore';
+  import PopWindow from '../../../components/PopWindow/PopWindow.vue';
 
   const friendStore = useFriendStore();
   let friendInfo = reactive<FriendInfo>({
@@ -48,7 +48,6 @@
   //修改备注
   async function changeRemark() {
     try {
-      await reqChangeFriendRemark();
       uni.showModal({
         title: '修改成功',
       });
@@ -59,7 +58,13 @@
     }
   }
   //删除朋友
-  function deleteFriend() {}
+  function deleteFriend() {
+    friendStore.deleteFriend(friendInfo.friendId);
+  }
+  //发送消息
+  function sendMessage() {
+    uni.redirectTo({ url: `/pages/main/personChat/chat?sessionId=${sessionId}` });
+  }
 </script>
 
 <template>
@@ -86,7 +91,7 @@
       <br />
       <text style="font-size: 28rpx">{{ friendStore.friendPage.account }}</text>
     </view>
-    <view class="send-msg-btn">添加好友</view>
+    <view class="send-msg-btn" @tap="sendMessage">发送消息</view>
   </view>
   <view class="introduction">这是一段个人介绍</view>
   <TopTab tab1="订阅空间" tab2="动态" height="350px">
@@ -99,16 +104,16 @@
       <view>动态</view>
     </template>
   </TopTab>
-  <uni-easyinput
-    v-if="isShowChangeNickname"
-    v-model="remark"
-    type="text"
-    placeholder="请输入新昵称"
-    trim
-    class="input"
-    maxlength="10"
-    @confirm="changeRemark"
-  />
+  <PopWindow :pop-show="isShowChangeNickname">
+    <uni-easyinput
+      v-model="remark"
+      type="text"
+      placeholder="请输入新昵称"
+      trim
+      maxlength="10"
+      @confirm="changeRemark"
+    />
+  </PopWindow>
   <view v-show="isShow" class="mask" @click="hiddenAll"></view>
 </template>
 <style lang="scss" scoped>
@@ -152,7 +157,7 @@
 
   .id-card {
     position: relative;
-    padding: 0 60rpx;
+    padding: 0 0 0 60rpx;
     top: -64rpx;
     display: flex;
     align-items: center;
@@ -166,10 +171,13 @@
     .send-msg-btn {
       width: 250rpx;
       height: 60rpx;
-      marigin-left: auto;
+      margin-left: auto;
       line-height: 60rpx;
       text-align: center;
-      border-radius: $color-sf;
+      border: 3px solid $color-sf;
+      color: $color-sf;
+      border-radius: 30rpx;
+      align-self: flex-end;
     }
   }
 
@@ -186,11 +194,6 @@
     flex-wrap: wrap;
   }
 
-  .input {
-    position: absolute;
-    z-index: 100;
-    top: 10vh;
-  }
   .mask {
     width: 750rpx;
     height: 1334rpx;

@@ -44,7 +44,7 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
   //响应拦截请求
   return new Promise<T>((resolve, reject) => {
     uni.request({
-      url: MOCK_URL + config.url, //默认地址
+      url: DEV_URL + config.url, //默认地址
       data: config.data || {},
       header: {
         Authorization: user.token,

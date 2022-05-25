@@ -81,7 +81,6 @@ export const useMainStore = defineStore('main', {
     },
     logout() {
       this.webSocket.logoutClose(); //断开后不再重连
-      uni.setStorageSync('userInfo', false);
       (this.webSocket = null),
         (this.currentChatId = null), //当前聊天页面的ID
         (this.applyCount = 0), //申请未处理数

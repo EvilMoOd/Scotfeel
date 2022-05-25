@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useSubscribeSpaceStore } from '../../store/modules/subscribeSpaceStore';
+  import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
 
   const spaceStore = useSubscribeSpaceStore();
 
@@ -11,7 +11,7 @@
 <template>
   <view class="header">
     <Back class="back" />
-    <text class="title">申请加入空间</text>
+    <text class="title">申请加入空间</text> 
   </view>
   <view class="main">
     <text>申请理由</text>

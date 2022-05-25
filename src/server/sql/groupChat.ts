@@ -51,13 +51,13 @@ export async function selectInfo(groupId: string, belongToId: string) {
 					select * from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}" 
 			`);
 }
-//更新昵称
+//更新昵称1
 export async function updateNickname(nickname: string, groupId: string, belongToId: string) {
   return await executeSql(`
 				update groupChat set nickname = "${nickname}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新成员数量
+//更新成员数量1
 export async function updateMemberCount(memberCount: number, groupId: string, belongToId: string) {
   return await executeSql(`
 				update groupChat set memberCount = "${memberCount}" where groupId = "${groupId}" and belongToId = "${belongToId}"

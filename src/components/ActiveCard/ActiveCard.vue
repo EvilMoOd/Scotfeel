@@ -19,10 +19,10 @@
       <view class="pageindex">{{ pageIndex + 1 }}/2</view>
       <swiper class="picture" @change="changePage">
         <swiper-item>
-          <image src="@/assets/images/img1.png" class="post-img" />
+          <image src="@/assets/images/img1.png" class="post-img" mode="aspectFill" />
         </swiper-item>
         <swiper-item>
-          <image src="@/assets/images/img2.jpg" class="post-img" />
+          <image src="@/assets/images/img2.jpg" class="post-img" mode="aspectFill" />
         </swiper-item>
       </swiper>
     </view>

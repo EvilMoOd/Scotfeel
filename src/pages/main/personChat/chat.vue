@@ -3,8 +3,11 @@
   import { ref, reactive, nextTick } from 'vue';
   // import { useChattingStore } from '../../../store/modules/chatting';
   import type { User } from '../../../store/modules/userStore';
+  import type { FriendInfo } from '../../../store/modules/friendStore';
   import { useFriendStore } from '../../../store/modules/friendStore';
-  import { insert, selectSingleChat } from '../../../server/sql/chatRecord';
+  import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
+  import { _sendMessage } from '../../../server/webSocket';
+  import { createUUID } from '../../../server/utils/uuid';
 
   export interface Chat {
     chatRecord: ChatRecord[];
@@ -18,18 +21,6 @@
     contentType: number;
     belongToId: string;
     createTime: number;
-  }
-  export interface FriendInfo {
-    friendId: string;
-    nickname: string;
-    remarkName: string;
-    avatar: string;
-    spaceId: string;
-    isDeletedByFriend: 0 | 1;
-    belongToId: string;
-    account: string;
-    backgroundImage: string;
-    noticeFlag: number;
   }
 
   const user: User = uni.getStorageSync('user');
@@ -73,14 +64,10 @@
     sessionId = params.sessionId;
     const friendInfo = friendStore.friendInfo.find((item) => item.friendId === sessionId);
     init(friendInfo);
-    console.log(1);
   });
   //初始化
   async function init(friendInfo: any) {
-    console.log(2);
     chat.friendInfo = friendInfo;
-    console.log(chat.friendInfo);
-    console.log(3);
     const record = await selectSingleChat(10000, sessionId, user.userInfo.mainId);
     chat.chatRecord = record as ChatRecord[];
     scroll.value += 1000;
@@ -99,7 +86,24 @@
     chat.chatRecord.push(newMsg);
     console.log(chat.chatRecord);
     msg.value = '';
-    insert(sessionId, user.userInfo.mainId, e.detail.value, 0, 11111111111, user.userInfo.mainId);
+    _sendMessage(
+      JSON.stringify({
+        toId: sessionId,
+        content: e.detail.value,
+        contentType: 0,
+        messageType: 3,
+        time: new Date().getTime(),
+        sequenceId: createUUID(),
+      })
+    );
+    insertRecord(
+      sessionId,
+      user.userInfo.mainId,
+      e.detail.value,
+      0,
+      11111111111,
+      user.userInfo.mainId
+    );
     nextTick(() => (scroll.value += 10000));
   }
 </script>

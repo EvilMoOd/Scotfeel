@@ -7,6 +7,7 @@
 
   const sessionListStore = useSessionListStore();
   const userStore = useUserStore();
+  console.log(userStore.userInfo);
 
   let isShow = ref(false);
   function displayPerson() {

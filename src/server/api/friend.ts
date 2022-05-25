@@ -29,7 +29,7 @@ export interface AllFriends {
   remarkName: string;
 }
 export const reqGetAllFriends = () =>
-  request<AllFriends>({
+  request<AllFriends[]>({
     url: `/friend/get/allFriends`,
     method: 'GET',
   });

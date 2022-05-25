@@ -4,7 +4,7 @@
   import { useUserStore } from '../../store/modules/userStore';
 
   const userStore = useUserStore();
-  const subscribedSpaceStore = useSubscribeSpaceStore();
+  const spaceStore = useSubscribeSpaceStore();
 
   // 展示person
   let spaceShow = ref(false);
@@ -22,7 +22,7 @@
   }
   //前往添加好友
   function goAddFriends() {
-    uni.navigateTo({ url: '/pages/menu/addFriends' });
+    uni.navigateTo({ url: '/pages/menu/searchFriend' });
   }
   //前往创建群聊
   function goCreateGroupChat() {
@@ -48,7 +48,7 @@
   <view class="menu">
     <view class="person-top">
       <view class="person-place" @tap="goPerson">
-        <image :src="userStore.userInfo?.avatar" class="avatar" />
+        <image :src="userStore.userInfo.avatar" class="avatar" />
         <view class="person-msg">
           <view class="name">{{ userStore.userInfo?.nickname }}</view>
           <view class="idCard">{{ userStore.userInfo?.account }}</view>
@@ -62,16 +62,8 @@
     </view>
     <!-- 订阅空间 -->
     <scroll-view scroll-y class="space-hidden" :class="{ 'space-show': spaceShow }">
-      <view class="space-place">
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
-        <SpaceIdCard :img="subscribedSpaceStore.avatar" />
+      <view v-for="space in spaceStore.subscribeSpace" :key="space.spaceId" class="space-place">
+        <SpaceIdCard :img="space.avatar" />
       </view>
     </scroll-view>
     <!-- 菜单项 -->

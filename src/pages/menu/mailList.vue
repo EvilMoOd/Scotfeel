@@ -1,4 +1,8 @@
-<script setip lang="ts"></script>
+<script setup lang="ts">
+  import { useFriendStore } from '../../store/modules/friendStore';
+
+  const friendStore = useFriendStore();
+</script>
 
 <template>
   <view class="header">
@@ -18,49 +22,9 @@
       </view>
     </view>
     <view class="mail">
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
+      <view v-for="friend in friendStore.friendInfo" :key="friend.friendId" class="list">
+        <image :src="friend.avatar" class="head" />
+        <text class="nickname">{{ friend.nickname }}</text>
       </view>
     </view>
   </scroll-view>

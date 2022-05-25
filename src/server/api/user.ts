@@ -31,6 +31,12 @@ export const reqUserDestroy = () =>
     url: `/cancelAccount`,
     method: 'GET',
   });
+//校验token
+export const reqValidateToken = () =>
+  request<{ token: string }>({
+    url: `/validateToken`,
+    method: 'GET',
+  });
 //个人资料
 //修改头像
 export const reqChangeAvatar = (avatar: string) =>
@@ -89,5 +95,17 @@ export const reqPersonMessage = () =>
 export const reqSearchUser = () =>
   request<string>({
     url: `/user/search`,
+    method: 'GET',
+  });
+//获取图片表单数据
+export interface ImgData {
+  accessKeyId: string;
+  securitytoken: string;
+  signature: string;
+  policy: string;
+}
+export const reqImgData = () =>
+  request<ImgData>({
+    url: `/OBS/get/formData`,
     method: 'GET',
   });

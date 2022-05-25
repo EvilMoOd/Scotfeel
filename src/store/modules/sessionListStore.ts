@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
-import { selectAll } from '../../server/sql/groupChat';
-import type { User } from './userStore';
+import { useUserStore } from './userStore';
 
 export interface SessionList {
   sessionListInfo: SessionListInfo[];
@@ -16,12 +15,11 @@ export interface SessionListInfo {
   type: 1 | 2; //会话类型，1：单聊，2：群聊
   chatorId?: string; //如果是群聊的话，这是最新一条消息发送者的id
 }
-const user: User = uni.getStorageSync('user');
 export const useSessionListStore = defineStore('sessionListStore', {
   state: (): SessionList => ({
     sessionListInfo: [
       {
-        sessionId: '85',
+        sessionId: '7d5e7e76a4534db78b79d80b221df2ae',
         contentType: 1,
         content: '您吃了吗',
         chatorName: '可莉',
@@ -32,7 +30,7 @@ export const useSessionListStore = defineStore('sessionListStore', {
         chatorId: '41',
       },
       {
-        sessionId: '15',
+        sessionId: '4c157fb2bffb4e48b8068dead4d379c7',
         contentType: 1,
         content: 'ea qui amet quis labore',
         chatorName: '大侠',
@@ -78,9 +76,26 @@ export const useSessionListStore = defineStore('sessionListStore', {
     ],
   }),
   actions: {
-    //初始化
-    init() {
-      selectAll(user.userInfo.mainId);
+    newMessage(sessionId: string, content: string, contentType: 1 | 2, date: number, type: 1 | 2) {
+      const user = useUserStore();
+      const sessionIndex = this.sessionListInfo.findIndex((item) => {
+        item.sessionId = sessionId;
+      });
+      let session = this.sessionListInfo[sessionIndex];
+      if (session) {
+        this.sessionListInfo.splice(sessionIndex, 1);
+        this.sessionListInfo.unshift({
+          sessionId,
+          contentType,
+          content,
+          chatorName: '',
+          unReadCount: session.unReadCount + 1,
+          belongToId: user.userInfo.mainId,
+          updateTime: date,
+          type,
+          chatorId: '',
+        });
+      }
     },
   },
   getters: {},

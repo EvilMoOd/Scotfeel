@@ -18,7 +18,7 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
   });
 }
 //插入数据
-export function insert(
+export function insertRecord(
   sessionId: string,
   userId: string,
   content: string,

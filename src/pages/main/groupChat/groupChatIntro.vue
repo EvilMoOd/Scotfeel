@@ -1,21 +1,77 @@
 <script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
+  import { reqChangeRemark, reqDismissGroupChat } from '../../../server/api/groupChat';
+  import { useGroupChatStore } from '../../../store/modules/groupStore';
 
+  const groupStore = useGroupChatStore();
+  let sessionId: string;
+  onLoad((params: any) => {
+    sessionId = params.sessionId;
+    groupStore.getFriendInfo(sessionId);
+  });
+
+  //展示功能块
   const isShow = ref(false);
+  const isShowConfig = ref(false);
+  const isShowChangeNickname = ref(false);
+  const isShowChangeRemark = ref(false);
+  const nickname = ref('');
+  const remark = ref('');
+
+  //展示功能块
+  function showConfig() {
+    isShowConfig.value = true;
+    isShow.value = true;
+  }
+  function hiddenAll() {
+    isShowChangeRemark.value = false;
+    isShowChangeNickname.value = false;
+    isShowConfig.value = false;
+    isShow.value = false;
+  }
+  //修改昵称输入框
+  function showChangeNickname() {
+    isShowChangeNickname.value = true;
+    isShowConfig.value = false;
+    isShow.value = true;
+  }
+  function showChangeRemark() {
+    isShowChangeRemark.value = true;
+    isShowConfig.value = false;
+    isShow.value = true;
+  }
+  //修改群聊昵称
+  function changeGroupNickname(e: string) {
+    groupStore.changeNickname(e, sessionId);
+    isShowChangeRemark.value = false;
+    remark.value = '';
+  }
+  //解散群聊
+  const dismissGroup = async () => {
+    await reqDismissGroupChat(sessionId);
+    console.log('群聊已解散');
+  };
+  //修改我的群聊备注
+  const setMyRemark = async (e: string) => {
+    await reqChangeRemark(e, sessionId);
+    isShowChangeRemark.value = false;
+    remark.value = '';
+  };
 </script>
 
 <template>
   <view class="header">
     <Back />
-    <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="isShow = true" />
-    <view class="more-hidden" :class="{ 'more-show': isShow }">
+    <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="showConfig" />
+    <view class="more-hidden" :class="{ 'more-show': isShowConfig }">
       <text>
         进群审核
         <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
       </text>
-      <text>修改群聊昵称</text>
-      <text>设置头像</text>
-      <text style="color: #d9001b">解散</text>
+      <text @tap="showChangeNickname">修改群聊昵称</text>
+      <text @tap="groupStore.changeAvatar(sessionId)">设置头像</text>
+      <text style="color: #d9001b" @tap="dismissGroup">解散</text>
     </view>
     <image src="@/assets/images/head.png" class="head" />
     <view>AMCC肌肉车俱乐部</view>
@@ -23,9 +79,13 @@
   <view class="list">
     <view class="item">
       <text>消息免打扰</text>
-      <switch color="#117986" style="transform: scale(0.5); float: right; margin-top: -10rpx" />
+      <switch
+        color="#117986"
+        style="transform: scale(0.5); float: right; margin-top: -10rpx"
+        :checked="mute"
+      />
     </view>
-    <view class="item">
+    <view class="item" @tap="showChangeRemark">
       <text>设置群里的昵称</text>
       <AppIcon icon="fa:pencil" class="pencil"></AppIcon>
     </view>
@@ -63,7 +123,27 @@
       <text>法医</text>
     </view>
   </view>
-  <view v-show="isShow" class="mask" @click="isShow = false"></view>
+  <PopWindow :pop-show="isShowChangeNickname">
+    <uni-easyinput
+      v-model="nickname"
+      type="text"
+      placeholder="请输入新昵称"
+      trim
+      maxlength="10"
+      @confirm="(e:string) => changeGroupNickname"
+    />
+  </PopWindow>
+  <PopWindow :pop-show="isShowChangeRemark">
+    <uni-easyinput
+      v-model="remark"
+      type="text"
+      placeholder="我的群备注"
+      trim
+      maxlength="10"
+      @confirm="(e:string) => setMyRemark(e)"
+    />
+  </PopWindow>
+  <view v-show="isShow" class="mask" @click="hiddenAll"></view>
 </template>
 
 <style lang="scss" scoped>

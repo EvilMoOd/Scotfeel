@@ -17,7 +17,7 @@ export const useSubscribeSpaceStore = defineStore('subscribeDSpace', {
         spaceId: '53',
         belongToId: '79',
         nickname: '田敏',
-        avatar: 'http://dummyimage.com/100x100',
+        avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
         role: 0,
       },
     ],

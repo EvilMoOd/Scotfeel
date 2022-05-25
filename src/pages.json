@@ -83,6 +83,13 @@
 			}
 		},
 		{
+			"path": "pages/menu/searchFriend",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/menu/addFriends",
 			"style": {
 				"navigationStyle": "custom",

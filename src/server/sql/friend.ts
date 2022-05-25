@@ -100,7 +100,7 @@ export async function updateNoticeFlag(noticeFlag: number, friendId: string, bel
 }
 //更新是否被朋友删除
 export async function updateIsDeletedByFriend(
-  isDeletedByFriend: number,
+  isDeletedByFriend: 0 | 1,
   friendId: string,
   belongToId: string
 ) {

@@ -2,16 +2,16 @@
 
 import { request } from '../http';
 
+export interface CreateInfo {
+  memberIds: string;
+  memberNicknames: string;
+  memberAvatars: string;
+}
 //创建群聊
-export const reqCreateGroupChat = (
-  memberIds: string,
-  memberNicknames: string,
-  memberAvatars: string
-) => ({
+export const reqCreateGroupChat = (createInfo: CreateInfo[]) => ({
   url: `/groupChat/create/group`,
   method: 'POST',
-  data: { memberIds, memberNicknames, memberAvatars },
-  type: 'application/x-www-form-urlencoded',
+  data: createInfo,
 });
 //申请加入群聊
 export const reqApplyJoinInGroupChat = (groupId: string) =>
@@ -59,7 +59,7 @@ export const reqRemoveGroupMember = () =>
     type: 'application/x-www-form-urlencoded',
   });
 //解散群聊
-export const reqRDismissGroupChat = (groupId: string) =>
+export const reqDismissGroupChat = (groupId: string) =>
   request<null>({
     url: `/groupId/dismiss/group`,
     method: 'GET',

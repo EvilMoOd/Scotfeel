@@ -1,33 +1,59 @@
 <script setup lang="ts">
-  import { reactive } from 'vue';
+  import { computed, reactive } from 'vue';
+  import { reqCreateGroupChat } from '../../server/api/groupChat';
+  import type { FriendInfo } from '../../store/modules/friendStore';
+  import { useFriendStore } from '../../store/modules/friendStore';
 
-  const list = reactive([
-    {
-      letter: 'A',
-      data: [
-        '阿克苏机场',
-        '阿拉山口机场',
-        '阿勒泰机场',
-        '阿里昆莎机场',
-        '安庆天柱山机场',
-        '澳门国际机场',
-      ],
-    },
-    {
-      letter: 'Z',
-      data: ['保山机场', '包头机场', '北海福成机场', '北京南苑机场', '北京首都国际机场'],
-    },
-  ]);
+  const friendStore = useFriendStore();
+
+  const chooseFriends = reactive<FriendInfo[]>([]);
+  const createInfo = computed(() => {
+    const InfoArr: any[] = [];
+    chooseFriends.forEach((element) => {
+      const info = {
+        memberId: element.friendId,
+        memberNickname: element.nickname,
+        memberAvatar: element.avatar,
+      };
+      InfoArr.push(info);
+    });
+    return InfoArr;
+  });
+  async function done() {
+    console.log(createInfo.value);
+    await reqCreateGroupChat(createInfo.value);
+  }
 </script>
 
 <template>
   <view class="header">
     <Back />
     <view class="title">创建群聊</view>
-    <uni-icons class="back" type="search" size="5vh" color="#fff"></uni-icons>
+    <uni-icons class="next" type="checkmarkempty" size="5vh" color="#fff" @tap="done"></uni-icons>
   </view>
+  <scroll-view scroll-x class="top">
+    <view class="choose">
+      <image
+        v-for="friend in chooseFriends"
+        :key="friend.friendId"
+        :src="friend.avatar"
+        mode="scaleToFill"
+        class="avatar"
+      />
+    </view>
+  </scroll-view>
   <scroll-view scroll-y class="main">
-    <uni-indexed-list :options="list" :showSelect="false"></uni-indexed-list>
+    <view class="mail">
+      <view
+        v-for="friend in friendStore.friendInfo"
+        :key="friend.friendId"
+        class="list"
+        @tap="chooseFriends.find((item) => item === friend) ? '' : chooseFriends.push(friend)"
+      >
+        <image :src="friend.avatar" class="avatar" />
+        <text class="nickname">{{ friend.nickname }}</text>
+      </view>
+    </view>
   </scroll-view>
 </template>
 
@@ -39,7 +65,7 @@
     justify-content: space-between;
     align-items: flex-end;
 
-    .back {
+    .next {
       margin: 20rpx;
     }
 
@@ -51,9 +77,44 @@
       color: #fff;
     }
   }
-
+  .top {
+    height: 92rpx;
+    background-color: #fff;
+    padding: 15rpx;
+    .choose {
+      .avatar {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-left: 20rpx;
+      }
+    }
+  }
   .main {
     height: 1170rpx;
     background-color: #f0f1f2;
+
+    .mail {
+      margin-top: 40rpx;
+
+      .list {
+        padding: 12rpx 24rpx;
+        background-color: #fff;
+
+        .avatar {
+          width: 80rpx;
+          height: 80rpx;
+          border-radius: 50%;
+          vertical-align: middle;
+          margin-right: 32rpx;
+        }
+
+        .nickname {
+          font-size: 36rpx;
+          font-weight: bolder;
+        }
+      }
+    }
   }
 </style>

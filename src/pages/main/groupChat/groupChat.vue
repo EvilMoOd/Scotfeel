@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
-  // import { useChattingStore } from '../../../store/modules/chatting';
   import type { User } from '../../../store/modules/userStore';
-  import { useFriendStore } from '../../../store/modules/friendStore';
-  import { insert, selectSingleChat } from '../../../server/sql/chatRecord';
+  import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
+  import type { GroupInfo } from '../../../store/modules/groupStore';
+  import { useGroupChatStore } from '../../../store/modules/groupStore';
 
   export interface Chat {
     chatRecord: ChatRecord[];
-    friendInfo: FriendInfo;
+    groupInfo: GroupInfo;
   }
   export interface ChatRecord {
-    id: number;
+    id?: number;
     sessionId: string;
     userId: string;
     content: string;
@@ -19,28 +19,16 @@
     belongToId: string;
     createTime: number;
   }
-  export interface FriendInfo {
-    friendId: string;
-    nickname: string;
-    remarkName: string;
-    avatar: string;
-    spaceId: string;
-    isDeletedByFriend: 0 | 1;
-    belongToId: string;
-    account: string;
-    backgroundImage: string;
-    noticeFlag: number;
-  }
 
   const user: User = uni.getStorageSync('user');
-  const friendStore = useFriendStore();
+  const groupStore = useGroupChatStore();
   let sessionId: string;
   //输入信息
   let msg = ref('');
 
   //前往群聊介绍页面
   function goGroupIntroduction() {
-    uni.navigateTo({ url: '/pages/main/groupChat/groupChatIntro' });
+    uni.navigateTo({ url: `/pages/main/groupChat/groupChatIntro?sessionId=${sessionId}` });
   }
   //过滤对方和自己的消息
   const scroll = ref(0);
@@ -56,32 +44,30 @@
         createTime: 11111111111,
       },
     ],
-    friendInfo: {
-      friendId: '85',
-      nickname: '可莉',
-      remarkName: '起报战议去层定',
-      avatar: 'http://dummyimage.com/100x100',
-      spaceId: '61',
-      isDeletedByFriend: 0,
-      belongToId: '13',
-      account: 'reprehenderit aliqua pariatur esse',
-      backgroundImage: 'http://dummyimage.com/400x400',
-      noticeFlag: 0,
+    groupInfo: {
+      groupId: '35',
+      nickname: '考研摆烂',
+      avatar: '61b0b7cc5af7a0db2c245f213bfa637b',
+      memberCount: 'in reprehenderit',
+      spaceId: '29',
+      belongToId: '41',
+      isDismissed: 0,
+      spaceNickname: '金娟',
+      spaceAvatar: '61b0b7cc5af7a0db2c245f213bfa637b',
+      noticeFlag: 1,
     },
   });
   onLoad((params: any) => {
     sessionId = params.sessionId;
-    const friendInfo = friendStore.friendInfo.find((item) => item.friendId === sessionId);
-    init(friendInfo);
+    const groupInfo = groupStore.groupInfo.find((item) => item.groupId === sessionId);
+    init(groupInfo);
   });
   //初始化
-  async function init(friendInfo: any) {
+  async function init(groupInfo: any) {
+    chat.groupInfo = groupInfo;
     const record = await selectSingleChat(10000, sessionId, user.userInfo.mainId);
-    console.log(record);
     chat.chatRecord = record as ChatRecord[];
     scroll.value += 1000;
-    console.log(chat.chatRecord);
-    chat.friendInfo = friendInfo;
   }
   //发送消息
   function submitMessage(e: any) {
@@ -97,7 +83,14 @@
     chat.chatRecord.push(newMsg);
     console.log(chat.chatRecord);
     msg.value = '';
-    insert(sessionId, user.userInfo.mainId, e.detail.value, 0, 11111111111, user.userInfo.mainId);
+    insertRecord(
+      sessionId,
+      user.userInfo.mainId,
+      e.detail.value,
+      0,
+      new Date().getTime(),
+      user.userInfo.mainId
+    );
     nextTick(() => (scroll.value += 10000));
   }
 </script>
@@ -106,8 +99,8 @@
   <view class="header">
     <Back />
     <view class="user" @tap="goGroupIntroduction">
-      <image :src="chat.friendInfo.avatar" class="avatar" />
-      <text class="nickname">{{ chat.friendInfo.nickname }}</text>
+      <image :src="chat.groupInfo.avatar" class="avatar" />
+      <text class="nickname">{{ chat.groupInfo.nickname }}</text>
     </view>
     <uni-icons class="more" type="more-filled" size="5vh" color="#fff"></uni-icons>
   </view>
