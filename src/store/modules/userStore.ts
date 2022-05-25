@@ -23,8 +23,8 @@ export interface UserInfo {
   spaceId: string; //首页左滑默认进入空间ID
 }
 export interface User {
-  userInfo: UserInfo;
-  token: string; //令牌
+  userInfo?: UserInfo;
+  token?: string; //令牌
 }
 //从本地仓库捞数据
 const user: User = uni.getStorageSync('user');
@@ -43,8 +43,10 @@ export const useUserStore = defineStore('user', {
     },
     //退出登录
     async userLogout() {
-      await reqUserLogout();
-      uni.removeStorageSync('user');
+      const result = await reqUserLogout();
+      console.log(result);
+      this.userInfo = undefined;
+      this.token = undefined;
     },
     //修改昵称
     async changeNickname(nickname: string) {

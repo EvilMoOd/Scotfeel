@@ -1,9 +1,18 @@
 import { defineStore } from 'pinia';
-import { reqChangeFriendRemark, reqDeleteFriend, reqGetAllFriends } from '../../server/api/friend';
-import { updateIsDeletedByFriend, updateRemarkName } from '../../server/sql/friend';
+import { reqChangeFriendRemark, reqDeleteFriend } from '../../server/api/friend';
+import {
+  updateAccount,
+  updateAvatar,
+  updateBackgroundImage,
+  updateIsDeletedByFriend,
+  updateNickname,
+  updateRemarkName,
+  updateSignature,
+  updateSpaceId,
+} from '../../server/sql/friend';
 import type { User } from './userStore';
 export interface Friend {
-  friendInfo: FriendInfo[];
+  friendsInfo: FriendInfo[];
   friendPage: FriendInfo;
 }
 export interface FriendInfo {
@@ -14,15 +23,16 @@ export interface FriendInfo {
   spaceId?: string; //所绑定的空间ID
   isDeletedByFriend?: 0 | 1; //是否已被朋友删除，0：否，1：是
   belongToId?: string; //用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
-  account?: string; //@id(用户）
+  account: string; //@id(用户）
   backgroundImage?: string; //背景照片(用户）
+  signature: string;
   noticeFlag?: 0 | 1; //是否设为免打扰，0：否，1：是
 }
 const user: User = uni.getStorageSync('user');
 
 export const useFriendStore = defineStore('friend', {
   state: (): Friend => ({
-    friendInfo: [
+    friendsInfo: [
       {
         friendId: '7d5e7e76a4534db78b79d80b221df2ae',
         nickname: '可莉',
@@ -33,6 +43,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -46,6 +57,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -58,6 +70,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: ``,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -70,6 +83,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -82,6 +96,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -94,6 +109,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
       {
@@ -106,6 +122,7 @@ export const useFriendStore = defineStore('friend', {
         belongToId: '13',
         account: ' pariatur esse',
         backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+        signature: '这是个性签名',
         noticeFlag: 0,
       },
     ],
@@ -119,28 +136,67 @@ export const useFriendStore = defineStore('friend', {
       belongToId: '13',
       account: ' pariatur esse',
       backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+      signature: '这是个性签名',
       noticeFlag: 0,
     },
   }),
   actions: {
     getFriendInfo(friendId: string) {
-      this.friendPage = this.friendInfo.find((item) => item.friendId === friendId) as FriendInfo;
+      this.friendPage = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
     },
     async changeRemark(remark: string, friendId: string) {
       await reqChangeFriendRemark(remark, friendId);
-      let index = this.friendInfo.findIndex((item) => item.friendId === friendId);
-      this.friendInfo[index].remarkName = remark;
-      updateRemarkName(remark, friendId, user.userInfo.mainId);
+      let index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
+      this.friendsInfo[index].remarkName = remark;
+      updateRemarkName(remark, friendId, user.userInfo?.mainId);
     },
     async deleteFriend(friendId: string) {
       await reqDeleteFriend(friendId);
-      let index = this.friendInfo.findIndex((item) => item.friendId === friendId);
-      this.friendInfo.splice(index, 1);
-      updateIsDeletedByFriend(1, friendId, user.userInfo.mainId);
+      let index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
+      this.friendsInfo.splice(index, 1);
+      updateIsDeletedByFriend(1, friendId, user.userInfo?.mainId);
     },
-    async getAllFriends() {
-      const friends = await reqGetAllFriends();
-      this.friendInfo = friends;
+    updateFriendAvatar(friendId: string, avatar: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].avatar = avatar;
+      updateAvatar(avatar, friendId, belongToId);
+    },
+    updateFriendNickname(friendId: string, nickname: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].nickname = nickname;
+      updateNickname(nickname, friendId, belongToId);
+    },
+    updateFriendAccount(friendId: string, account: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].account = account;
+      updateAccount(account, friendId, belongToId);
+    },
+    updateFriendBackgroundImg(friendId: string, backgroundImage: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].backgroundImage = backgroundImage;
+      updateBackgroundImage(backgroundImage, friendId, belongToId);
+    },
+    updateFriendSignature(friendId: string, signature: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].signature = signature;
+      updateSignature(signature, friendId, belongToId);
+    },
+    updateFriendSpaceId(friendId: string, spaceId: string, belongToId: string) {
+      const index = this.friendsInfo.findIndex((item) => {
+        item.friendId = friendId;
+      });
+      this.friendsInfo[index].spaceId = spaceId;
+      updateSpaceId(spaceId, friendId, belongToId);
     },
   },
   getters: {},

@@ -24,7 +24,7 @@ export function insertRecord(
   content: string,
   contentType: 0 | 1,
   createTime: number,
-  belongToId: string
+  belongToId?: string
 ) {
   return executeSql(`
 		insert into chatRecord values (null,"${sessionId}","${userId}","${content}","${contentType}","${createTime}","${belongToId}")

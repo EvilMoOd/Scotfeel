@@ -10,7 +10,7 @@
   //查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
-    friendStore.friendInfo.find((item) => item.friendId === props.list.friendId)
+    friendStore.friendsInfo.find((item) => item.friendId === props.list.friendId)
   );
 </script>
 

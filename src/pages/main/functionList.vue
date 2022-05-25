@@ -48,7 +48,7 @@
   <view class="menu">
     <view class="person-top">
       <view class="person-place" @tap="goPerson">
-        <image :src="userStore.userInfo.avatar" class="avatar" />
+        <image :src="userStore.userInfo?.avatar" class="avatar" />
         <view class="person-msg">
           <view class="name">{{ userStore.userInfo?.nickname }}</view>
           <view class="idCard">{{ userStore.userInfo?.account }}</view>

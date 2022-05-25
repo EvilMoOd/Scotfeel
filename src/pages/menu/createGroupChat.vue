@@ -45,7 +45,7 @@
   <scroll-view scroll-y class="main">
     <view class="mail">
       <view
-        v-for="friend in friendStore.friendInfo"
+        v-for="friend in friendStore.friendsInfo"
         :key="friend.friendId"
         class="list"
         @tap="chooseFriends.find((item) => item === friend) ? '' : chooseFriends.push(friend)"

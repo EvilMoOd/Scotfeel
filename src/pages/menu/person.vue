@@ -50,7 +50,7 @@
 <template>
   <view class="header">
     <image
-      :src="userStore.userInfo.backgroundImage"
+      :src="userStore.userInfo?.backgroundImage"
       mode="scaleToFill"
       style="position: absolute; z-index: -100; width: 750rpx; height: 304rpx"
     />
@@ -64,7 +64,7 @@
     </view>
   </view>
   <view class="id-card">
-    <image :src="userStore.userInfo.avatar" mode="scaleToFill" class="avatar" />
+    <image :src="userStore.userInfo?.avatar" mode="scaleToFill" class="avatar" />
     <view>
       <text style="font-size: 34rpx; font-weight: bold; color: #fff">科比</text>
       <br />

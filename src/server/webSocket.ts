@@ -1,4 +1,5 @@
 import { useMomentListStore } from '../store/modules/momemtListStore';
+import { useNoticeStore } from '../store/modules/notice';
 import { useSessionListStore } from '../store/modules/sessionListStore';
 import { useUserStore } from '../store/modules/userStore';
 import { insertRecord } from './sql/chatRecord';
@@ -13,6 +14,8 @@ export function connectWebSocket(url: string, token: string) {
   const user = useUserStore();
   const momentStore = useMomentListStore();
   const sessionListStore = useSessionListStore();
+  const noticeStore = useNoticeStore();
+  const friendStore = useFriendStore();
   connectSocket();
   // 连接socket
   function connectSocket() {
@@ -76,7 +79,7 @@ export function connectWebSocket(url: string, token: string) {
         content.content,
         content.contentType,
         content.createTime,
-        user.userInfo.mainId
+        user.userInfo?.mainId
       );
       sessionListStore.newMessage(
         content.fromId,
@@ -93,7 +96,7 @@ export function connectWebSocket(url: string, token: string) {
         content.content,
         content.contentType,
         content.createTime,
-        user.userInfo.mainId
+        user.userInfo?.mainId
       );
       sessionListStore.newMessage(
         content.fromId,
@@ -107,43 +110,47 @@ export function connectWebSocket(url: string, token: string) {
       momentStore.updateMomentList(content.firendId);
     } else if (messageType === 6) {
       //6、有申请请求
-      applyMessage();
+      //TODO 系统app弹窗
     } else if (messageType === 7) {
       // 7、被评论消息
-      commentMessage();
+      noticeStore.beComment();
     } else if (messageType === 8) {
       // 8、被点赞消息
-      LikeMessage();
+      noticeStore.beLike();
     } else if (messageType === 9) {
       // 9、被订阅消息
-      beingSubscribe();
+      noticeStore.beSubscribe();
     } else if (messageType === 10) {
       // 10、被申请添加朋友
-      beingFriendAdd();
+      noticeStore.beApply();
     } else if (messageType === 11) {
       // 11、被同意添加好友
-      beingAgreeByFriend();
+      //TODO 会话列表插入新好友，好友store添加新好友信息
     } else if (messageType === 12) {
       // 12、被删除好友
-      beingDeleteByFriend();
+      //TODO 会话列表移除新好友，好友store移除新好友信息
     } else if (messageType === 13) {
       // 13、更新好友头像
-      updateFriendAvatar();
+      friendStore.updateFriendAvatar(content.friendId, content.avatar, user.userInfo?.mainId);
     } else if (messageType === 14) {
       // 14、更新朋友昵称
-      updateFriendNickname();
+      friendStore.updateFriendNickname(content.friendId, content.nickname, user.userInfo?.mainId);
     } else if (messageType === 15) {
       // 15、更新朋友account
-      updateFriendAccount();
+      friendStore.updateFriendAccount(content.friendId, content.account, user.userInfo?.mainId);
     } else if (messageType === 16) {
       // 16、更新朋友背景照片
-      updateFriendBackgroundImg;
+      friendStore.updateFriendBackgroundImg(
+        content.friendId,
+        content.backgroundImage,
+        user.userInfo?.mainId
+      );
     } else if (messageType === 17) {
       // 17、更新朋友个性签名
-      updateFriendSignature();
+      friendStore.updateFriendSignature(content.friendId, content.signature, user.userInfo?.mainId);
     } else if (messageType === 18) {
       // 18、更新我和朋友所绑定的空间ID
-      updateFriendSpaceId();
+      friendStore.updateFriendSpaceId(content.friendId, content.spaceId, user.userInfo?.mainId);
     } else if (messageType === 19) {
       // 19、被同意加入群聊
       beingAgreeJoinGroupChat();

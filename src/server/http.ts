@@ -1,6 +1,3 @@
-export const MOCK_URL = 'http://127.0.0.1:4523/mock/613601';
-export const DEV_URL = 'http://124.71.7.65:80/test/portal';
-export const MASTER_URL = '';
 export const OBS_URL = 'http://obs.scotfeel.com';
 
 export const OK_CODE = 200;
@@ -44,7 +41,7 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
   //响应拦截请求
   return new Promise<T>((resolve, reject) => {
     uni.request({
-      url: DEV_URL + config.url, //默认地址
+      url: import.meta.env.VITE_MOCK_URL + config.url, //默认地址
       data: config.data || {},
       header: {
         Authorization: user.token,

@@ -79,19 +79,19 @@ export const reqGetAllMemberInfo = () =>
     method: 'GET',
   });
 //设置群聊免打扰
-export const reqSetGroupNoNotify = (groupId: string) =>
+export const reqSetGroupNoNotify = (groupId: string, noticeFlag: 0 | 1) =>
   request<null>({
     url: `/groupChat/mute/notice`,
     method: 'POST',
-    data: { groupId },
+    data: { groupId, noticeFlag },
     type: 'application/x-www-form-urlencoded',
   });
 //更新群聊审核
-export const reqUpdateVarify = (groupId: string) =>
+export const reqUpdateVerify = (groupId: string, noticeFlag: 0 | 1) =>
   request<null>({
     url: `/groupChat/update/varify`,
     method: 'POST',
-    data: { groupId },
+    data: { groupId, noticeFlag },
     type: 'application/x-www-form-urlencoded',
   });
 //获取一个成员信息

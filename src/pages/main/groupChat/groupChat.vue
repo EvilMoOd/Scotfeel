@@ -55,6 +55,7 @@
       spaceNickname: '金娟',
       spaceAvatar: '61b0b7cc5af7a0db2c245f213bfa637b',
       noticeFlag: 1,
+      groupMember: [],
     },
   });
   onLoad((params: any) => {
@@ -88,7 +89,7 @@
       user.userInfo.mainId,
       e.detail.value,
       0,
-      new Date().getTime(),
+      Date.now(),
       user.userInfo.mainId
     );
     nextTick(() => (scroll.value += 10000));

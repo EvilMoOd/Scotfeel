@@ -25,11 +25,12 @@ export async function insert(
   isDeletedByFriend: number,
   account: string,
   backgroundImage: string,
+  signature: string,
   noticeFlag: number,
   belongToId: string
 ) {
   return await executeSql(`
-		insert into friend values ("${friendId}","${nickname}","${remarkName}","${avatar}","${spaceId}","${isDeletedByFriend}","${account}","${backgroundImage}","${noticeFlag}","${belongToId}")
+		insert into friend values ("${friendId}","${nickname}","${remarkName}","${avatar}","${spaceId}","${isDeletedByFriend}","${account}","${backgroundImage}","${signature}","${noticeFlag}","${belongToId}")
 	`);
 }
 
@@ -59,7 +60,7 @@ export async function updateNickname(nickname: string, friendId: string, belongT
 	`);
 }
 //更新备注
-export async function updateRemarkName(remarkName: string, friendId: string, belongToId: string) {
+export async function updateRemarkName(remarkName: string, friendId: string, belongToId?: string) {
   return await executeSql(`
 		update friend set remarkName = "${remarkName}" where friendId = "${friendId}" and belongToId = "${belongToId}"
 	`);
@@ -86,6 +87,12 @@ export async function updateBackgroundImage(
 		update friend set backgroundImage = "${backgroundImage}" where friendId = "${friendId}" and belongToId = "${belongToId}"
 	`);
 }
+//更新个性签名
+export async function updateSignature(signature: string, friendId: string, belongToId: string) {
+  return await executeSql(`
+		update friend set signature = "${signature}" where friendId = "${friendId}" and belongToId = "${belongToId}"
+	`);
+}
 //更新双方绑定的空间id
 export async function updateSpaceId(spaceId: string, friendId: string, belongToId: string) {
   return await executeSql(`
@@ -102,7 +109,7 @@ export async function updateNoticeFlag(noticeFlag: number, friendId: string, bel
 export async function updateIsDeletedByFriend(
   isDeletedByFriend: 0 | 1,
   friendId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 		update friend set isDeletedByFriend = "${isDeletedByFriend}" where friendId = "${friendId}" and belongToId = "${belongToId}"

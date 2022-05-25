@@ -26,23 +26,25 @@
   });
 
   //展示功能块
-  const isShowChangeNickname = ref(false);
-  const isShow = ref(false);
-  const isShowConfig = ref(false);
+  const show = reactive({
+    isShow: false,
+    isShowChangeNickname: false,
+    isShowConfig: false,
+  });
   function showConfig() {
-    isShowConfig.value = true;
-    isShow.value = true;
+    show.isShowConfig = true;
+    show.isShow = true;
   }
   function hiddenAll() {
-    isShowChangeNickname.value = false;
-    isShowConfig.value = false;
-    isShow.value = false;
+    show.isShowChangeNickname = false;
+    show.isShowConfig = false;
+    show.isShow = false;
   }
   //修改备注输入框
   function showChangeRemark() {
-    isShowChangeNickname.value = true;
-    isShowConfig.value = false;
-    isShow.value = true;
+    show.isShowChangeNickname = true;
+    show.isShowConfig = false;
+    show.isShow = true;
   }
   const remark = ref('');
   //修改备注
@@ -76,7 +78,7 @@
     />
     <Back class="icon-back" />
     <uni-icons type="more-filled" color="#aaa" size="28" class="icon-more" @click="showConfig" />
-    <view class="more" :class="{ 'more-show': isShowConfig }">
+    <view class="more" :class="{ 'more-show': show.isShowConfig }">
       <text @tap="showChangeRemark">设置备注</text>
       <text>创建空间</text>
       <text style="color: #d9001b" @tap="deleteFriend">删除</text>
@@ -104,7 +106,7 @@
       <view>动态</view>
     </template>
   </TopTab>
-  <PopWindow :pop-show="isShowChangeNickname">
+  <PopWindow :pop-show="show.isShowChangeNickname">
     <uni-easyinput
       v-model="remark"
       type="text"
@@ -114,7 +116,7 @@
       @confirm="changeRemark"
     />
   </PopWindow>
-  <view v-show="isShow" class="mask" @click="hiddenAll"></view>
+  <view v-show="show.isShow" class="mask" @click="hiddenAll"></view>
 </template>
 <style lang="scss" scoped>
   .header {

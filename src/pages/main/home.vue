@@ -36,13 +36,10 @@
   <view class="body">
     <view class="header">
       <text class="title" @tap="displayPerson">Scotfeel</text>
-      <uni-icons
-        type="notification"
-        size="4vh"
-        class="icon-bell"
-        color="#fff"
-        @tap="goMessage"
-      ></uni-icons>
+      <view class="notice">
+        <uni-icons type="notification" size="4vh" color="#fff" @tap="goMessage"></uni-icons>
+        <uni-badge :text="1" size="small" class="msg-tip"></uni-badge>
+      </view>
       <uni-icons type="search" size="4vh" class="icon-search" color="#fff"></uni-icons>
     </view>
     <!-- 聊天列表 -->
@@ -85,10 +82,15 @@
         color: #fff;
       }
 
-      .icon-bell {
-        position: absolute;
-        top: 82rpx;
+      .notice {
+        position: relative;
+        top: -56rpx;
         left: 592rpx;
+        .msg-tip {
+          position: absolute;
+          top: -12rpx;
+          left: 25rpx;
+        }
       }
 
       .icon-search {

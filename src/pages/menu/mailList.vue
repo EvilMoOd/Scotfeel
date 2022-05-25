@@ -22,7 +22,7 @@
       </view>
     </view>
     <view class="mail">
-      <view v-for="friend in friendStore.friendInfo" :key="friend.friendId" class="list">
+      <view v-for="friend in friendStore.friendsInfo" :key="friend.friendId" class="list">
         <image :src="friend.avatar" class="head" />
         <text class="nickname">{{ friend.nickname }}</text>
       </view>

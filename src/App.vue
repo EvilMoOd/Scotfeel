@@ -7,7 +7,7 @@
   import { useFriendStore } from './store/modules/friendStore';
   // import { createTable, insert } from './server/sql/groupChat';
 
-  const user = useUserStore();
+  const userStore = useUserStore();
   const friendStore = useFriendStore();
 
   onLaunch(() => {
@@ -20,12 +20,11 @@
     console.log('App Hide');
   });
   async function init() {
-    user.$subscribe((mutation, state) => {
+    userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
     });
     const { token } = await reqValidateToken();
-    user.token = token;
-    //TODO这里要加token
+    userStore.token = token;
     connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
     createChatRecordTable();
     friendStore.getAllFriends();

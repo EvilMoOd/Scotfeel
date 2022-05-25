@@ -1,7 +1,12 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { ref } from 'vue';
-  import { reqChangeRemark, reqDismissGroupChat } from '../../../server/api/groupChat';
+  import { reactive } from 'vue';
+  import {
+    reqChangeRemark,
+    reqDismissGroupChat,
+    reqSetGroupNoNotify,
+    reqUpdateVerify,
+  } from '../../../server/api/groupChat';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
 
   const groupStore = useGroupChatStore();
@@ -12,40 +17,44 @@
   });
 
   //展示功能块
-  const isShow = ref(false);
-  const isShowConfig = ref(false);
-  const isShowChangeNickname = ref(false);
-  const isShowChangeRemark = ref(false);
-  const nickname = ref('');
-  const remark = ref('');
+  const show = reactive({
+    isShow: false,
+    isShowConfig: false,
+    isShowChangeNickname: false,
+    isShowChangeRemark: false,
+  });
 
   //展示功能块
   function showConfig() {
-    isShowConfig.value = true;
-    isShow.value = true;
+    show.isShowConfig = true;
+    show.isShow = true;
   }
   function hiddenAll() {
-    isShowChangeRemark.value = false;
-    isShowChangeNickname.value = false;
-    isShowConfig.value = false;
-    isShow.value = false;
+    show.isShowChangeRemark = false;
+    show.isShowChangeNickname = false;
+    show.isShowConfig = false;
+    show.isShow = false;
   }
   //修改昵称输入框
   function showChangeNickname() {
-    isShowChangeNickname.value = true;
-    isShowConfig.value = false;
-    isShow.value = true;
+    show.isShowChangeNickname = true;
+    show.isShowConfig = false;
+    show.isShow = true;
   }
   function showChangeRemark() {
-    isShowChangeRemark.value = true;
-    isShowConfig.value = false;
-    isShow.value = true;
+    show.isShowChangeRemark = true;
+    show.isShowConfig = false;
+    show.isShow = true;
   }
+  const Input = reactive({
+    nickname: '',
+    remark: '',
+  });
   //修改群聊昵称
   function changeGroupNickname(e: string) {
     groupStore.changeNickname(e, sessionId);
-    isShowChangeRemark.value = false;
-    remark.value = '';
+    show.isShowChangeRemark = false;
+    Input.remark = '';
   }
   //解散群聊
   const dismissGroup = async () => {
@@ -55,20 +64,37 @@
   //修改我的群聊备注
   const setMyRemark = async (e: string) => {
     await reqChangeRemark(e, sessionId);
-    isShowChangeRemark.value = false;
-    remark.value = '';
+    show.isShowChangeRemark = false;
+    Input.remark = '';
   };
+  const switches = reactive<{ mute: boolean; verify: boolean }>({
+    mute: true,
+    verify: false,
+  });
+  //消息免打扰
+  async function changeMute() {
+    await reqSetGroupNoNotify(sessionId, switches.mute ? 1 : 0);
+  }
+  //进群审核开关
+  async function changeVerify() {
+    await reqUpdateVerify(sessionId, switches.verify ? 1 : 0);
+  }
 </script>
 
 <template>
   <view class="header">
     <Back />
     <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="showConfig" />
-    <view class="more-hidden" :class="{ 'more-show': isShowConfig }">
-      <text>
+    <view class="more-hidden" :class="{ 'more-show': show.isShowConfig }">
+      <view>
         进群审核
-        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-      </text>
+        <switch
+          color="#117986"
+          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          :checked="switches.verify"
+          @change="changeVerify"
+        />
+      </view>
       <text @tap="showChangeNickname">修改群聊昵称</text>
       <text @tap="groupStore.changeAvatar(sessionId)">设置头像</text>
       <text style="color: #d9001b" @tap="dismissGroup">解散</text>
@@ -82,7 +108,8 @@
       <switch
         color="#117986"
         style="transform: scale(0.5); float: right; margin-top: -10rpx"
-        :checked="mute"
+        :checked="switches.mute"
+        @change="changeMute"
       />
     </view>
     <view class="item" @tap="showChangeRemark">
@@ -123,9 +150,9 @@
       <text>法医</text>
     </view>
   </view>
-  <PopWindow :pop-show="isShowChangeNickname">
+  <PopWindow :pop-show="show.isShowChangeNickname">
     <uni-easyinput
-      v-model="nickname"
+      v-model="Input.nickname"
       type="text"
       placeholder="请输入新昵称"
       trim
@@ -133,9 +160,9 @@
       @confirm="(e:string) => changeGroupNickname"
     />
   </PopWindow>
-  <PopWindow :pop-show="isShowChangeRemark">
+  <PopWindow :pop-show="show.isShowChangeRemark">
     <uni-easyinput
-      v-model="remark"
+      v-model="Input.remark"
       type="text"
       placeholder="我的群备注"
       trim
@@ -143,7 +170,7 @@
       @confirm="(e:string) => setMyRemark(e)"
     />
   </PopWindow>
-  <view v-show="isShow" class="mask" @click="hiddenAll"></view>
+  <view v-show="show.isShow" class="mask" @click="hiddenAll"></view>
 </template>
 
 <style lang="scss" scoped>

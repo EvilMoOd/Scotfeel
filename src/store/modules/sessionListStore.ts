@@ -10,7 +10,7 @@ export interface SessionListInfo {
   content: string; //最后一次聊天内容
   chatorName?: string; //如果是群聊的话，这是最新一条消息发送者的昵称
   unReadCount: number; //未读消息的数量
-  belongToId: string; //用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
+  belongToId?: string; //用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
   updateTime: number; //更新时间
   type: 1 | 2; //会话类型，1：单聊，2：群聊
   chatorId?: string; //如果是群聊的话，这是最新一条消息发送者的id
@@ -56,7 +56,7 @@ export const useSessionListStore = defineStore('sessionListStore', {
         contentType: 1,
         content: 'ea qui amet quis labore',
         chatorName: '雪茶',
-        unReadCount: 1,
+        unReadCount: 0,
         belongToId: '82',
         updateTime: 1652412653,
         type: 2,
@@ -90,7 +90,7 @@ export const useSessionListStore = defineStore('sessionListStore', {
           content,
           chatorName: '',
           unReadCount: session.unReadCount + 1,
-          belongToId: user.userInfo.mainId,
+          belongToId: user.userInfo?.mainId,
           updateTime: date,
           type,
           chatorId: '',

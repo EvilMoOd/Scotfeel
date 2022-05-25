@@ -84,7 +84,6 @@
       createTime: 11111111111,
     };
     chat.chatRecord.push(newMsg);
-    console.log(chat.chatRecord);
     msg.value = '';
     _sendMessage(
       JSON.stringify({
@@ -92,7 +91,7 @@
         content: e.detail.value,
         contentType: 0,
         messageType: 3,
-        time: new Date().getTime(),
+        time: Date.now(),
         sequenceId: createUUID(),
       })
     );

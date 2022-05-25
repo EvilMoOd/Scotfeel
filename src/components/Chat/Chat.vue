@@ -15,7 +15,7 @@
   //查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
-    friendStore.friendInfo.find((item) => item.friendId === props.list.sessionId)
+    friendStore.friendsInfo.find((item) => item.friendId === props.list.sessionId)
   );
   //查找群聊信息
   const groupStore = useGroupChatStore();
@@ -33,12 +33,11 @@
 <template>
   <!-- 聊天信息条 -->
   <view class="chat" @tap="goChat(props.list.type, props.list.sessionId)">
-    <image v-if="props.list.type === 1" :src="friendInfo?.avatar" class="user-head" />
-    <image v-if="props.list.type === 2" :src="groupInfo?.avatar" class="user-head" />
+    <image v-if="props.list.type === 1" :src="friendInfo?.avatar" class="user-avatar" />
+    <image v-if="props.list.type === 2" :src="groupInfo?.avatar" class="user-avatar" />
 
     <view class="chat-place">
       <view>
-        <!-- TODO -->
         <text v-if="props.list.type === 1" class="nickname">{{ friendInfo?.nickname }}</text>
         <text v-if="props.list.type === 2" class="nickname">{{ groupInfo?.nickname }}</text>
         <text class="time">{{ day().from(day.unix(props.list.updateTime)) }}</text>
@@ -57,7 +56,7 @@
   .chat {
     display: flex;
 
-    .user-head {
+    .user-avatar {
       width: 96rpx;
       height: 96rpx;
       border-radius: 50%;

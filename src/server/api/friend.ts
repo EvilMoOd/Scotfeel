@@ -21,18 +21,6 @@ export const reqChangeFriendRemark = (remark: string, friendId: string) =>
     method: 'POST',
     data: { remark, friendId },
   });
-//获取所有朋友
-export interface AllFriends {
-  friend_id: string;
-  avatar: string;
-  nickname: string;
-  remarkName: string;
-}
-export const reqGetAllFriends = () =>
-  request<AllFriends[]>({
-    url: `/friend/get/allFriends`,
-    method: 'GET',
-  });
 //设置免打扰
 export const reqSetNoNotify = () =>
   request<null>({
