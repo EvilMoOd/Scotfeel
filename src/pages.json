@@ -146,7 +146,7 @@
 			}
 		},
 		{
-			"path": "pages/subscribe/subscribeAndRecommand",
+			"path": "pages/subscribe/subscribeAndRecommend",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

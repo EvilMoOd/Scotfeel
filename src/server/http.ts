@@ -6,20 +6,20 @@ export const QUERRY_ERROR_CODE = 404;
 export const NO_TOKEN = 401;
 export const NO_PERMISSION = 403;
 
-//请求参数
+// 请求参数
 export interface HTTPConfig {
   url: string;
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT';
-  data?: { [key: string]: unknown }; //GET方法默认json转string，以params默认发送，post则不变
+  data?: { [key: string]: unknown }; // GET方法默认json转string，以params默认发送，post则不变
   type?: 'application/json' | 'application/x-www-form-urlencoded';
 }
-//响应参数
+// 响应参数
 export interface BasicResponse<T> {
   code: number;
   data: T;
   message: string;
 }
-//uni.request响应参数
+// uni.request响应参数
 export interface HTTPResponse {
   statusCode: number;
   cookies: string[];
@@ -27,10 +27,10 @@ export interface HTTPResponse {
   header: any;
 }
 
-//传入地址，方法，参数
-export const request = <T>(config: HTTPConfig): Promise<T> => {
-  //请求拦截权限
-  //TODO 这一部分后期要删掉，改成在请求头里验证token 16-23
+// 传入地址，方法，参数
+export const request = async <T>(config: HTTPConfig): Promise<T> => {
+  // 请求拦截权限
+  // TODO 这一部分后期要删掉，改成在请求头里验证token 16-23
   const user = uni.getStorageSync('user');
   uni.showLoading({
     title: '加载中',
@@ -38,14 +38,14 @@ export const request = <T>(config: HTTPConfig): Promise<T> => {
   // if (!user) {
   //   uni.redirectTo({ url: '/pages/login' });
   // }
-  //响应拦截请求
-  return new Promise<T>((resolve, reject) => {
+  // 响应拦截请求
+  return await new Promise<T>((resolve, reject) => {
     uni.request({
-      url: import.meta.env.VITE_MOCK_URL + config.url, //默认地址
-      data: config.data || {},
+      url: (import.meta.env.VITE_MOCK_URL as string) + config.url, // 默认地址
+      data: config.data,
       header: {
         Authorization: user.token,
-        'content-type': config.type || 'application/json',
+        'content-type': config.type ?? 'application/json',
       },
       method: config.method,
       timeout: 20000,

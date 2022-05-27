@@ -3,8 +3,8 @@
 
   async function addFriend() {
     try {
-      //TODO 要修改成实际的添加信息
-      await reqAddFriend('123', 'mu', 'http://123');
+      // TODO 要修改成实际的添加信息
+      await reqAddFriend('123', 'mu');
       uni.navigateBack({
         delta: 1,
       });

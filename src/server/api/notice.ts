@@ -1,6 +1,6 @@
 import { request } from '../http';
 
-//获取申请通知信息
+// 获取申请通知信息
 export interface ApplyNotice {
   applyId: string;
   applicantId: string;
@@ -22,13 +22,13 @@ export interface ApplyNotice {
   applicantSpaceAvatar?: any;
   applicantSpaceNickname?: any;
 }
-export const reqApplyNotice = (offset: number) =>
-  request<ApplyNotice[]>({
+export const reqApplyNotice = async (offset: number): Promise<ApplyNotice[]> =>
+  await request<ApplyNotice[]>({
     url: `/notice/get/applications`,
     method: 'GET',
     data: { offset },
   });
-//获取评论的通知信息
+// 获取评论的通知信息
 export interface CommenterInfo {
   _id: string;
   nickname: string;
@@ -48,21 +48,17 @@ export interface CommentNotice {
   commentType: number;
   createTime: string;
 }
-export const reqCommentsNotice = (lastCommentTime: string) =>
-  request<CommentNotice[]>({
+export const reqCommentsNotice = async (lastCommentTime: string): Promise<CommentNotice[]> =>
+  await request<CommentNotice[]>({
     url: `/notice/get/comments`,
     method: 'GET',
     data: { lastCommentTime },
   });
-//获取点赞通知信息
+// 获取点赞通知信息
 export interface LikerInfo {
   _id: string;
   nickname: string;
   avatar: string;
-}
-export interface UserMomentInfo {
-  content: string;
-  photos: string[];
 }
 export interface LikeNotice {
   momentId: string;
@@ -72,13 +68,13 @@ export interface LikeNotice {
   spaceMomentInfo: any[];
   createTime: string;
 }
-export const reqLikeNotice = (lastLikeTimestring: string) =>
-  request<LikeNotice[]>({
+export const reqLikeNotice = async (lastLikeTimestring: string): Promise<LikeNotice[]> =>
+  await request<LikeNotice[]>({
     url: `/notice/get/likes`,
     method: 'GET',
     data: { lastLikeTimestring },
   });
-//获取订阅的通知信息
+// 获取订阅的通知信息
 export interface SubscribeNotice {
   userId: string;
   nickname: string;
@@ -87,8 +83,8 @@ export interface SubscribeNotice {
   spaceNickname: string;
   createTime: string;
 }
-export const reqSubscribeNotice = (offset: string) =>
-  request<SubscribeNotice[]>({
+export const reqSubscribeNotice = async (offset: string): Promise<SubscribeNotice[]> =>
+  await request<SubscribeNotice[]>({
     url: `/notice/get/subscriptions`,
     method: 'GET',
     data: { offset },

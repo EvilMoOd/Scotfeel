@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
+  import PopBottom from '../../components/PopBottom/PopBottom.vue';
 
   const spaceStore = useSubscribeSpaceStore();
 
@@ -21,7 +22,7 @@
 </script>
 
 <template>
-  <scroll-view scroll-y class="space-body">
+  <scroll-view scroll-y class="space-body" :class="{ glass: isShow }">
     <view class="header">
       <Back class="back" />
       <uni-icons type="camera" color="#fff" size="4vh" class="publicActive" />
@@ -35,8 +36,10 @@
         </view>
       </view>
       <view class="introduction">中美式肌肉俱乐部（American Muscl Club of China...</view>
-      <view v-if="!spaceStore.inSpace" class="subscribe">订阅</view>
-      <view :class="spaceStore.inSpace ? 'inSpace' : 'join'" @click="joinSpace">加入</view>
+      <view v-if="!spaceStore.subscribeSpace.inSpace" class="subscribe">订阅</view>
+      <view :class="spaceStore.subscribeSpace.inSpace ? 'inSpace' : 'join'" @click="joinSpace">
+        加入
+      </view>
     </view>
     <view class="main">
       <view class="space-sp">
@@ -51,7 +54,7 @@
       </view>
     </view>
   </scroll-view>
-  <view class="space-member-container" :class="{ 'space-member-container-show': isShow }">
+  <PopBottom :pop-show="isShow">
     <scroll-view scroll-y class="member-list">
       <view class="member-item">
         <Avatar img-src="/src/assets/images/img3.png" :type="1" />
@@ -74,12 +77,13 @@
         <text class="leave">退出</text>
       </view>
     </scroll-view>
-  </view>
-  <view v-show="isShow" class="mask" @tap="hiddenMemberList"></view>
+  </PopBottom>
+  <Mask :show="isShow" :hidden="hiddenMemberList" />
 </template>
 
 <style lang="scss" scoped>
   .space-body {
+    transition: 0.7s;
     .header {
       width: 750rpx;
       height: 458rpx;
@@ -181,44 +185,22 @@
       }
     }
   }
-
-  .space-member-container {
-    position: absolute;
-    z-index: 20;
-    box-sizing: border-box;
-    top: 968rpx;
-    left: 34rpx;
-    height: 366rpx;
-    width: 680rpx;
-    background-color: #fff;
-    border-radius: 30rpx 30rpx 0 0;
-    padding: 0 60rpx;
-    @include hidden;
-    .member-list {
-      margin-top: 30rpx;
-      height: 336rpx;
-      .member-item {
-        padding: 15rpx 0;
-        border-bottom: 1px solid #f2f2f2;
-        .username {
-          margin-left: 20rpx;
-        }
-        .leave {
-          margin-left: 300rpx;
-          color: $color-sf;
-        }
+  .member-list {
+    margin-top: 30rpx;
+    height: 336rpx;
+    .member-item {
+      padding: 15rpx 0;
+      border-bottom: 1px solid #f2f2f2;
+      .username {
+        margin-left: 20rpx;
+      }
+      .leave {
+        margin-left: 300rpx;
+        color: $color-sf;
       }
     }
   }
-  .space-member-container-show {
-    @include show;
-  }
-  .mask {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba($color: #f2f2f2, $alpha: 0.6);
-    position: absolute;
-    top: 0;
-    z-index: 10;
+  .glass {
+    filter: blur(3px);
   }
 </style>

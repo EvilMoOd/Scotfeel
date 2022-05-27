@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createGroupChatTable() {
+export function createGroupChatTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
@@ -15,8 +15,8 @@ export async function createGroupChatTable() {
     },
   });
 }
-//插入数据
-export async function insert(
+// 插入数据
+export function insert(
   groupId: string,
   nickname: string,
   avatar: string,
@@ -26,80 +26,80 @@ export async function insert(
   spaceAvatar: string,
   noticeFlag: string,
   isDismissed: 1 | 0,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				insert into groupChat values ("${groupId}","${nickname}","${avatar}","${memberCount}","${spaceId}","${spaceNickname}","${spaceAvatar}","${noticeFlag}","${isDismissed}","${belongToId}")
 			`);
 }
 
-//删除记录
-export async function _delete(groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 删除记录
+export function _delete(groupId: string, belongToId: string): void {
+  return executeSql(`
 				delete from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//查找所有群聊
-export async function selectAll(belongToId?: string) {
+// 查找所有群聊
+export async function selectAll(belongToId: string): Promise<void> {
   return await selectSql(`
 	select groupId,nickname,avatar from groupChat where belongToId = "${belongToId}"
 			`);
 }
-//群聊基本信息
-export async function selectInfo(groupId: string, belongToId?: string) {
+// 群聊基本信息
+export async function selectInfo(groupId: string, belongToId: string): Promise<void> {
   return await selectSql(`
 					select * from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}" 
 			`);
 }
-//更新昵称1
-export async function updateNickname(nickname: string, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新昵称1
+export function updateNickname(nickname: string, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set nickname = "${nickname}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新成员数量1
-export async function updateMemberCount(memberCount: number, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新成员数量1
+export function updateMemberCount(memberCount: number, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set memberCount = "${memberCount}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新头像
-export async function updateAvatar(avatar: string, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新头像
+export function updateAvatar(avatar: string, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set avatar = "${avatar}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新是否被解散
-export async function updateIsDismissed(isDismissed: 1 | 0, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新是否被解散
+export function updateIsDismissed(isDismissed: 1 | 0, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set isDismissed = "${isDismissed}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新绑定的空间id
-export async function updateSpaceId(spaceId: string, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新绑定的空间id
+export function updateSpaceId(spaceId: string, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set spaceId = "${spaceId}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新绑定的空间头像
-export async function updateSpaceAvatar(spaceAvatar: string, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新绑定的空间头像
+export function updateSpaceAvatar(spaceAvatar: string, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set spaceAvatar = "${spaceAvatar}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新双方绑定的空间昵称
-export async function updateSpaceNickname(
+// 更新双方绑定的空间昵称
+export function updateSpaceNickname(
   spaceNickname: string,
   groupId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChat set spaceNickname = "${spaceNickname}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新是否免打扰字段
-export async function updateNoticeFlag(noticeFlag: string, groupId: string, belongToId?: string) {
-  return await executeSql(`
+// 更新是否免打扰字段
+export function updateNoticeFlag(noticeFlag: string, groupId: string, belongToId: string): void {
+  return executeSql(`
 				update groupChat set noticeFlag = "${noticeFlag}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }

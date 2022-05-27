@@ -18,3 +18,6 @@ $uni-bg-color: #f7f7f7;
   visibility: visible;
   opacity: 1;
 }
+@mixin mask {
+  filter: blur(3px);
+}

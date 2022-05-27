@@ -4,34 +4,24 @@ import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import { updateAvatar, updateNickname } from '../../server/sql/groupChat';
 import { createUUID } from '../../server/utils/uuid';
-import type { User } from './userStore';
+import type { GroupMember, User } from './userStore';
 
 export interface GroupChat {
   groupInfo: GroupInfo[];
   groupPage: GroupInfo;
 }
 export interface GroupInfo {
-  groupId: string; //群聊id
-  nickname?: string; //群聊昵称
-  avatar: string; //群聊头像
-  memberCount?: string; //群聊成员数
-  spaceId?: string; //群聊绑定的空间id
-  belongToId?: string; //属于哪个用户
-  isDismissed?: 0 | 1; //是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
-  spaceNickname?: string; //群聊绑定的空间昵称
-  spaceAvatar?: string; //群聊绑定的空间头像
-  noticeFlag?: 0 | 1; //是否设为免打扰，0：否，1：是
+  groupId: string; // 群聊id
+  nickname?: string; // 群聊昵称
+  avatar: string; // 群聊头像
+  memberCount?: string; // 群聊成员数
+  spaceId?: string; // 群聊绑定的空间id
+  belongToId?: string; // 属于哪个用户
+  isDismissed?: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
+  spaceNickname?: string; // 群聊绑定的空间昵称
+  spaceAvatar?: string; // 群聊绑定的空间头像
+  noticeFlag?: 0 | 1; // 是否设为免打扰，0：否，1：是
   groupMember: GroupMember[];
-}
-export interface GroupMember {
-  memberId: string; //联系人id
-  remarkName: string; //成员在这个群里的备注,群聊成员显示名字优先级——群聊成员备注>我对这个用户的备注该成员的网名
-  role: 0 | 1 | 2; //群聊角色，0：群主，1：管理员：2：普通成员
-  isExited: 0 | 1; //是否已退出，0：是，1：否
-  belongToId?: string; //用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
-  nickname: string; //昵称
-  avatar: string; //头像
-  groupId: string; //群聊id
 }
 
 const user: User = uni.getStorageSync('user');
@@ -104,19 +94,17 @@ export const useGroupChatStore = defineStore('groupChatStore', {
   }),
 
   actions: {
-    //获取群聊信息
+    // 获取群聊信息
     getFriendInfo(groupId: string) {
       this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupInfo;
     },
-    //修改昵称
+    // 修改昵称
     async changeNickname(nickname: string, groupId: string) {
       try {
         await reqChangeGroupChatNickname(nickname, groupId);
-        const index = this.groupInfo.findIndex((item) => {
-          item.groupId === groupId;
-        });
+        const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
         this.groupInfo[index].nickname = nickname;
-        updateNickname(nickname, groupId, user.userInfo.mainId);
+        await updateNickname(nickname, groupId, user.userInfo.mainId);
         uni.showModal({
           title: '修改成功',
         });
@@ -126,7 +114,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         });
       }
     },
-    //修改头像
+    // 修改头像
     changeAvatar(groupId: string) {
       uni.chooseImage({
         count: 1,
@@ -135,7 +123,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
           height: 48,
         },
         success: async (chooseImageRes) => {
-          let imgId = createUUID();
+          const imgId = createUUID();
           const imgData = await reqImgData();
           const tempFilePaths = chooseImageRes.tempFilePaths;
           console.log(tempFilePaths);
@@ -144,23 +132,21 @@ export const useGroupChatStore = defineStore('groupChatStore', {
             filePath: tempFilePaths[0],
             name: 'file',
             formData: {
-              key: `user/${imgId}.jpeg`, //地址和文件名,照片名字需以"user/"开头
-              AccessKeyId: imgData.accessKeyId, //获取ak
-              'x-obs-acl': 'public-read', //设置为公共读
+              key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
+              AccessKeyId: imgData.accessKeyId, // 获取ak
+              'x-obs-acl': 'public-read', // 设置为公共读
               policy: imgData.policy,
-              'content-type': 'image/jpeg', //文件类型
+              'content-type': 'image/jpeg', // 文件类型
               'x-obs-security-token': imgData.securitytoken,
-              signature: imgData.signature, //获取后端生成的signature
+              signature: imgData.signature, // 获取后端生成的signature
             },
             timeout: 10000,
-            success: ({ data }: any) => {
-              const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data.versionId}`;
-              reqUpdateGroupChatAvatar(imgUrl, groupId);
-              const index = this.groupInfo.findIndex((item) => {
-                item.groupId === groupId;
-              });
+            success: async ({ data }) => {
+              const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data}`;
+              await reqUpdateGroupChatAvatar(imgUrl, groupId);
+              const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
               this.groupInfo[index].avatar = imgUrl;
-              updateAvatar(imgUrl, this.groupInfo[index].groupId, user.userInfo.mainId);
+              await updateAvatar(imgUrl, this.groupInfo[index].groupId, user.userInfo.mainId);
             },
             fail: () =>
               uni.showModal({

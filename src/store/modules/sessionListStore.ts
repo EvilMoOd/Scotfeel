@@ -5,15 +5,15 @@ export interface SessionList {
   sessionListInfo: SessionListInfo[];
 }
 export interface SessionListInfo {
-  sessionId: string; //用户或群聊的id
-  contentType: 1 | 2; //最后一次聊天内容的类型，1：文本，2：照片
-  content: string; //最后一次聊天内容
-  chatorName?: string; //如果是群聊的话，这是最新一条消息发送者的昵称
-  unReadCount: number; //未读消息的数量
-  belongToId?: string; //用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
-  updateTime: number; //更新时间
-  type: 1 | 2; //会话类型，1：单聊，2：群聊
-  chatorId?: string; //如果是群聊的话，这是最新一条消息发送者的id
+  sessionId: string; // 用户或群聊的id
+  contentType: 1 | 2; // 最后一次聊天内容的类型，1：文本，2：照片
+  content: string; // 最后一次聊天内容
+  chatorName?: string; // 如果是群聊的话，这是最新一条消息发送者的昵称
+  unReadCount: number; // 未读消息的数量
+  belongToId?: string; // 用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
+  updateTime: number; // 更新时间
+  type: 1 | 2; // 会话类型，1：单聊，2：群聊
+  chatorId?: string; // 如果是群聊的话，这是最新一条消息发送者的id
 }
 export const useSessionListStore = defineStore('sessionListStore', {
   state: (): SessionList => ({
@@ -78,11 +78,9 @@ export const useSessionListStore = defineStore('sessionListStore', {
   actions: {
     newMessage(sessionId: string, content: string, contentType: 1 | 2, date: number, type: 1 | 2) {
       const user = useUserStore();
-      const sessionIndex = this.sessionListInfo.findIndex((item) => {
-        item.sessionId = sessionId;
-      });
-      let session = this.sessionListInfo[sessionIndex];
-      if (session) {
+      const sessionIndex = this.sessionListInfo.findIndex((item) => (item.sessionId = sessionId));
+      if (sessionIndex !== -1) {
+        const session = this.sessionListInfo[sessionIndex];
         this.sessionListInfo.splice(sessionIndex, 1);
         this.sessionListInfo.unshift({
           sessionId,

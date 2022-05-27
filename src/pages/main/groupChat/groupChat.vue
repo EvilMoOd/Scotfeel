@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
-  import type { User } from '../../../store/modules/userStore';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
   import type { GroupInfo } from '../../../store/modules/groupStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
@@ -20,7 +19,7 @@
     groupInfo: GroupInfo;
   }
 
-  const user: User = uni.getStorageSync('user');
+  const user = uni.getStorageSync('user');
   const groupStore = useGroupChatStore();
   let sessionId: string;
   // 输入信息

@@ -1,6 +1,6 @@
 import { executeSql, openDB, selectSql } from './baseSql';
 
-// 执行SQL语句
+// 新建或查询聊天记录表
 export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
   if (!plus.sqlite.isOpenDatabase(config)) {
     // 2.如果没打开先打开
@@ -18,21 +18,25 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
   });
 }
 // 插入数据
-export async function insertRecord(
+export function insertRecord(
   sessionId: string,
   userId: string,
   content: string,
   contentType: 0 | 1,
   createTime: number,
   belongToId: string
-): Promise<unknown> {
-  return await executeSql(`
+): void {
+  return executeSql(`
 		insert into chatRecord values (null,"${sessionId}","${userId}","${content}","${contentType}","${createTime}","${belongToId}")
 	`);
 }
 
 // 单聊的聊天记录查询，lastId是上一次查询的最小的id
-export async function selectSingleChat(lastId: number, sessionId: string, belongToId?: string) {
+export async function selectSingleChat(
+  lastId: number,
+  sessionId: string,
+  belongToId: string
+): Promise<void> {
   return await selectSql(`
 	select id,userId,content,contentType,createTime from chatRecord 
 		where sessionId = "${sessionId}" and belongToId = "${belongToId}" and id < "${lastId}"
@@ -42,7 +46,11 @@ export async function selectSingleChat(lastId: number, sessionId: string, belong
 }
 
 // 群聊的聊天记录查询，lastId是上一次查询的最小的id
-export async function selectGroupChat(lastId: string, sessionId: string, belongToId?: string) {
+export async function selectGroupChat(
+  lastId: string,
+  sessionId: string,
+  belongToId: string
+): Promise<void> {
   return await selectSql(`
 		select c.id,c.userId,c.content,c.contentType,c.createTime,g.avatar,g.nickname,g.remarkName as memberRemarkName,f.remarkName as friendRemarkName
 			from chatRecord c

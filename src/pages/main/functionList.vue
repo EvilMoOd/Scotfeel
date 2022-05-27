@@ -7,28 +7,28 @@
   const spaceStore = useSubscribeSpaceStore();
 
   // 展示person
-  let spaceShow = ref(false);
+  const spaceShow = ref(false);
   // 打开订阅空间栏
   function openSpace() {
     spaceShow.value = !spaceShow.value;
   }
-  //前往个人主页
+  // 前往个人主页
   function goPerson() {
     uni.navigateTo({ url: '/pages/menu/person' });
   }
-  //前往通讯录
+  // 前往通讯录
   function goMailList() {
     uni.navigateTo({ url: '/pages/menu/mailList' });
   }
-  //前往添加好友
+  // 前往添加好友
   function goAddFriends() {
     uni.navigateTo({ url: '/pages/menu/searchFriend' });
   }
-  //前往创建群聊
+  // 前往创建群聊
   function goCreateGroupChat() {
     uni.navigateTo({ url: '/pages/menu/createGroupChat' });
   }
-  //前往创建空间
+  // 前往创建空间
   function goCreateSpace() {
     uni.navigateTo({ url: '/pages/menu/createSpace' });
   }

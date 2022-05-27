@@ -23,7 +23,7 @@
     friendInfo: FriendInfo;
   }
 
-  const user: User = uni.getStorageSync('user');
+  const user = uni.getStorageSync('user');
   const friendStore = useFriendStore();
   let sessionId: string;
   // 输入信息
@@ -98,11 +98,11 @@
     );
     insertRecord(
       sessionId,
-      user.userInfo?.mainId,
+      user.userInfo?.mainId as string,
       e.detail.value,
       0,
       11111111111,
-      user.userInfo?.mainId
+      user.userInfo?.mainId as string
     );
     nextTick(() => (scroll.value += 10000));
   }
@@ -122,7 +122,7 @@
     <view v-for="cr in chat.chatRecord" :key="cr.id">
       <!-- 我的消息 -->
 
-      <view v-if="cr.userId === user.userInfo.mainId" class="contain">
+      <view v-if="cr.userId === user.userInfo?.mainId" class="contain">
         <view :class="cr.contentType === 0 ? 'chat-me' : 'chat-me-img'">
           <view v-if="cr.contentType === 0">{{ cr.content }}</view>
           <image v-if="cr.contentType === 1" :src="cr.content" mode="aspectFit" lazy-load />

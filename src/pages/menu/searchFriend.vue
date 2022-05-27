@@ -2,10 +2,8 @@
   import { ref } from 'vue';
 
   const searchText = ref('');
-  function search() {
-    
-  }
-  //前往添加好友申请
+  function search() {}
+  // 前往添加好友申请
   function goAddFriends() {
     uni.navigateTo({ url: '/pages/menu/addFriends' });
   }

@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createMemberTable() {
+export function createMemberTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql: 'create table if not exists momentList( "id" INTEGER PRIMARY KEY AUTOINCREMENT,"friendId"	VARCHAR(40),"isRead" INT(11),"createTime" DATE,"belongToId" VARCHAR(40))',
@@ -13,20 +13,20 @@ export async function createMemberTable() {
     },
   });
 }
-//插入数据
-export async function insert(
+// 插入数据
+export function insert(
   friendId: string,
   isRead: string,
   createTime: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				insert into momentList values (null,"${friendId}","${isRead}","${createTime}","${belongToId}")
 			`);
 }
 
-//lastId是上一次查询的最小的id
-export async function momentListSelectSql(lastId: string, belongToId?: string) {
+// lastId是上一次查询的最小的id
+export async function momentListSelectSql(lastId: string, belongToId: string): Promise<void> {
   return await selectSql(`
   select m.friendId,m.isRead,f.nickname,f.remarkName,f.avatar
     from momentList m

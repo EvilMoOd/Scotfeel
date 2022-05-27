@@ -4,43 +4,43 @@
   import { useUserStore } from '../store/modules/userStore';
 
   const userStore = useUserStore();
-  //修改手机号地区类型
-  let type = ref(0);
-  let phoneTypes = reactive(['+86']);
+  // 修改手机号地区类型
+  const type = ref(0);
+  const phoneTypes = reactive(['+86']);
   function changePhoneType(e: any) {
     type.value = e.detail.value;
   }
-  //登录信息
-  let userPhone = ref<string>('');
-  let userAuthCode = ref<string>('');
-  let checked = ref(false);
+  // 登录信息
+  const user = reactive({
+    phone: '',
+    authCode: '',
+    agreeAccord: false,
+  });
 
-  //登录
+  // 登录
   async function login() {
     const phonePattern = /^1[3456789]\d{9}$/;
-    if (!phonePattern.test(userPhone.value)) {
+    if (!phonePattern.test(user.phone)) {
       uni.showModal({ title: '请输入正确手机号' });
-    } else if (checked.value != true) {
+    } else if (user.agreeAccord !== true) {
       uni.showModal({ title: '请同意相关协议' });
     } else {
       try {
-        let phone = userPhone.value;
-        let authCode = userAuthCode.value;
-        await userStore.userLogin(phone, authCode);
+        await userStore.userLogin(user.phone, user.authCode);
         uni.redirectTo({ url: '/pages/main/home' });
       } catch (error: any) {
         uni.showModal({ title: error });
       }
     }
   }
-  //获取验证码
-  let disabled = ref(false);
+  // 获取验证码
+  const disabled = ref(false);
   async function getAuthCode() {
     const AuthPattern = /^1[3456789]\d{9}$/;
-    if (AuthPattern.test(userPhone.value)) {
+    if (AuthPattern.test(user.phone)) {
       try {
-        await reqAuthCode(userPhone.value);
-        //设置发送成功后禁用时间为60s
+        await reqAuthCode(user.phone);
+        // 设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {
           disabled.value = false;
@@ -52,9 +52,9 @@
       uni.showModal({ title: '手机号格式有误' });
     }
   }
-  //同意协议
+  // 同意协议
   function changeChecked() {
-    checked.value = true;
+    user.agreeAccord = true;
   }
 </script>
 <template>
@@ -66,14 +66,14 @@
       {{ phoneTypes[type] }}
     </picker>
     <input
-      v-model="userPhone"
+      v-model="user.phone"
       type="text"
       class="username"
       placeholder="请输入手机号"
       placeholder-class="placeholder"
     />
     <input
-      v-model="userAuthCode"
+      v-model="user.authCode"
       type="text"
       class="code"
       placeholder="请输入验证码"
@@ -96,7 +96,7 @@
     <uni-icons type="arrow-right" :size="30" color="white" />
   </button>
   <view class="footer">
-    <radio class="agree" color="#117986" :checked="checked" @tap.once="changeChecked" />
+    <radio class="agree" color="#117986" :checked="user.agreeAccord" @tap.once="changeChecked" />
     <text>我已阅读并同意</text>
     <navigator url="/pages/" hover-class="navigator-hover">
       <text class="nav">Scotfeel用户协议</text>

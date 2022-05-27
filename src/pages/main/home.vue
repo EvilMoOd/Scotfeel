@@ -9,22 +9,22 @@
   const userStore = useUserStore();
   console.log(userStore.userInfo);
 
-  let isShow = ref(false);
+  const isShow = ref(false);
   function displayPerson() {
     isShow.value = !isShow.value;
   }
 
-  //打开消息列表
+  // 打开消息列表
   function goMessage() {
     uni.navigateTo({ url: '/pages/main/message/message' });
   }
   // 前往订阅页面
   function goSubscribe() {
-    uni.navigateTo({ url: '/pages/subscribe/subscribeAndRecommand' });
+    uni.navigateTo({ url: '/pages/subscribe/subscribeAndRecommend' });
   }
 
   onLoad(() => {
-    //TODO初始化
+    // TODO初始化
     if (!userStore.token) {
       uni.redirectTo({ url: '/pages/login' });
     }
@@ -33,7 +33,7 @@
 
 <template>
   <!-- 首页聊天区 -->
-  <view class="body">
+  <view class="body" :class="{ mask: isShow }">
     <view class="header">
       <text class="title" @tap="displayPerson">Scotfeel</text>
       <view class="notice">
@@ -59,7 +59,7 @@
   <!-- 个人中心 -->
   <FunctionList :class="{ 'show-menu': isShow }" />
   <!-- 遮罩 -->
-  <view v-show="isShow" class="mask" @tap="displayPerson"></view>
+  <Mask :show="isShow" :hidden="displayPerson" />
   <view class="subscribe" @tap="goSubscribe">
     <AppIcon icon="mdi:arrow-right-thin" class="icon-arrow"></AppIcon>
   </view>
@@ -69,6 +69,7 @@
   .body {
     position: absolute;
     z-index: 1;
+    transition: 0.7s;
 
     .header {
       @include header;
@@ -117,14 +118,6 @@
     transform: translateX(0);
   }
 
-  .mask {
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba($color: #333, $alpha: 0.6);
-    position: absolute;
-    z-index: 9;
-  }
-
   //订阅空间
   .subscribe {
     width: 80rpx;
@@ -142,5 +135,8 @@
       margin-top: -10rpx;
       margin-left: -10rpx;
     }
+  }
+  .mask {
+    @include mask;
   }
 </style>

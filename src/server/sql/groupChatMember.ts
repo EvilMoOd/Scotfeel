@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createGroupMemberTable() {
+export function createGroupMemberTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
@@ -21,14 +21,14 @@ export interface RootObject {
   avatar: string;
   memberCount: string;
   spaceId: string;
-  belongToId?: string;
+  belongToId: string;
   isDismissed: number;
   spaceNickname: string;
   spaceAvatar: string;
   noticeFlag: number;
 }
-//插入数据
-export async function insert(
+// 插入数据
+export function insert(
   groupId: string,
   memberId: string,
   nickname: string,
@@ -36,21 +36,21 @@ export async function insert(
   avatar: string,
   role: string,
   isExited: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				insert into groupChatMember values ("${groupId}","${memberId}","${nickname}","${remarkName}","${avatar}","${role}","${isExited}","${belongToId}")
 			`);
 }
 
-//删除记录
-export async function _delete(groupId: string, memberId: string, belongToId?: string) {
-  return await executeSql(`
+// 删除记录
+export function _delete(groupId: string, memberId: string, belongToId: string): void {
+  return executeSql(`
 				delete from groupChatMember where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
-//查找所有群成员信息
-export async function selectAllMemberInfo(groupId: string, belongToId?: string) {
+// 查找所有群成员信息
+export async function selectAllMemberInfo(groupId: string, belongToId: string): Promise<void> {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
@@ -59,8 +59,12 @@ export async function selectAllMemberInfo(groupId: string, belongToId?: string) 
 		order by role asc	
 			`);
 }
-//查找一个群成员信息,不需要判断该成员是否已退出群聊,remarkName是这个用户在这个群里的备注
-export async function selectOneMemberInfo(groupId: string, memberId: string, belongToId?: string) {
+// 查找一个群成员信息,不需要判断该成员是否已退出群聊,remarkName是这个用户在这个群里的备注
+export async function selectOneMemberInfo(
+  groupId: string,
+  memberId: string,
+  belongToId: string
+): Promise<void> {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
@@ -68,58 +72,58 @@ export async function selectOneMemberInfo(groupId: string, memberId: string, bel
 		where g.groupId = "${groupId}" and g.memberId = "${memberId}" and g.belongToId = "${belongToId}"
 			`);
 }
-//更新昵称
-export async function updateNickname(
+// 更新昵称
+export function updateNickname(
   nickname: string,
   groupId: string,
   memberId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChatMember set nickname = "${nickname}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新头像
-export async function updateAvatar(
+// 更新头像
+export function updateAvatar(
   avatar: string,
   groupId: string,
   memberId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChatMember set avatar = "${avatar}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新成员备注
-export async function updateRemarkName(
+// 更新成员备注
+export function updateRemarkName(
   remarkName: string,
   groupId: string,
   memberId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChatMember set remarkName = "${remarkName}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新成员角色
-export async function updateRole(
+// 更新成员角色
+export function updateRole(
   role: string,
   groupId: string,
   memberId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChatMember set role = "${role}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
-//更新成员退出状态
-export async function updateIsExited(
+// 更新成员退出状态
+export function updateIsExited(
   isExited: string,
   groupId: string,
   memberId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 				update groupChatMember set isExited = "${isExited}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }

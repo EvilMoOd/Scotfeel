@@ -18,9 +18,14 @@ export interface SearchSpace {
   memberCount: number;
 }
 
-//搜索空间
-export const reqApplyNotice = (keyword: string, pageNum: number, lat: number, lon: number) =>
-  request<SearchSpace[]>({
+// 搜索空间
+export const reqApplyNotice = async (
+  keyword: string,
+  pageNum: number,
+  lat: number,
+  lon: number
+): Promise<SearchSpace[]> =>
+  await request<SearchSpace[]>({
     url: `/notice/get/applications`,
     method: 'GET',
     data: { keyword, pageNum, lat, lon },

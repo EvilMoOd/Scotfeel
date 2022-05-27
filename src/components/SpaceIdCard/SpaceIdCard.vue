@@ -43,11 +43,11 @@
     .identify {
       display: inline-block;
       padding: 4rpx;
-      width: 60rpx;
+      width: 90rpx;
       color: $color-sf;
       border: 1px solid $color-sf;
       border-radius: 30rpx;
-      margin: 10rpx;
+      margin: 10rpx 0;
     }
   }
 </style>

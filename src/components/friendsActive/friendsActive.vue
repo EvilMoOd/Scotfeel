@@ -7,7 +7,7 @@
     uni.navigateTo({ url: '/pages/main/friendsActive' });
   }
   function goFriendsActive(params: string) {
-    uni.navigateTo({ url: `/pages/main/friendsActive?${params}` });
+    uni.navigateTo({ url: `/pages/main/friendsActive?friendId=${params}` });
   }
 </script>
 

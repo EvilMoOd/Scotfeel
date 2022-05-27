@@ -16,11 +16,10 @@
     left: 10vw;
     background-color: #fff;
     width: 80vw;
-    height: 100px;
     transition: 0.5s;
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding: 3vw;
     border-radius: 30rpx;
     box-shadow: 0 3px 8px 6px rgba(7, 17, 27, 0.06);
     &:hover {

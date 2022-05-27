@@ -1,7 +1,7 @@
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
-export async function createSessionListTable() {
+export function createSessionListTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
@@ -16,8 +16,8 @@ export async function createSessionListTable() {
   });
 }
 
-//插入数据
-export async function insert(
+// 插入数据
+export function insert(
   sessionId: string,
   chatorName: string,
   chatorId: string,
@@ -26,15 +26,15 @@ export async function insert(
   unReadCount: number,
   type: number,
   updateTime: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
 		insert into sessionList values ("${sessionId}","${chatorName}","${chatorId}","${content}","${contentType}","${unReadCount}","${type}","${updateTime}","${belongToId}")
 	`);
 }
 
-//查出会话列表
-export async function selectAll(belongToId?: string) {
+// 查出会话列表
+export async function selectAll(belongToId: string): Promise<void> {
   return await selectSql(`
   select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as friendNickname,f.avatar as friendAvatar,f.remarkName as friendRemarkName
     from sessionList s
@@ -44,8 +44,8 @@ export async function selectAll(belongToId?: string) {
   `);
 }
 
-//查出一个会话
-export async function selectOneSession(sessionId: string, belongToId?: string) {
+// 查出一个会话
+export async function selectOneSession(sessionId: string, belongToId: string): Promise<void> {
   return await selectSql(`
 			select *
 					from sessionList
@@ -53,32 +53,32 @@ export async function selectOneSession(sessionId: string, belongToId?: string) {
 			`);
 }
 
-//更新session
-export async function update(
+// 更新session
+export function update(
   chatorName: string,
   chatorId: string,
   content: string,
   contentType: string,
   updateTime: string,
   sessionId: string,
-  belongToId?: string
-) {
-  return await executeSql(`
+  belongToId: string
+): void {
+  return executeSql(`
     update sessionList set chatorName = "${chatorName}",chatorId = "${chatorId}",content = "${content}",contentType = "${contentType}",updateTime = "${updateTime}"
     where sessionId = "${sessionId}" and belongToId = "${belongToId}"
   `);
 }
 
-//未读数加一
-export async function updateIncUnReadCount(sessionId: string, belongToId?: string) {
-  return await executeSql(`
+// 未读数加一
+export function updateIncUnReadCount(sessionId: string, belongToId: string): void {
+  return executeSql(`
     update sessionList set unReadCount = unReadCount + 1 where sessionId = "${sessionId}" and belongToId = "${belongToId}"
   `);
 }
 
-//未读数清零
-export async function updateClearUnReadCount(sessionId: string, belongToId?: string) {
-  return await executeSql(`
+// 未读数清零
+export function updateClearUnReadCount(sessionId: string, belongToId: string): void {
+  return executeSql(`
     update sessionList set unReadCount = 0 where sessionId = "${sessionId}" and belongToId = "${belongToId}"
   `);
 }

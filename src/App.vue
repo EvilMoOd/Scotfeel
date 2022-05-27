@@ -4,11 +4,9 @@
   import { createChatRecordTable } from './server/sql/chatRecord';
   import { connectWebSocket } from './server/webSocket';
   import { useUserStore } from './store/modules/userStore';
-  import { useFriendStore } from './store/modules/friendStore';
   // import { createTable, insert } from './server/sql/groupChat';
 
   const userStore = useUserStore();
-  const friendStore = useFriendStore();
 
   onLaunch(() => {
     init();
@@ -27,7 +25,6 @@
     userStore.token = token;
     connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
     createChatRecordTable();
-    friendStore.getAllFriends();
   }
 </script>
 <style>

@@ -1,4 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
+  import { useMomentListStore } from '../../store/modules/momemtListStore';
+  import { getParam } from '../../util/url';
+
+  const friendId = getParam('friendId');
+  const momentStore = useMomentListStore();
+  onLoad(() => {
+    momentStore.getMoment(friendId);
+  });
+</script>
 
 <template>
   <view class="header">

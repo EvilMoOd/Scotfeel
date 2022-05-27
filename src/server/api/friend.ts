@@ -1,35 +1,35 @@
 import { request } from '../http';
 
-//添加好友
-export const reqAddFriend = (content: string, appliedUserId: string) =>
-  request<null>({
+// 添加好友
+export const reqAddFriend = async (content: string, appliedUserId: string): Promise<null> =>
+  await request<null>({
     url: `/friend/apply/addFriend`,
     method: 'POST',
     data: { content, appliedUserId },
   });
-//删除朋友
-export const reqDeleteFriend = (deletedUserId: string) =>
-  request<null>({
+// 删除朋友
+export const reqDeleteFriend = async (deletedUserId: string): Promise<null> =>
+  await request<null>({
     url: `/friend/delete/friend`,
     method: 'POST',
     data: { deletedUserId },
   });
-//修改朋友备注
-export const reqChangeFriendRemark = (remark: string, friendId: string) =>
-  request<null>({
+// 修改朋友备注
+export const reqChangeFriendRemark = async (remark: string, friendId: string): Promise<null> =>
+  await request<null>({
     url: `/friend/update/remark`,
     method: 'POST',
     data: { remark, friendId },
   });
-//设置免打扰
-export const reqSetNoNotify = () =>
-  request<null>({
+// 设置免打扰
+export const reqSetNoNotify = async (): Promise<null> =>
+  await request<null>({
     url: `/friend/mute/notice`,
     method: 'GET',
   });
-//处理好友请求 审核状态 ：0：未审核，1：同意，2：拒绝
-export const reqDealFriendApply = (applyId: string, status: 0 | 1 | 2) =>
-  request<null>({
+// 处理好友请求 审核状态 ：0：未审核，1：同意，2：拒绝
+export const reqDealFriendApply = async (applyId: string, status: 0 | 1 | 2): Promise<null> =>
+  await request<null>({
     url: `/friend/handle/friendApply`,
     method: 'POST',
     data: { applyId, status },
