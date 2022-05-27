@@ -12,17 +12,17 @@
   const props = defineProps<{
     list: SessionListInfo;
   }>();
-  //查找朋友信息
+  // 查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
     friendStore.friendsInfo.find((item) => item.friendId === props.list.sessionId)
   );
-  //查找群聊信息
+  // 查找群聊信息
   const groupStore = useGroupChatStore();
   const groupInfo = computed(() =>
     groupStore.groupInfo.find((item) => item.groupId === props.list.sessionId)
   );
-  //前往聊天页详情
+  // 前往聊天页详情
   function goChat(type: 1 | 2, params: string) {
     type === 1
       ? uni.navigateTo({ url: `/pages/main/personChat/chat?sessionId=${params}` })

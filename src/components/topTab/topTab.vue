@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  //顶部选项卡
+  // 顶部选项卡
   import { ref } from 'vue';
 
   const props = defineProps<{
@@ -8,8 +8,8 @@
     height: string;
   }>();
 
-  let active = ref(true);
-  let currentTab = ref(0);
+  const active = ref(true);
+  const currentTab = ref(0);
   function log() {
     active.value = !active.value;
   }

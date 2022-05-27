@@ -1,5 +1,5 @@
 <script lang="ts" setup="setup">
-  //直接用app-icon组件并传入icon属性即可
+  // 直接用app-icon组件并传入icon属性即可
   const props = defineProps<{
     icon: string;
   }>();

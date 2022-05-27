@@ -1,9 +1,9 @@
 import { executeSql, openDB, selectSql } from './baseSql';
 
 // 执行SQL语句
-export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/chat.db' }) {
+export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
   if (!plus.sqlite.isOpenDatabase(config)) {
-    //2.如果没打开先打开
+    // 2.如果没打开先打开
     openDB(config);
   }
   plus.sqlite.executeSql({
@@ -17,23 +17,23 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
     },
   });
 }
-//插入数据
-export function insertRecord(
+// 插入数据
+export async function insertRecord(
   sessionId: string,
   userId: string,
   content: string,
   contentType: 0 | 1,
   createTime: number,
-  belongToId?: string
-) {
-  return executeSql(`
+  belongToId: string
+): Promise<unknown> {
+  return await executeSql(`
 		insert into chatRecord values (null,"${sessionId}","${userId}","${content}","${contentType}","${createTime}","${belongToId}")
 	`);
 }
 
-//单聊的聊天记录查询，lastId是上一次查询的最小的id
-export function selectSingleChat(lastId: number, sessionId: string, belongToId: string) {
-  return selectSql(`
+// 单聊的聊天记录查询，lastId是上一次查询的最小的id
+export async function selectSingleChat(lastId: number, sessionId: string, belongToId?: string) {
+  return await selectSql(`
 	select id,userId,content,contentType,createTime from chatRecord 
 		where sessionId = "${sessionId}" and belongToId = "${belongToId}" and id < "${lastId}"
 	order by id desc
@@ -41,9 +41,9 @@ export function selectSingleChat(lastId: number, sessionId: string, belongToId: 
 `);
 }
 
-//群聊的聊天记录查询，lastId是上一次查询的最小的id
-export function selectGroupChat(lastId: string, sessionId: string, belongToId: string) {
-  return selectSql(`
+// 群聊的聊天记录查询，lastId是上一次查询的最小的id
+export async function selectGroupChat(lastId: string, sessionId: string, belongToId?: string) {
+  return await selectSql(`
 		select c.id,c.userId,c.content,c.contentType,c.createTime,g.avatar,g.nickname,g.remarkName as memberRemarkName,f.remarkName as friendRemarkName
 			from chatRecord c
 			left join groupChatMember g on (g.groupId = "${sessionId}" and g.belongToId = "${belongToId}" and g.memberId = c.userId)

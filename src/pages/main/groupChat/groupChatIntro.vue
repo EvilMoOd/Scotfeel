@@ -16,7 +16,7 @@
     groupStore.getFriendInfo(sessionId);
   });
 
-  //展示功能块
+  // 展示功能块
   const show = reactive({
     isShow: false,
     isShowConfig: false,
@@ -24,7 +24,7 @@
     isShowChangeRemark: false,
   });
 
-  //展示功能块
+  // 展示功能块
   function showConfig() {
     show.isShowConfig = true;
     show.isShow = true;
@@ -35,7 +35,7 @@
     show.isShowConfig = false;
     show.isShow = false;
   }
-  //修改昵称输入框
+  // 修改昵称输入框
   function showChangeNickname() {
     show.isShowChangeNickname = true;
     show.isShowConfig = false;
@@ -50,18 +50,18 @@
     nickname: '',
     remark: '',
   });
-  //修改群聊昵称
+  // 修改群聊昵称
   function changeGroupNickname(e: string) {
     groupStore.changeNickname(e, sessionId);
     show.isShowChangeRemark = false;
     Input.remark = '';
   }
-  //解散群聊
+  // 解散群聊
   const dismissGroup = async () => {
     await reqDismissGroupChat(sessionId);
     console.log('群聊已解散');
   };
-  //修改我的群聊备注
+  // 修改我的群聊备注
   const setMyRemark = async (e: string) => {
     await reqChangeRemark(e, sessionId);
     show.isShowChangeRemark = false;
@@ -71,11 +71,11 @@
     mute: true,
     verify: false,
   });
-  //消息免打扰
+  // 消息免打扰
   async function changeMute() {
     await reqSetGroupNoNotify(sessionId, switches.mute ? 1 : 0);
   }
-  //进群审核开关
+  // 进群审核开关
   async function changeVerify() {
     await reqUpdateVerify(sessionId, switches.verify ? 1 : 0);
   }

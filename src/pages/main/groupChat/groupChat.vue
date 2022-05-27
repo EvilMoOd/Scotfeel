@@ -6,31 +6,31 @@
   import type { GroupInfo } from '../../../store/modules/groupStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
 
+  export interface ChatRecord {
+    id: number;
+    sessionId: string;
+    userId?: string;
+    content: string;
+    contentType: number;
+    belongToId?: string;
+    createTime: number;
+  }
   export interface Chat {
     chatRecord: ChatRecord[];
     groupInfo: GroupInfo;
-  }
-  export interface ChatRecord {
-    id?: number;
-    sessionId: string;
-    userId: string;
-    content: string;
-    contentType: number;
-    belongToId: string;
-    createTime: number;
   }
 
   const user: User = uni.getStorageSync('user');
   const groupStore = useGroupChatStore();
   let sessionId: string;
-  //输入信息
-  let msg = ref('');
+  // 输入信息
+  const msg = ref('');
 
-  //前往群聊介绍页面
+  // 前往群聊介绍页面
   function goGroupIntroduction() {
     uni.navigateTo({ url: `/pages/main/groupChat/groupChatIntro?sessionId=${sessionId}` });
   }
-  //过滤对方和自己的消息
+  // 过滤对方和自己的消息
   const scroll = ref(0);
   const chat = reactive<Chat>({
     chatRecord: [
@@ -63,20 +63,20 @@
     const groupInfo = groupStore.groupInfo.find((item) => item.groupId === sessionId);
     init(groupInfo);
   });
-  //初始化
+  // 初始化
   async function init(groupInfo: any) {
     chat.groupInfo = groupInfo;
-    const record = await selectSingleChat(10000, sessionId, user.userInfo.mainId);
+    const record = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
     chat.chatRecord = record as ChatRecord[];
     scroll.value += 1000;
   }
-  //发送消息
+  // 发送消息
   function submitMessage(e: any) {
     const newMsg = {
       id: 1,
       sessionId: sessionId,
-      userId: user.userInfo.mainId,
-      belongToId: user.userInfo.mainId,
+      userId: user.userInfo?.mainId,
+      belongToId: user.userInfo?.mainId,
       content: e.detail.value,
       contentType: 0,
       createTime: 11111111111,
@@ -86,11 +86,11 @@
     msg.value = '';
     insertRecord(
       sessionId,
-      user.userInfo.mainId,
+      user.userInfo?.mainId as string,
       e.detail.value,
       0,
       Date.now(),
-      user.userInfo.mainId
+      user.userInfo?.mainId as string
     );
     nextTick(() => (scroll.value += 10000));
   }
@@ -110,7 +110,7 @@
     <view v-for="cr in chat.chatRecord" :key="cr.id">
       <!-- 我的消息 -->
 
-      <view v-if="cr.userId === user.userInfo.mainId" class="contain">
+      <view v-if="cr.userId === user.userInfo?.mainId" class="contain">
         <view :class="cr.contentType === 0 ? 'chat-me' : 'chat-me-img'">
           <view v-if="cr.contentType === 0">{{ cr.content }}</view>
           <image v-if="cr.contentType === 1" :src="cr.content" mode="aspectFit" lazy-load />

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  //空间名片卡片
+  // 空间名片卡片
   const props = defineProps<{
     img: string;
   }>();

@@ -19,7 +19,7 @@ export async function insert(
   nickname: string,
   avatar: string,
   role: number,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				insert into subscribedSpace values ("${spaceId}","${nickname}","${avatar}","${role}","${belongToId}")
@@ -27,37 +27,37 @@ export async function insert(
 }
 
 //删除记录
-export async function _delete(spaceId: string, belongToId: string) {
+export async function _delete(spaceId: string, belongToId?: string) {
   return await executeSql(`
 				delete from subscribedSpace where spaceId = "${spaceId}" and belongToId = "${belongToId}"
 			`);
 }
 //查找所有订阅空间
-export async function selectAllSpaces(belongToId: string) {
+export async function selectAllSpaces(belongToId?: string) {
   return await selectSql(`
 	select spaceId,nickname,avatar,role from subscribedSpace where belongToId = "${belongToId}"
 			`);
 }
 //查找一个订阅空间
-export async function selectOneSpace(spaceId: string, belongToId: string) {
+export async function selectOneSpace(spaceId: string, belongToId?: string) {
   return await selectSql(`
 	select spaceId,nickname,avatar,role from subscribedSpace where spaceId = "${spaceId}" and belongToId = "${belongToId}"
 			`);
 }
 //更新昵称
-export async function updateNickname(nickname: string, spaceId: string, belongToId: string) {
+export async function updateNickname(nickname: string, spaceId: string, belongToId?: string) {
   return await executeSql(`
 				update subscribedSpace set nickname = "${nickname}" where spaceId = "${spaceId}" and belongToId = "${belongToId}"
 			`);
 }
 //更新角色
-export async function updateRole(role: number, spaceId: string, belongToId: string) {
+export async function updateRole(role: number, spaceId: string, belongToId?: string) {
   return await executeSql(`
 				update subscribedSpace set role = "${role}" where spaceId = "${spaceId}" and belongToId = "${belongToId}"
 			`);
 }
 //更新头像
-export async function updateAvatar(avatar: string, spaceId: string, belongToId: string) {
+export async function updateAvatar(avatar: string, spaceId: string, belongToId?: string) {
   return await executeSql(`
 				update subscribedSpace set avatar = "${avatar}" where spaceId = "${spaceId}" and belongToId = "${belongToId}"
 			`);

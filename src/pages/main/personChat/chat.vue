@@ -8,32 +8,32 @@
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
   import { _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
+  export interface ChatRecord {
+    id: number;
+    sessionId?: string;
+    userId?: string;
+    content: string;
+    contentType: number;
+    belongToId?: string;
+    createTime: number;
+  }
 
   export interface Chat {
     chatRecord: ChatRecord[];
     friendInfo: FriendInfo;
   }
-  export interface ChatRecord {
-    id: number;
-    sessionId: string;
-    userId: string;
-    content: string;
-    contentType: number;
-    belongToId: string;
-    createTime: number;
-  }
 
   const user: User = uni.getStorageSync('user');
   const friendStore = useFriendStore();
   let sessionId: string;
-  //输入信息
-  let msg = ref('');
+  // 输入信息
+  const msg = ref('');
 
-  //前往个人介绍页面
+  // 前往个人介绍页面
   function goFriendPerson() {
     uni.navigateTo({ url: `/pages/main/personChat/friendDetail?sessionId=${sessionId}` });
   }
-  //过滤对方和自己的消息
+  // 过滤对方和自己的消息
   const scroll = ref(0);
   const chat = reactive<Chat>({
     chatRecord: [
@@ -58,27 +58,28 @@
       account: 'reprehenderit aliqua pariatur esse',
       backgroundImage: 'http://dummyimage.com/400x400',
       noticeFlag: 0,
+      signature: '',
     },
   });
   onLoad((params: any) => {
     sessionId = params.sessionId;
-    const friendInfo = friendStore.friendInfo.find((item) => item.friendId === sessionId);
+    const friendInfo = friendStore.friendsInfo.find((item) => item.friendId === sessionId);
     init(friendInfo);
   });
-  //初始化
+  // 初始化
   async function init(friendInfo: any) {
     chat.friendInfo = friendInfo;
-    const record = await selectSingleChat(10000, sessionId, user.userInfo.mainId);
+    const record = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
     chat.chatRecord = record as ChatRecord[];
     scroll.value += 1000;
   }
-  //发送消息
+  // 发送消息
   function submitMessage(e: any) {
-    const newMsg = {
+    const newMsg: ChatRecord = {
       id: 1,
       sessionId: sessionId,
-      userId: user.userInfo.mainId,
-      belongToId: user.userInfo.mainId,
+      userId: user.userInfo?.mainId,
+      belongToId: user.userInfo?.mainId,
       content: e.detail.value,
       contentType: 0,
       createTime: 11111111111,
@@ -97,11 +98,11 @@
     );
     insertRecord(
       sessionId,
-      user.userInfo.mainId,
+      user.userInfo?.mainId,
       e.detail.value,
       0,
       11111111111,
-      user.userInfo.mainId
+      user.userInfo?.mainId
     );
     nextTick(() => (scroll.value += 10000));
   }

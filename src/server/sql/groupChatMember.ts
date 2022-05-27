@@ -21,7 +21,7 @@ export interface RootObject {
   avatar: string;
   memberCount: string;
   spaceId: string;
-  belongToId: string;
+  belongToId?: string;
   isDismissed: number;
   spaceNickname: string;
   spaceAvatar: string;
@@ -36,7 +36,7 @@ export async function insert(
   avatar: string,
   role: string,
   isExited: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				insert into groupChatMember values ("${groupId}","${memberId}","${nickname}","${remarkName}","${avatar}","${role}","${isExited}","${belongToId}")
@@ -44,13 +44,13 @@ export async function insert(
 }
 
 //删除记录
-export async function _delete(groupId: string, memberId: string, belongToId: string) {
+export async function _delete(groupId: string, memberId: string, belongToId?: string) {
   return await executeSql(`
 				delete from groupChatMember where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
 }
 //查找所有群成员信息
-export async function selectAllMemberInfo(groupId: string, belongToId: string) {
+export async function selectAllMemberInfo(groupId: string, belongToId?: string) {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
@@ -60,7 +60,7 @@ export async function selectAllMemberInfo(groupId: string, belongToId: string) {
 			`);
 }
 //查找一个群成员信息,不需要判断该成员是否已退出群聊,remarkName是这个用户在这个群里的备注
-export async function selectOneMemberInfo(groupId: string, memberId: string, belongToId: string) {
+export async function selectOneMemberInfo(groupId: string, memberId: string, belongToId?: string) {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
@@ -73,7 +73,7 @@ export async function updateNickname(
   nickname: string,
   groupId: string,
   memberId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				update groupChatMember set nickname = "${nickname}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
@@ -84,7 +84,7 @@ export async function updateAvatar(
   avatar: string,
   groupId: string,
   memberId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				update groupChatMember set avatar = "${avatar}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
@@ -95,7 +95,7 @@ export async function updateRemarkName(
   remarkName: string,
   groupId: string,
   memberId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				update groupChatMember set remarkName = "${remarkName}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
@@ -106,7 +106,7 @@ export async function updateRole(
   role: string,
   groupId: string,
   memberId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				update groupChatMember set role = "${role}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
@@ -117,7 +117,7 @@ export async function updateIsExited(
   isExited: string,
   groupId: string,
   memberId: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				update groupChatMember set isExited = "${isExited}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"

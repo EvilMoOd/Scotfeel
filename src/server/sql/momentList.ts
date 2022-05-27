@@ -18,7 +18,7 @@ export async function insert(
   friendId: string,
   isRead: string,
   createTime: string,
-  belongToId: string
+  belongToId?: string
 ) {
   return await executeSql(`
 				insert into momentList values (null,"${friendId}","${isRead}","${createTime}","${belongToId}")
@@ -26,7 +26,7 @@ export async function insert(
 }
 
 //lastId是上一次查询的最小的id
-export async function momentListSelectSql(lastId: string, belongToId: string) {
+export async function momentListSelectSql(lastId: string, belongToId?: string) {
   return await selectSql(`
   select m.friendId,m.isRead,f.nickname,f.remarkName,f.avatar
     from momentList m

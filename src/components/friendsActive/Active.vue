@@ -7,7 +7,7 @@
     list: MomentListInfo;
   }>();
 
-  //查找朋友信息
+  // 查找朋友信息
   const friendStore = useFriendStore();
   const friendInfo = computed(() =>
     friendStore.friendsInfo.find((item) => item.friendId === props.list.friendId)

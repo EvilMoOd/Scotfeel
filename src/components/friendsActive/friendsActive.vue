@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { useMomentListStore } from '../../store/modules/momemtListStore';
   import Active from './Active.vue';
-  //朋友动态栏
+  // 朋友动态栏
   const momentList = useMomentListStore();
   function goAllFriendsActive() {
     uni.navigateTo({ url: '/pages/main/friendsActive' });

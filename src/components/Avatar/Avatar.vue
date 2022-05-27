@@ -1,7 +1,7 @@
 <script setup lang="ts">
   const props = defineProps<{
     imgSrc: string;
-    type: 1 | 2 | 3; //1代表个人头像，2代表空间头像
+    type: 1 | 2 | 3; // 1代表个人头像，2代表空间头像
   }>();
 </script>
 
