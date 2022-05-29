@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { reqChangeFriendRemark, reqDeleteFriend } from '../../server/api/friend';
+import type { FriendInfo } from '../../server/api/user';
 import {
   updateAccount,
   updateAvatar,
@@ -10,12 +11,11 @@ import {
   updateSignature,
   updateSpaceId,
 } from '../../server/sql/friend';
-import type { FriendInfo, User } from './userStore';
 export interface Friend {
   friendsInfo: FriendInfo[];
   friendPage: FriendInfo;
 }
-const user: User = uni.getStorageSync('user');
+const user = uni.getStorageSync('user');
 
 export const useFriendStore = defineStore('friend', {
   state: (): Friend => ({

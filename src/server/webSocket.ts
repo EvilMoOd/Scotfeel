@@ -1,6 +1,6 @@
 import { useFriendStore } from '../store/modules/friendStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
-import { useNoticeStore } from '../store/modules/notice';
+import { useNoticeStore } from '../store/modules/noticeStore';
 import { useSessionListStore } from '../store/modules/sessionListStore';
 import { useUserStore } from '../store/modules/userStore';
 import { insertRecord } from './sql/chatRecord';

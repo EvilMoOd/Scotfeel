@@ -14,6 +14,10 @@
     isShow.value = !isShow.value;
   }
 
+  // function goMoment() {
+  //   uni.navigateTo({ url: '/pages/main/moment' });
+  // }
+
   // 打开消息列表
   function goMessage() {
     uni.navigateTo({ url: '/pages/main/message/message' });
@@ -44,7 +48,7 @@
     </view>
     <!-- 聊天列表 -->
     <scroll-view scroll-y="true" class="main">
-      <FriendsActive />
+      <MomentList />
       <view class="chat-list">
         <view
           v-for="(list, index) in sessionListStore.sessionListInfo"
@@ -61,7 +65,7 @@
   <!-- 遮罩 -->
   <Mask :show="isShow" :hidden="displayPerson" />
   <view class="subscribe" @tap="goSubscribe">
-    <AppIcon icon="mdi:arrow-right-thin" class="icon-arrow"></AppIcon>
+    <uni-icons type="arrow-right" color="#fff" size="40" />
   </view>
 </template>
 
@@ -84,8 +88,8 @@
       }
 
       .notice {
-        position: relative;
-        top: -56rpx;
+        position: absolute;
+        top: 86rpx;
         left: 592rpx;
         .msg-tip {
           position: absolute;

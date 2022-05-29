@@ -3,39 +3,39 @@
   import Active from './Active.vue';
   // 朋友动态栏
   const momentList = useMomentListStore();
-  function goAllFriendsActive() {
-    uni.navigateTo({ url: '/pages/main/friendsActive' });
+  function goAllMoment() {
+    uni.redirectTo({ url: '/pages/main/moment' });
   }
-  function goFriendsActive(params: string) {
-    uni.navigateTo({ url: `/pages/main/friendsActive?friendId=${params}` });
+  function goMoment(params: string) {
+    uni.redirectTo({ url: `/pages/main/moment?friendId=${params}` });
   }
 </script>
 
 <template>
   <!-- 朋友动态栏 -->
-  <view class="friends-active">
-    <view class="friend-active">
+  <view class="momentList">
+    <view class="moment">
       <!-- 可能有bug这里 -->
       <scroll-view scroll-x="true">
         <Active
           v-for="list in momentList.momentListInfo"
           :key="list.id"
           :list="list"
-          @tap="goFriendsActive(list.friendId)"
+          @tap="goMoment(list.friendId)"
         />
       </scroll-view>
     </view>
-    <view class="more-active" @tap="goAllFriendsActive">全部</view>
+    <view class="more-active" @tap="goAllMoment">全部</view>
   </view>
 </template>
 
 <style lang="scss" scoped>
-  .friends-active {
+  .momentList {
     display: flex;
     height: 190rpx;
     border-bottom: solid 2rpx #f2f2f2;
     justify-content: center;
-    .friend-active {
+    .moment {
       overflow: hidden;
       white-space: nowrap;
       width: 600rpx;

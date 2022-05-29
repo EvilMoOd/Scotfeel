@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
 import {
   reqChangeAvatar,

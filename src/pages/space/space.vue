@@ -22,38 +22,40 @@
 </script>
 
 <template>
-  <scroll-view scroll-y class="space-body" :class="{ glass: isShow }">
-    <view class="header">
-      <Back class="back" />
-      <uni-icons type="camera" color="#fff" size="4vh" class="publicActive" />
-      <uni-icons type="bars" color="#fff" size="4vh" class="more" @tap="showMember" />
-      <view class="space-msg">
-        <Avatar img-src="/src/assets/images/img3.png" :type="3" @tap="goSpaceDetail" />
-        <view class="msg">
-          <text style="color: #fff">ACM</text>
-          <br />
-          <text style="color: #aaa; font-size: 24rpx">@ACM</text>
+  <view class="page">
+    <scroll-view scroll-y class="space-body" :class="{ mask: isShow }">
+      <view class="header">
+        <Back class="back" />
+        <uni-icons type="camera" color="#fff" size="4vh" class="publicActive" />
+        <uni-icons type="bars" color="#fff" size="4vh" class="more" @tap="showMember" />
+        <view class="space-msg">
+          <Avatar img-src="/src/assets/images/img3.png" :type="3" @tap="goSpaceDetail" />
+          <view class="msg">
+            <text style="color: #fff">ACM</text>
+            <br />
+            <text style="color: #aaa; font-size: 24rpx">@ACM</text>
+          </view>
+        </view>
+        <view class="introduction">中美式肌肉俱乐部（American Muscl Club of China...</view>
+        <view v-if="!spaceStore.subscribeSpace.inSpace" class="subscribe">订阅</view>
+        <view :class="spaceStore.subscribeSpace.inSpace ? 'inSpace' : 'join'" @click="joinSpace">
+          加入
         </view>
       </view>
-      <view class="introduction">中美式肌肉俱乐部（American Muscl Club of China...</view>
-      <view v-if="!spaceStore.subscribeSpace.inSpace" class="subscribe">订阅</view>
-      <view :class="spaceStore.subscribeSpace.inSpace ? 'inSpace' : 'join'" @click="joinSpace">
-        加入
+      <view class="main">
+        <view class="space-sp">
+          <text>30订阅&nbsp;&nbsp;</text>
+          <text>10成员</text>
+        </view>
+        <view class="space-place">
+          <SpaceCard />
+          <SpaceCard />
+          <SpaceCard />
+          <SpaceCard />
+        </view>
       </view>
-    </view>
-    <view class="main">
-      <view class="space-sp">
-        <text>30订阅&nbsp;&nbsp;</text>
-        <text>10成员</text>
-      </view>
-      <view class="space-place">
-        <SpaceCard />
-        <SpaceCard />
-        <SpaceCard />
-        <SpaceCard />
-      </view>
-    </view>
-  </scroll-view>
+    </scroll-view>
+  </view>
   <PopBottom :pop-show="isShow">
     <scroll-view scroll-y class="member-list">
       <view class="member-item">
@@ -82,106 +84,109 @@
 </template>
 
 <style lang="scss" scoped>
-  .space-body {
-    transition: 0.7s;
-    .header {
-      width: 750rpx;
-      height: 458rpx;
-      background-image: url('@/assets/images/img4.png');
-      background-size: cover;
-      overflow: hidden;
-      font-size: 26rpx;
-      .back {
-        position: absolute;
-        top: 62rpx;
-        left: 26rpx;
-      }
-      .publicActive {
-        position: absolute;
-        top: 62rpx;
-        left: 580rpx;
-      }
-      .more {
-        position: absolute;
-        top: 62rpx;
-        left: 682rpx;
-      }
-      .space-msg {
-        margin-top: 136rpx;
-        margin-left: 40rpx;
-        display: flex;
-        .msg {
-          margin-left: 20rpx;
-        }
-      }
-      .introduction {
-        margin-top: 60rpx;
-        margin-left: 40rpx;
-        width: 50%;
-        height: 70rpx;
-        font-size: 22rpx;
-        color: #fff;
+  .page {
+    height: 100vh;
+    .space-body {
+      transition: 0.7s;
+      .header {
+        width: 750rpx;
+        height: 458rpx;
+        background-image: url('@/assets/images/img4.png');
+        background-size: cover;
         overflow: hidden;
-      }
-      .subscribe {
-        position: absolute;
-        top: 374rpx;
-        width: 82rpx;
-        height: 50rpx;
-        left: 540rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: $color-sf;
-        border-radius: 10rpx;
-        color: #fff;
-        &:active {
-          background-color: #226068;
-        }
-      }
-      .join {
-        position: absolute;
-        top: 374rpx;
-        left: 632rpx;
-        width: 96rpx;
-        height: 50rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #fbb148;
-        border-radius: 30rpx;
-        color: #fff;
-        &:active {
-          background-color: #ca9230;
-        }
-      }
-      .inSpace {
-        position: absolute;
-        top: 374rpx;
-        left: 632rpx;
-        width: 96rpx;
-        height: 50rpx;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #d7d7d7;
-        border-radius: 30rpx;
-        color: #fff;
-      }
-    }
-    .main {
-      border-radius: 40rpx 40rpx 0 0;
-      margin-top: -30rpx;
-      width: 100vw;
-      height: 900rpx;
-      background-color: #fff;
-      .space-sp {
-        padding: 10rpx 10rpx 30rpx 520rpx;
         font-size: 26rpx;
-        color: #797979;
+        .back {
+          position: absolute;
+          top: 62rpx;
+          left: 26rpx;
+        }
+        .publicActive {
+          position: absolute;
+          top: 62rpx;
+          left: 580rpx;
+        }
+        .more {
+          position: absolute;
+          top: 62rpx;
+          left: 682rpx;
+        }
+        .space-msg {
+          margin-top: 136rpx;
+          margin-left: 40rpx;
+          display: flex;
+          .msg {
+            margin-left: 20rpx;
+          }
+        }
+        .introduction {
+          margin-top: 60rpx;
+          margin-left: 40rpx;
+          width: 50%;
+          height: 70rpx;
+          font-size: 22rpx;
+          color: #fff;
+          overflow: hidden;
+        }
+        .subscribe {
+          position: absolute;
+          top: 374rpx;
+          width: 82rpx;
+          height: 50rpx;
+          left: 540rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: $color-sf;
+          border-radius: 10rpx;
+          color: #fff;
+          &:active {
+            background-color: #226068;
+          }
+        }
+        .join {
+          position: absolute;
+          top: 374rpx;
+          left: 632rpx;
+          width: 96rpx;
+          height: 50rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #fbb148;
+          border-radius: 30rpx;
+          color: #fff;
+          &:active {
+            background-color: #ca9230;
+          }
+        }
+        .inSpace {
+          position: absolute;
+          top: 374rpx;
+          left: 632rpx;
+          width: 96rpx;
+          height: 50rpx;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background-color: #d7d7d7;
+          border-radius: 30rpx;
+          color: #fff;
+        }
       }
-      .space-place {
-        background-color: #f2f2f2;
+      .main {
+        border-radius: 40rpx 40rpx 0 0;
+        margin-top: -30rpx;
+        width: 100vw;
+        height: 900rpx;
+        background-color: #fff;
+        .space-sp {
+          padding: 10rpx 10rpx 30rpx 520rpx;
+          font-size: 26rpx;
+          color: #797979;
+        }
+        .space-place {
+          background-color: #f2f2f2;
+        }
       }
     }
   }
@@ -200,7 +205,7 @@
       }
     }
   }
-  .glass {
+  .mask {
     filter: blur(3px);
   }
 </style>

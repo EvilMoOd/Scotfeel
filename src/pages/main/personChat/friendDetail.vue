@@ -3,27 +3,32 @@
   import { reactive, ref } from 'vue';
   import { useFriendStore } from '../../../store/modules/friendStore';
   import PopWindow from '../../../components/PopWindow/PopWindow.vue';
-  import type { FriendInfo } from '../../../server/api/user';
+  import type { PersonMessage } from '../../../server/api/user';
+  import { reqPersonMessage } from '../../../server/api/user';
 
   const friendStore = useFriendStore();
-  const friendInfo = reactive<FriendInfo>({
-    friendId: '85',
-    nickname: '可莉',
-    remarkName: '起报战议去层定',
-    avatar: '',
-    spaceId: '61',
-    isDeletedByFriend: 0,
-    belongToId: '13',
-    account: 'reprehenderit aliqua pariatur esse',
-    backgroundImage: 'http://dummyimage.com/400x400',
-    noticeFlag: 0,
-    signature: '',
+  const personInfo = reactive<PersonMessage>({
+    userId: '7d5e7e76a4534db78b79d80b221df2ae',
+    nickname: '用户02',
+    remarkName: '丽丽',
+    account: 'SF_W0mWG6bK',
+    avatar: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
+    backgroundImage: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
+    signature: '喜欢写代码',
+    relationship: 1,
   });
   let sessionId: string;
-  onLoad((params: any) => {
+  onLoad(async (params: any) => {
     sessionId = params.sessionId;
-    friendStore.getFriendInfo(sessionId);
-    console.log(friendInfo);
+    const data = await reqPersonMessage(sessionId);
+    personInfo.account = data.account;
+    personInfo.avatar = data.account;
+    personInfo.backgroundImage = data.backgroundImage;
+    personInfo.nickname = data.nickname;
+    personInfo.relationship = data.relationship;
+    personInfo.remarkName = data.remarkName;
+    personInfo.signature = data.signature;
+    personInfo.userId = data.userId;
   });
 
   // 展示功能块
@@ -49,11 +54,14 @@
   }
   const remark = ref('');
   // 修改备注
+  const message = ref(null);
   async function changeRemark() {
     try {
-      uni.showModal({
-        title: '修改成功',
-      });
+      await friendStore.changeRemark(remark.value, personInfo.userId);
+      message.value.open();
+      hiddenAll();
+      personInfo.remarkName = remark.value;
+      remark.value = '';
     } catch (err) {
       uni.showModal({
         title: '修改失败，请检查网络',
@@ -62,11 +70,11 @@
   }
   // 删除朋友
   function deleteFriend() {
-    friendStore.deleteFriend(friendInfo.friendId);
+    friendStore.deleteFriend(personInfo.userId);
   }
   // 发送消息
   function sendMessage() {
-    uni.redirectTo({ url: `/pages/main/personChat/chat?sessionId=${sessionId}` });
+    uni.navigateTo({ url: `/pages/main/personChat/chat?sessionId=${sessionId}` });
   }
 </script>
 
@@ -74,7 +82,7 @@
   <view class="page" :class="show.isShow ? 'mask' : ''">
     <view class="header">
       <image
-        :src="friendStore.friendPage.backgroundImage"
+        :src="personInfo.backgroundImage"
         mode="scaleToFill"
         style="position: absolute; z-index: -100; width: 750rpx; height: 304rpx"
       />
@@ -82,17 +90,20 @@
       <uni-icons type="more-filled" color="#aaa" size="28" class="icon-more" @click="showConfig" />
     </view>
     <view class="id-card">
-      <image :src="friendStore.friendPage.avatar" mode="scaleToFill" class="avatar" />
+      <image :src="personInfo.avatar" mode="scaleToFill" class="avatar" />
       <view>
-        <text style="font-size: 34rpx; font-weight: bold; color: #fff">
-          {{ friendStore.friendPage.nickname }}
+        <text v-if="personInfo.remarkName" style="font-size: 34rpx; font-weight: bold; color: #fff">
+          {{ personInfo.remarkName }}
+        </text>
+        <text v-else style="font-size: 34rpx; font-weight: bold; color: #fff">
+          {{ personInfo.nickname }}
         </text>
         <br />
-        <text style="font-size: 28rpx">{{ friendStore.friendPage.account }}</text>
+        <text style="font-size: 28rpx">{{ personInfo.account }}</text>
       </view>
       <view class="send-msg-btn" @tap="sendMessage">发送消息</view>
     </view>
-    <view class="introduction">这是一段个人介绍</view>
+    <view class="introduction">{{ personInfo.signature }}</view>
     <TopTab tab1="订阅空间" tab2="动态" height="350px">
       <template #s1>
         <view class="my-space">
@@ -104,6 +115,9 @@
       </template>
     </TopTab>
   </view>
+  <uni-popup ref="message" type="message">
+    <uni-popup-message type="success" message="备注修改成功" :duration="2000"></uni-popup-message>
+  </uni-popup>
   <GradientWindow
     style="right: 1rpx; top: 66rpx; text-align: center; line-height: 60rpx; width: 150rpx"
     :show="show.isShowConfig"

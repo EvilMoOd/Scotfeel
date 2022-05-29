@@ -12,10 +12,10 @@
 
 <style lang="scss" scoped>
   .pop-container {
-    position: absolute;
+    position: fixed;
     z-index: 20;
     box-sizing: border-box;
-    top: 968rpx;
+    bottom: 0;
     left: 34rpx;
     height: 366rpx;
     width: 680rpx;
@@ -24,8 +24,10 @@
     padding: 0 60rpx;
     transform: translateY(366rpx);
     transition: 0.7s;
+    visibility: hidden;
   }
   .space-member-container-show {
     transform: translateY(0);
+    visibility: visible;
   }
 </style>

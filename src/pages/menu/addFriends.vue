@@ -1,13 +1,27 @@
 <script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
+  import { reactive, ref } from 'vue';
   import { reqAddFriend } from '../../server/api/friend';
 
+  const apply = reactive({
+    content: '',
+    appliedUserId: '',
+  });
+
+  onLoad((params: any) => {
+    apply.appliedUserId = params.appliedUserId;
+  });
+
+  const message = ref(null);
   async function addFriend() {
     try {
-      // TODO 要修改成实际的添加信息
-      await reqAddFriend('123', 'mu');
-      uni.navigateBack({
-        delta: 1,
-      });
+      await reqAddFriend(apply.content, apply.appliedUserId);
+      message.value.open();
+      setTimeout(() => {
+        uni.navigateBack({
+          delta: 1,
+        });
+      }, 3000);
     } catch (err) {
       uni.showModal({
         title: '添加失败，请检查网络',
@@ -23,7 +37,7 @@
   </view>
   <view class="main">
     <text>发送添加邀请</text>
-    <textarea class="applyReason" cols="30" rows="10"></textarea>
+    <textarea v-model="apply.content" class="applyReason" cols="30" rows="10"></textarea>
     <image
       src="@/assets/images/determine.jpg"
       class="determine"
@@ -31,6 +45,9 @@
       @tap="addFriend"
     />
   </view>
+  <uni-popup ref="message" type="message">
+    <uni-popup-message type="success" message="添加成功" :duration="2000"></uni-popup-message>
+  </uni-popup>
 </template>
 
 <style lang="scss" scoped>

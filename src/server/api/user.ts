@@ -140,20 +140,33 @@ export const reqChangeId = async (id: string): Promise<null> =>
   });
 // 获取个人主页信息
 export interface PersonMessage {
+  userId: string;
   nickname: string;
+  remarkName?: string;
   account: string;
   avatar: string;
-  backgroundImage: string;
-  signature: string;
+  backgroundImage?: string;
+  signature?: string;
+  relationship: 0 | 1 | 2; // 关系：0：自己，1：朋友，2：非朋友
 }
-export const reqPersonMessage = async (): Promise<PersonMessage> =>
+export const reqPersonMessage = async (mainId: string): Promise<PersonMessage> =>
   await request<PersonMessage>({
     url: `/user/home`,
     method: 'GET',
   });
 // 搜索好友
-export const reqSearchUser = async (): Promise<string> =>
-  await request<string>({
+export interface PersonInfo {
+  userId: string;
+  nickname: string;
+  remarkName?: any;
+  account: string;
+  avatar: string;
+  backgroundImage?: any;
+  signature?: any;
+  relationship: number;
+}
+export const reqSearchUser = async (searchContent: string): Promise<PersonInfo> =>
+  await request<PersonInfo>({
     url: `/user/search`,
     method: 'GET',
   });

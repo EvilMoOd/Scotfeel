@@ -28,28 +28,8 @@
       <view>订阅</view>
     </view>
   </view>
-  <view class="chat1">
-    <image src="@/assets/images/head.png" class="user-head" />
-    <view class="chat-place">
-      <view>
-        <text class="nickname">可莉</text>
-      </view>
-      <text class="content">今晚八点一起攻沙</text>
-      <view class="btn-accept">接受</view>
-    </view>
-  </view>
-  <view class="chat1">
-    <image src="@/assets/images/head.png" class="user-head" />
-    <view class="chat-place">
-      <view>
-        <text class="nickname">可莉</text>
-      </view>
-      <text class="content">今晚八点一起攻沙</text>
-      <view class="btn-accept">接受</view>
-    </view>
-  </view>
-  <view class="chat1">
-    <image src="@/assets/images/head.png" class="user-head" />
+  <view class="apply-msg">
+    <image src="@/assets/images/head.png" class="avatar" />
     <view class="chat-place">
       <view>
         <text class="nickname">可莉</text>
@@ -88,10 +68,10 @@
     text-align: center;
   }
 
-  .chat1 {
+  .apply-msg {
     display: flex;
 
-    .user-head {
+    .avatar {
       width: 96rpx;
       height: 96rpx;
       border-radius: 50%;

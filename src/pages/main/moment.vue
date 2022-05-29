@@ -1,21 +1,21 @@
 <script setup lang="ts">
-  import { onLoad } from '@dcloudio/uni-app';
-  import { useMomentListStore } from '../../store/modules/momemtListStore';
-  import { getParam } from '../../util/url';
+  // import { onLoad } from '@dcloudio/uni-app';
+  // import { useMomentListStore } from '../../store/modules/momemtListStore';
+  // import { getParam } from '../../util/url';
 
-  const friendId = getParam('friendId');
-  const momentStore = useMomentListStore();
-  onLoad(() => {
-    momentStore.getMoment(friendId);
-  });
+  // const friendId = getParam('friendId');
+  // const momentStore = useMomentListStore();
+  // onLoad(() => {
+  // momentStore.getMoment(friendId);
+  // });
 </script>
 
 <template>
   <view class="header">
-    <Back />
+    <Home />
     <text class="title">朋友动态</text>
   </view>
-  <FriendsActive style="background-color: #f2f2f2" />
+  <MomentList style="background-color: #f2f2f2" />
   <scroll-view scroll-y class="main">
     <view class="posts">
       <ActiveCard />
@@ -31,12 +31,6 @@
   .header {
     @include header;
     text-align: center;
-
-    .back {
-      position: absolute;
-      left: 0;
-      top: 60rpx;
-    }
 
     .title {
       display: inline-block;

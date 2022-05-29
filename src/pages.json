@@ -34,7 +34,7 @@
 			}
 		},
 		{
-			"path": "pages/main/friendsActive",
+			"path": "pages/main/moment",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

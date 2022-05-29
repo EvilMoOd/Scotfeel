@@ -1,16 +1,17 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
 import { reqChangeGroupChatNickname, reqUpdateGroupChatAvatar } from '../../server/api/groupChat';
+import type { GroupMember } from '../../server/api/user';
 import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import { updateAvatar, updateNickname } from '../../server/sql/groupChat';
 import { createUUID } from '../../server/utils/uuid';
-import type { GroupMember, User } from './userStore';
 
 export interface GroupChat {
-  groupInfo: GroupInfo[];
-  groupPage: GroupInfo;
+  groupInfo: GroupPage[];
+  groupPage: GroupPage;
 }
-export interface GroupInfo {
+export interface GroupPage {
   groupId: string; // 群聊id
   nickname?: string; // 群聊昵称
   avatar: string; // 群聊头像
@@ -24,7 +25,7 @@ export interface GroupInfo {
   groupMember: GroupMember[];
 }
 
-const user: User = uni.getStorageSync('user');
+const user = uni.getStorageSync('user');
 
 export const useGroupChatStore = defineStore('groupChatStore', {
   state: (): GroupChat => ({
@@ -96,7 +97,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
   actions: {
     // 获取群聊信息
     getFriendInfo(groupId: string) {
-      this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupInfo;
+      this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupPage;
     },
     // 修改昵称
     async changeNickname(nickname: string, groupId: string) {
