@@ -17,7 +17,7 @@ export interface UserInfo {
   account: string; // 用户@id
   phone: string; // 用户手机号
   avatar: string | string[]; // 用户头像
-  backgroundImage: string | string[]; // 用户背景照片
+  backgroundImage: string; // 用户背景照片
   qrcode: string; // 用户二维码
   signature: string; // 用户个性签名
   spaceId: string; // 首页左滑默认进入空间ID

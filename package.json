@@ -50,8 +50,6 @@
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3031320220314002",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3031320220314002",
     "@dcloudio/uni-ui": "^1.4.15",
-    "@iconify/iconify": "^2.2.1",
-    "animate.css": "^4.1.1",
     "dayjs": "^1.11.2",
     "pinia": "^2.0.14",
     "qs": "^6.10.3",
@@ -64,12 +62,10 @@
     "@dcloudio/uni-cli-shared": "3.0.0-alpha-3031320220314002",
     "@dcloudio/vite-plugin-uni": "3.0.0-alpha-3031320220314002",
     "@evilmu/eslint-config-common": "^1.1.4",
-    "@iconify/json": "^2.1.51",
     "@types/uni-app": "^1.4.4",
     "autoprefixer": "^10.4.7",
     "sass": "^1.52.1",
     "typescript": "^4.7.2",
-    "vite": "^2.9.9",
-    "vite-plugin-purge-icons": "^0.8.1"
+    "vite": "^2.9.9"
   }
 }

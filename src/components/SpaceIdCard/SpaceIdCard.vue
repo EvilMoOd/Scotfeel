@@ -2,11 +2,14 @@
   // 空间名片卡片
   const props = defineProps<{
     img: string;
+    spaceId?: string;
+    nickname: string;
+    role?: 1 | 2 | 3 | 4;
   }>();
 
   // 前往订阅空间
   function goSpace() {
-    uni.navigateTo({ url: '/pages/space/space' });
+    uni.navigateTo({ url: `/pages/space/space?spaceId=${props.spaceId}` });
   }
 </script>
 
@@ -15,8 +18,18 @@
   <view class="space-item" @tap="goSpace">
     <image :src="props.img" class="space-img" />
     <br />
-    <text>健身俱乐部</text>
-    <view class="identify">管理员</view>
+    <text>{{ props.nickname }}</text>
+    <view v-if="props.role" class="identify">
+      {{
+        props.role === 1
+          ? '空间主'
+          : props.role === 2
+          ? '管理员'
+          : props.role === 3
+          ? '成员'
+          : '订阅者'
+      }}
+    </view>
   </view>
 </template>
 

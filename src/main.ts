@@ -1,9 +1,7 @@
 import { createSSRApp } from 'vue';
 import App from './App.vue';
 import * as Pinia from 'pinia';
-
-import '@purge-icons/generated'; // icon
-import 'animate.css';
+// import uView from 'uview-ui';
 
 export function createApp(): any {
   const app = createSSRApp(App);

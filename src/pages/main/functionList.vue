@@ -63,7 +63,12 @@
     <!-- 订阅空间 -->
     <scroll-view scroll-y class="space-hidden" :class="{ 'space-show': spaceShow }">
       <view v-for="space in spaceStore.subscribeSpace" :key="space.spaceId" class="space-place">
-        <SpaceIdCard :img="space.avatar" />
+        <SpaceIdCard
+          :img="space.avatar"
+          :space-id="space.spaceId"
+          :nickname="space.nickname"
+          :role="space.role"
+        />
       </view>
     </scroll-view>
     <!-- 菜单项 -->

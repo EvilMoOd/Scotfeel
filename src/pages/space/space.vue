@@ -1,9 +1,60 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { computed, reactive, ref } from 'vue';
+  import type { SubscribeSpace } from '../../store/modules/spaceStore';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
+  import { onLoad } from '@dcloudio/uni-app';
+  import type { SpaceInfo, SpaceMoment } from '../../server/api/space';
+  import {
+    reqCancelSubscribeSpace,
+    reqSubscribeSpace,
+    reqCancelLike,
+    reqAddLike,
+    reqSpaceInfo,
+    reqASpaceMoment,
+  } from '../../server/api/space';
 
+  import { getParam } from '../../util/url';
+
+  // 判断该空间是否为用户订阅的空间
   const spaceStore = useSubscribeSpaceStore();
+  const spaceId = getParam('spaceId');
+
+  interface Space {
+    spaceInfo: SpaceInfo;
+    inSpace?: SubscribeSpace;
+    spaceMoment: SpaceMoment[];
+  }
+
+  const space = reactive<Space>({
+    spaceInfo: {
+      mainId: '2c513f023a514e2083c3294d24cc3aa6',
+      nickname: '号级级特候',
+      account: 'SF_LqJDPOFJ',
+      introduction: '优秀空间',
+      identify: 0,
+      avatar: 'http://dummyimage.com/100x100',
+      countSubscriber: 2,
+      countMember: 3,
+      backgroundImage: 'http://dummyimage.com/100x100',
+    },
+    inSpace: {
+      spaceId: '2c513f023a514e2083c3294d24cc3aa6',
+      belongToId: '79',
+      nickname: '田敏',
+      avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
+      role: 1,
+    },
+    spaceMoment: [],
+  });
+  const imgUrl = computed(() => {
+    return `url(${space.spaceInfo.backgroundImage})`;
+  });
+  onLoad(async () => {
+    space.spaceInfo = await reqSpaceInfo(spaceId);
+    space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId);
+    space.spaceMoment = await reqASpaceMoment();
+  });
 
   const isShow = ref(false);
   function showMember() {
@@ -14,10 +65,32 @@
   }
 
   function joinSpace() {
-    uni.navigateTo({ url: '/pages/space/applySpace' });
+    uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
   }
   function goSpaceDetail() {
-    uni.navigateTo({ url: '/pages/space/spaceDetail' });
+    uni.navigateTo({ url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}` });
+  }
+  // 点赞
+  async function changeLikeStatus(index: number) {
+    if (space.spaceMoment[index].likeStatus === 1) {
+      await reqCancelLike(space.spaceMoment[index]._id);
+      space.spaceMoment[index].likeStatus = 0;
+    } else {
+      await reqAddLike(
+        space.spaceMoment[index]._id,
+        space.spaceMoment[index].posterInfo[0]._id,
+        space.inSpace ? 1 : 0
+      );
+      space.spaceMoment[index].likeStatus = 1;
+    }
+  }
+  // 订阅空间
+  async function subscribe() {
+    await reqSubscribeSpace(spaceId);
+  }
+  // 取消订阅
+  async function cancelSubscribe() {
+    await reqCancelSubscribeSpace(spaceId);
   }
 </script>
 
@@ -29,29 +102,43 @@
         <uni-icons type="camera" color="#fff" size="4vh" class="publicActive" />
         <uni-icons type="bars" color="#fff" size="4vh" class="more" @tap="showMember" />
         <view class="space-msg">
-          <Avatar img-src="/src/assets/images/img3.png" :type="3" @tap="goSpaceDetail" />
+          <Avatar :img-src="space.spaceInfo.avatar" :type="3" @tap="goSpaceDetail" />
           <view class="msg">
-            <text style="color: #fff">ACM</text>
+            <text style="color: #fff">{{ space.spaceInfo.nickname }}</text>
             <br />
-            <text style="color: #aaa; font-size: 24rpx">@ACM</text>
+            <text style="color: #aaa; font-size: 24rpx">{{ space.spaceInfo.account }}</text>
           </view>
         </view>
-        <view class="introduction">中美式肌肉俱乐部（American Muscl Club of China...</view>
-        <view v-if="!spaceStore.subscribeSpace.inSpace" class="subscribe">订阅</view>
-        <view :class="spaceStore.subscribeSpace.inSpace ? 'inSpace' : 'join'" @click="joinSpace">
-          加入
-        </view>
+        <view class="introduction">{{ space.spaceInfo.introduction }}</view>
+        <view v-if="!space.inSpace" class="subscribe" @tap="subscribe">订阅</view>
+        <view
+          v-if="space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3"
+          class="inSpace"
+          @tap="cancelSubscribe"
+        ></view>
+        <view v-else class="join" @click="joinSpace">加入</view>
       </view>
       <view class="main">
         <view class="space-sp">
-          <text>30订阅&nbsp;&nbsp;</text>
-          <text>10成员</text>
+          <text>{{ space.spaceInfo.countSubscriber }}订阅&nbsp;&nbsp;</text>
+          <text>{{ space.spaceInfo.countMember }}成员</text>
         </view>
         <view class="space-place">
-          <SpaceCard />
-          <SpaceCard />
-          <SpaceCard />
-          <SpaceCard />
+          <SpaceCard
+            v-for="(item, index) in space.spaceMoment"
+            :key="item._id"
+            :index="index"
+            :poster-info="item.posterInfo[0]"
+            :content="item.content"
+            :like-count="item.likedCount"
+            :like-status="item.likeStatus"
+            :commented-count="item.commentedCount"
+            :photos="item.photos"
+            :change-like-status="changeLikeStatus"
+            :liked-count="item.likedCount"
+            :comments="item.comments"
+            :create-time="item.createTime"
+          />
         </view>
       </view>
     </scroll-view>
@@ -91,7 +178,7 @@
       .header {
         width: 750rpx;
         height: 458rpx;
-        background-image: url('@/assets/images/img4.png');
+        background-image: v-bind('imgUrl');
         background-size: cover;
         overflow: hidden;
         font-size: 26rpx;

@@ -101,7 +101,6 @@
       </view>
       <view class="item" @tap="showChangeRemark">
         <text>设置群里的昵称</text>
-        <AppIcon icon="fa:pencil" class="pencil"></AppIcon>
       </view>
     </view>
     <view class="br"></view>

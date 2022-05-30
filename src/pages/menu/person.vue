@@ -53,11 +53,6 @@
 <template>
   <view class="page" :class="show.isShow ? 'mask' : ''">
     <view class="header">
-      <image
-        :src="userStore.userInfo?.backgroundImage"
-        mode="scaleToFill"
-        style="position: absolute; z-index: -100; width: 750rpx; height: 304rpx"
-      />
       <Back class="icon-back" />
       <uni-icons type="more-filled" color="#aaa" size="28" class="icon-more" @tap="showConfig" />
     </view>
@@ -120,6 +115,7 @@
     transition: 0.7s;
     .header {
       height: 304rpx;
+      background-image: v-bind('userStore.backgroundImg');
       .icon-back {
         float: left;
         margin-left: 26rpx;

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
+import type { User } from '../../server/api/user';
 import {
   reqChangeAvatar,
   reqChangeBackground,
@@ -13,7 +14,7 @@ import { OBS_URL } from '../../server/http';
 import { createUUID } from '../../server/utils/uuid';
 
 // 从本地仓库捞数据
-const user = uni.getStorageSync('user');
+const user: User = uni.getStorageSync('user');
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -135,6 +136,12 @@ export const useUserStore = defineStore('user', {
           title: '修改失败，请检查网络',
         });
       }
+    },
+  },
+  getters: {
+    backgroundImg(): string {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      return `url(${this.userInfo?.backgroundImage})`;
     },
   },
 });

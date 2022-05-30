@@ -25,6 +25,7 @@
     transform: translateY(366rpx);
     transition: 0.7s;
     visibility: hidden;
+    box-shadow: 5px -5px 5px 0 #eee;
   }
   .space-member-container-show {
     transform: translateY(0);

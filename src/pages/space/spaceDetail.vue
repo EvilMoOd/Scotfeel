@@ -1,14 +1,174 @@
 <script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
+  import {
+    reqChangeAvatar,
+    reqPrivateSetting,
+    reqSetBackGroundImg,
+    reqSetDefaultSpace,
+    reqSetPrivate,
+    reqShowInPersonPage,
+    reqSpaceMember,
+    reqUpdateIntroduction,
+    reqUpdateNickname,
+    reqUserMember,
+  } from '../../server/api/space';
+  import { reqImgData } from '../../server/api/user';
+  import { OBS_URL } from '../../server/http';
+  import { createUUID } from '../../server/utils/uuid';
+  import { getParam } from '../../util/url';
 
+  const spaceId = getParam('spaceId');
+  // 展示模块
   const show = reactive({
     maskShow: false,
+    showConfig: false,
+    showChangeNickname: false,
+    showChangeIntroduction: false,
+    showPrivate: false,
   });
-  const groupInfo = reactive({
-    myRemark: '',
+  function hiddenAll() {
+    show.maskShow = false;
+    show.showConfig = false;
+    show.showChangeNickname = false;
+    show.showChangeIntroduction = false;
+    show.showPrivate = false;
+  }
+  // 空间基础信息
+  onLoad(async () => {
+    const data = await reqPrivateSetting();
+    spaceInfo.private = data.privateFlag === 1;
+    spaceInfo.verify = data.verifyFlag === 1;
+    spaceInfo.recommend = data.recommendFlag === 1;
+    spaceInfo.invite = data.inviteFlag === 1;
+    spaceInfo.userMember = await reqUserMember();
+    spaceInfo.spaceMember = await reqSpaceMember();
   });
-  function changeRemark(e: string) {
-    groupInfo.myRemark = '';
+  const spaceInfo = reactive({
+    spaceNickname: '',
+    spaceIntroduction: '',
+    displayOnPage: true,
+    defaultSpace: false,
+    private: false,
+    verify: false,
+    invite: false,
+    recommend: true,
+    userMember: [
+      {
+        userId: '31231131',
+        avatar: '',
+        nickName: '',
+        role: 3,
+      },
+    ],
+    spaceMember: [
+      {
+        spaceAccount: '55e3f26a10a649f386cc3960916ce251',
+        nickName: '动漫2',
+        avatar: '1',
+      },
+    ],
+  });
+  // 修改昵称
+  async function changeNickname(e: string) {
+    await reqUpdateNickname(e, spaceId);
+    spaceInfo.spaceNickname = '';
+  }
+  async function changeIntroduction(e: string) {
+    await reqUpdateIntroduction(e, spaceId);
+    spaceInfo.spaceIntroduction = '';
+  }
+  // 是否展示在个人主页
+  async function changeDisplayOnPersonPage() {
+    spaceInfo.displayOnPage = !spaceInfo.displayOnPage;
+    await reqShowInPersonPage(spaceInfo.displayOnPage ? 0 : 1, spaceId);
+  }
+  // 左滑默认空间
+  async function setDefaultSpace() {
+    spaceInfo.defaultSpace = !spaceInfo.defaultSpace;
+    await reqSetDefaultSpace(spaceId);
+  }
+  // 设置空间头像
+  function changeSpaceAvatar() {
+    uni.chooseImage({
+      count: 1,
+      crop: {
+        width: 48,
+        height: 48,
+      },
+      success: async (chooseImageRes): Promise<void> => {
+        const imgId = createUUID();
+        const imgData = await reqImgData();
+        const tempFilePaths = chooseImageRes.tempFilePaths;
+        uni.uploadFile({
+          url: OBS_URL,
+          filePath: tempFilePaths[0],
+          name: 'file',
+          formData: {
+            key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
+            AccessKeyId: imgData.accessKeyId, // 获取ak
+            'x-obs-acl': 'public-read', // 设置为公共读
+            policy: imgData.policy,
+            'content-type': 'image/jpeg', // 文件类型
+            'x-obs-security-token': imgData.securitytoken,
+            signature: imgData.signature, // 获取后端生成的signature
+          },
+          timeout: 10000,
+          success: async ({ data }) => {
+            const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data}`;
+            await reqChangeAvatar(imgUrl, spaceId);
+          },
+          fail: () =>
+            uni.showModal({
+              title: '更改失败',
+            }),
+        });
+      },
+    });
+  }
+  // 设置空间背景
+  function changeSpaceBackgroundImg() {
+    uni.chooseImage({
+      count: 1,
+      success: async (chooseImageRes) => {
+        const imgId = createUUID();
+        const imgData = await reqImgData();
+        const tempFilePaths = chooseImageRes.tempFilePaths;
+        uni.uploadFile({
+          url: OBS_URL,
+          filePath: tempFilePaths[0],
+          name: 'file',
+          formData: {
+            key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
+            AccessKeyId: imgData.accessKeyId, // 获取ak
+            'x-obs-acl': 'public-read', // 设置为公共读
+            policy: imgData.policy,
+            'content-type': 'image/jpeg', // 文件类型
+            'x-obs-security-token': imgData.securitytoken,
+            signature: imgData.signature, // 获取后端生成的signature
+          },
+          timeout: 10000,
+          success: async ({ data }) => {
+            const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data}`;
+            await reqSetBackGroundImg(imgUrl, spaceId);
+          },
+          fail: () =>
+            uni.showModal({
+              title: '更改失败',
+            }),
+        });
+      },
+    });
+  }
+  // 空间私密设置
+  async function setSpacePrivate() {
+    await reqSetPrivate(
+      spaceId,
+      spaceInfo.private ? 1 : 0,
+      spaceInfo.verify ? 1 : 0,
+      spaceInfo.invite ? 1 : 0,
+      spaceInfo.recommend ? 1 : 0
+    );
   }
 </script>
 
@@ -21,7 +181,12 @@
         color="#fff"
         size="28"
         class="more-icon"
-        @click="show.maskShow = true"
+        @tap="
+          () => {
+            show.maskShow = true;
+            show.showConfig = true;
+          }
+        "
       />
       <image src="@/assets/images/head.png" class="avatar" />
       <view>AMCC肌肉车俱乐部</view>
@@ -29,7 +194,6 @@
     <view class="list">
       <view class="item">
         <text>设置群里的昵称</text>
-        <AppIcon icon="fa:pencil" class="pencil"></AppIcon>
       </view>
     </view>
     <view class="br"></view>
@@ -54,89 +218,179 @@
       </view>
     </view>
     <hr />
-    <TopTab tab1="用户成员" tab2="空间成员" height="550rpx">
+    <TopTab tab1="用户成员" tab2="空间成员" height="540rpx">
       <template #s1>
         <scroll-view scroll-y class="member-list">
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>海浪线</text>
-            <view style="float: right; color: #3ea8c2; margin-top: 10rpx">群主</view>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
-          </view>
-          <view class="item">
-            <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-            <text>法医</text>
+          <view v-for="item in spaceInfo.userMember" :key="item.userId" class="item">
+            <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
+            <text>{{ item.nickName }}</text>
+            <view style="float: right; color: #3ea8c2; margin-top: 10rpx">
+              {{ item.role === 1 ? '空间主' : item.role === 2 ? '管理员' : '成员' }}
+            </view>
           </view>
         </scroll-view>
       </template>
       <template #s2>
         <view class="my-space">
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
-          <SpaceIdCard img="/src/assets/images/head.png" />
+          <SpaceIdCard
+            v-for="(item, index) in spaceInfo.spaceMember"
+            :key="index"
+            :img="item.avatar"
+            :nickname="item.nickName"
+          />
         </view>
       </template>
     </TopTab>
   </view>
   <GradientWindow
-    style="right: 1rpx; top: 66rpx; text-align: center; line-height: 60rpx"
-    :show="show.maskShow"
+    style="
+      right: 1rpx;
+      top: 66rpx;
+      text-align: center;
+      margin: 10rpx;
+      border-bottom: 5px solid #eee;
+      line-height: 60rpx;
+    "
+    :show="show.showConfig"
   >
-    <text>
+    <view>
       展示在个人主页
-      <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-    </text>
-    <text>
+      <switch
+        color="#117986"
+        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        :checked="spaceInfo.displayOnPage"
+        @change="changeDisplayOnPersonPage"
+      />
+    </view>
+    <view>
       首页左滑默认空间
-      <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
-    </text>
-    <text>设置空间昵称</text>
-    <text>设置空间背景</text>
-    <text>私密设置</text>
-    <text>设置头像</text>
-    <text>空间认证</text>
+      <switch
+        color="#117986"
+        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        :checked="spaceInfo.defaultSpace"
+        @change="setDefaultSpace"
+      />
+    </view>
+    <view
+      @tap="
+        () => {
+          show.showChangeNickname = true;
+          show.maskShow = true;
+          show.showConfig = false;
+        }
+      "
+    >
+      设置空间昵称
+    </view>
+    <view
+      @tap="
+        () => {
+          show.showChangeIntroduction = true;
+          show.maskShow = true;
+          show.showConfig = false;
+        }
+      "
+    >
+      设置空间介绍
+    </view>
+    <view
+      @tap="
+        () => {
+          show.showConfig = false;
+          show.showPrivate = true;
+          show.maskShow = true;
+        }
+      "
+    >
+      私密设置
+    </view>
+    <view @tap="changeSpaceBackgroundImg">设置空间背景</view>
+    <view @tap="changeSpaceAvatar">设置头像</view>
+    <view>空间认证</view>
   </GradientWindow>
-  <PopWindow pop-show>
+  <PopWindow :pop-show="show.showChangeNickname">
     <uni-easyinput
-      v-model="groupInfo.myRemark"
+      v-model="spaceInfo.spaceNickname"
       type="text"
-      placeholder="请输入群聊备注"
+      placeholder="请输入空间昵称"
       trim
       maxlength="30"
       :styles="{ borderColor: '#fff' }"
-      @confirm="(e:string) => changeRemark"
+      @confirm="changeNickname"
     />
   </PopWindow>
-
-  <Mask :show="show.maskShow" class="mask" :hidden="() => (show.maskShow = false)" />
+  <PopWindow :pop-show="show.showChangeIntroduction">
+    <uni-easyinput
+      v-model="spaceInfo.spaceIntroduction"
+      type="text"
+      placeholder="请输入空间介绍"
+      trim
+      maxlength="30"
+      :styles="{ borderColor: '#fff' }"
+      @confirm="changeIntroduction"
+    />
+  </PopWindow>
+  <PopBottom :pop-show="show.showPrivate">
+    <view style="padding-top: 30rpx">
+      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+        设置为私密空间
+        <switch
+          color="#117986"
+          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          :checked="spaceInfo.private"
+          @change="
+            () => {
+              spaceInfo.private = !spaceInfo.private;
+              setSpacePrivate();
+            }
+          "
+        />
+      </view>
+      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+        进入空间需要审核
+        <switch
+          color="#117986"
+          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          :checked="spaceInfo.verify"
+          @change="
+            () => {
+              spaceInfo.verify = !spaceInfo.verify;
+              setSpacePrivate();
+            }
+          "
+        />
+      </view>
+      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+        空间成员只能被邀请
+        <switch
+          color="#117986"
+          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          :checked="spaceInfo.invite"
+          @change="
+            () => {
+              spaceInfo.invite = !spaceInfo.invite;
+              setSpacePrivate();
+            }
+          "
+        />
+      </view>
+      <view style="text-align: center; margin: 10rpx">
+        是否允许系统推荐给其他用户
+        <switch
+          color="#117986"
+          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          :checked="spaceInfo.recommend"
+          @change="
+            () => {
+              spaceInfo.recommend = !spaceInfo.recommend;
+              setSpacePrivate();
+            }
+          "
+        />
+      </view>
+    </view>
+  </PopBottom>
+  <Mask :show="show.maskShow" class="mask" :hidden="hiddenAll" />
 </template>
 
 <style lang="scss" scoped>
@@ -146,6 +400,8 @@
       height: 392rpx;
       background-color: $color-sf;
       text-align: center;
+      // margin: 10rpx;
+      border-bottom: 5px solid #eee;
       color: #fff;
 
       .back {
@@ -212,7 +468,7 @@
       .item {
         margin: 30rpx 0;
 
-        .head-user {
+        .avatar-user {
           width: 66rpx;
           height: 66rpx;
           border-radius: 50%;
