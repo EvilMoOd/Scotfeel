@@ -48,8 +48,6 @@ export function connectWebSocket(url: string, token: string): void {
       sequenceId: createUUID(),
     };
     _sendMessage(JSON.stringify(messageFromClient));
-    _sendHeart(); // 连接服务端成功后开始发送心跳
-    _closeConn(); // 并打开心跳回复检测
   }
   // 监听接收消息
   function _onMessage(res: any): void {
@@ -82,13 +80,14 @@ export function connectWebSocket(url: string, token: string): void {
         content.createTime,
         user.userInfo.mainId
       );
-      sessionListStore.newMessage(
-        content.fromId,
-        content.content,
-        content.contentType,
-        content.createTime,
-        1
-      );
+      console.log('收到消息');
+      // sessionListStore.newMessage(
+      //   content.fromId,
+      //   content.content,
+      //   content.contentType,
+      //   content.createTime,
+      //   1
+      // );
     } else if (messageType === 4) {
       // 4、一条群聊消息
       insertRecord(
@@ -224,6 +223,10 @@ export function connectWebSocket(url: string, token: string): void {
       // 39、kickout
       kickOut();
     } else if (messageType === 40) {
+    } else if (messageType === 43) {
+      console.log('绑定连接成功');
+      _sendHeart(); // 连接服务端成功后开始发送心跳
+      _closeConn(); // 并打开心跳回复检测
     }
   }
   // 监听关闭
@@ -264,6 +267,7 @@ export function connectWebSocket(url: string, token: string): void {
   function _reconnect(): void {
     console.log('进入reconnect准备重新连接');
     if (reconnectFlag) {
+      console.log('重连----------------------');
       setTimeout(function () {
         connectSocket();
       }, 3000);
@@ -275,7 +279,7 @@ export function _sendMessage(message: any): void {
   socketTask.send({
     data: message,
     success() {
-      console.log(message.content);
+      console.log(message);
     },
     fail() {
       console.log(message);

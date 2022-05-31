@@ -153,6 +153,7 @@ export const reqPersonMessage = async (mainId: string): Promise<PersonMessage> =
   await request<PersonMessage>({
     url: `/user/home`,
     method: 'GET',
+    data: { mainId },
   });
 // 搜索好友
 export interface PersonInfo {
@@ -169,6 +170,7 @@ export const reqSearchUser = async (searchContent: string): Promise<PersonInfo> 
   await request<PersonInfo>({
     url: `/user/search`,
     method: 'GET',
+    data: { searchContent },
   });
 // 获取图片表单数据
 export interface ImgData {

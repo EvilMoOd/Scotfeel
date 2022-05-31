@@ -14,11 +14,9 @@
     reqASpaceMoment,
   } from '../../server/api/space';
 
-  import { getParam } from '../../util/url';
-
   // 判断该空间是否为用户订阅的空间
   const spaceStore = useSubscribeSpaceStore();
-  const spaceId = getParam('spaceId');
+  let spaceId: string;
 
   interface Space {
     spaceInfo: SpaceInfo;
@@ -28,7 +26,7 @@
 
   const space = reactive<Space>({
     spaceInfo: {
-      mainId: '2c513f023a514e2083c3294d24cc3aa6',
+      mainId: '25606d2bb91c4638a84cc9109444d666',
       nickname: '号级级特候',
       account: 'SF_LqJDPOFJ',
       introduction: '优秀空间',
@@ -39,7 +37,7 @@
       backgroundImage: 'http://dummyimage.com/100x100',
     },
     inSpace: {
-      spaceId: '2c513f023a514e2083c3294d24cc3aa6',
+      spaceId: '25606d2bb91c4638a84cc9109444d666',
       belongToId: '79',
       nickname: '田敏',
       avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
@@ -50,10 +48,11 @@
   const imgUrl = computed(() => {
     return `url(${space.spaceInfo.backgroundImage})`;
   });
-  onLoad(async () => {
+  onLoad(async (params: any) => {
+    spaceId = params.spaceId;
     space.spaceInfo = await reqSpaceInfo(spaceId);
     space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId);
-    space.spaceMoment = await reqASpaceMoment();
+    space.spaceMoment = await reqASpaceMoment('4477e07c14a248779eecc989815de238', 1652471824095);
   });
 
   const isShow = ref(false);

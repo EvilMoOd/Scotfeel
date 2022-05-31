@@ -207,10 +207,14 @@ export interface SpaceMoment {
   isReposted: number;
   sRepostedMomentInfo: SRepostedMomentInfo[];
 }
-export const reqASpaceMoment = async (): Promise<SpaceMoment[]> =>
+export const reqASpaceMoment = async (
+  spaceId: string,
+  lastMomentId: number
+): Promise<SpaceMoment[]> =>
   await request<SpaceMoment[]>({
     url: `/spaceMoment/get/oneSpaceMoments`,
     method: 'GET',
+    data: { spaceId, lastMomentId },
   });
 // 获取所有订阅空间的动态
 export const reqAllSubscribeMoment = async (): Promise<SpaceMoment> =>

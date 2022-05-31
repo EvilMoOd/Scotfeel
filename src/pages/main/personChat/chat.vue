@@ -2,12 +2,11 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
   // import { useChattingStore } from '../../../store/modules/chatting';
-  import type { User } from '../../../store/modules/userStore';
-  import type { FriendInfo } from '../../../store/modules/friendStore';
   import { useFriendStore } from '../../../store/modules/friendStore';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
   import { _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
+  import type { FriendInfo } from '../../../server/api/user';
   export interface ChatRecord {
     id: number;
     sessionId?: string;
@@ -69,8 +68,7 @@
   // 初始化
   async function init(friendInfo: any) {
     chat.friendInfo = friendInfo;
-    const record = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
-    chat.chatRecord = record as ChatRecord[];
+    chat.chatRecord = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
     scroll.value += 1000;
   }
   // 发送消息

@@ -36,11 +36,11 @@ export async function selectSingleChat(
   lastId: number,
   sessionId: string,
   belongToId: string
-): Promise<void> {
+): Promise<ChatRecord[]> {
   return await selectSql(`
 	select id,userId,content,contentType,createTime from chatRecord 
 		where sessionId = "${sessionId}" and belongToId = "${belongToId}" and id < "${lastId}"
-	order by id desc
+	order by id
 	limit 15
 `);
 }
@@ -57,7 +57,7 @@ export async function selectGroupChat(
 			left join groupChatMember g on (g.groupId = "${sessionId}" and g.belongToId = "${belongToId}" and g.memberId = c.userId)
 				left join friend f on (c.userId = f.friendId and f.belongToId = "${belongToId}")
 					where c.sessionId = "${sessionId}" and c.belongToId = "${belongToId}" and c.id < "${lastId}"
-					order by c.id desc
+					order by c.id
 					limit 15
 	`);
 }
