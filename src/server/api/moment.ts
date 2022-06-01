@@ -54,7 +54,7 @@ export interface MomentInfo {
   repostedMomentPosterSpaceInfo: any[];
   repostedMomentPosterType: number;
   isReposted: number;
-  srepostedMomentInfo: any[];
+  repostedMomentInfo: any[];
 }
 // 获取动态
 export const reqMoment = async (

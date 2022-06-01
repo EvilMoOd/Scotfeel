@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
+  import { useNoticeStore } from '../../store/modules/noticeStore';
   import { useSessionListStore } from '../../store/modules/sessionListStore';
   import { useUserStore } from '../../store/modules/userStore';
   import FunctionList from './functionList.vue';
 
+  const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
   const userStore = useUserStore();
   console.log(userStore.userInfo);
@@ -18,6 +20,11 @@
   //   uni.navigateTo({ url: '/pages/main/moment' });
   // }
 
+  // 有申请添加好友
+  // function applyMessage(arguments) {}
+  function goApply() {
+    uni.navigateTo({ url: '/pages/main/message/apply' });
+  }
   // 打开消息列表
   function goMessage() {
     uni.navigateTo({ url: '/pages/main/message/message' });
@@ -29,9 +36,6 @@
 
   onLoad(() => {
     // TODO初始化
-    if (!userStore.token) {
-      uni.redirectTo({ url: '/pages/login' });
-    }
   });
 </script>
 
@@ -40,9 +44,13 @@
   <view class="body" :class="{ mask: isShow }">
     <view class="header">
       <text class="title" @tap="displayPerson">Scotfeel</text>
-      <view class="notice">
-        <uni-icons type="notification" size="4vh" color="#fff" @tap="goMessage"></uni-icons>
-        <uni-badge :text="1" size="small" class="msg-tip"></uni-badge>
+      <view class="notice" @tap="goMessage">
+        <uni-icons type="notification" size="4vh" color="#fff"></uni-icons>
+        <uni-badge :text="noticeStore.totalMessage" size="small" class="msg-tip"></uni-badge>
+      </view>
+      <view class="new-apply" @tap="goApply">
+        <uni-icons type="person" color="#fff" size="4vh" />
+        <uni-badge :text="noticeStore.applyMessage" size="small" class="msg-tip2"></uni-badge>
       </view>
       <uni-icons type="search" size="4vh" class="icon-search" color="#fff"></uni-icons>
     </view>
@@ -92,6 +100,16 @@
         top: 86rpx;
         left: 592rpx;
         .msg-tip {
+          position: absolute;
+          top: -12rpx;
+          left: 25rpx;
+        }
+      }
+      .new-apply {
+        position: absolute;
+        top: 83rpx;
+        left: 502rpx;
+        .msg-tip2 {
           position: absolute;
           top: -12rpx;
           left: 25rpx;

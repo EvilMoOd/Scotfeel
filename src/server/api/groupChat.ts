@@ -56,10 +56,11 @@ export const reqChangeRemark = async (remark: string, groupId: string): Promise<
     type: 'application/x-www-form-urlencoded',
   });
 // 移除成员
-export const reqRemoveGroupMember = async (): Promise<null> =>
+export const reqRemoveGroupMember = async (memberId: string, groupId: string): Promise<null> =>
   await request<null>({
     url: `/groupChat/delete/member`,
     method: 'POST',
+    data: { memberId, groupId },
     type: 'application/x-www-form-urlencoded',
   });
 // 解散群聊
@@ -98,20 +99,15 @@ export const reqUpdateVerify = async (groupId: string, noticeFlag: 0 | 1): Promi
     data: { groupId, noticeFlag },
     type: 'application/x-www-form-urlencoded',
   });
-// 获取一个成员信息
-export interface GroupMemberInfo {
-  mainId: string;
-  remarkName?: any;
-  nickname: string;
-  avatar: string;
-  role: string;
-}
-export const reqGroupMemberInfo = async (
+// 更改成员角色
+export const reqChangeMemberRole = async (
   groupId: string,
-  appliedId: string
-): Promise<GroupMemberInfo> =>
-  await request<GroupMemberInfo>({
-    url: `/groupChat/get/oneMember`,
-    method: 'GET',
-    data: { groupId, appliedId },
+  memberId: string,
+  role: 1 | 2 | 3
+): Promise<null> =>
+  await request<null>({
+    url: `/groupChat/update/memberRole`,
+    method: 'POST',
+    data: { groupId, memberId, role },
+    type: 'application/x-www-form-urlencoded',
   });

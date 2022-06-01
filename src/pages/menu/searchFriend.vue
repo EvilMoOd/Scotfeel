@@ -8,8 +8,8 @@
     personInfo: undefined,
   });
   async function search(content: string) {
-    console.log(content);
     const result = await reqSearchUser(content);
+    console.log(result);
     searchInfo.personInfo = result;
   }
   // 前往添加好友申请

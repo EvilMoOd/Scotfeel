@@ -26,7 +26,7 @@ export const reqApplyNotice = async (
   lon: number
 ): Promise<SearchSpace[]> =>
   await request<SearchSpace[]>({
-    url: `/notice/get/applications`,
+    url: `/search/space`,
     method: 'GET',
     data: { keyword, pageNum, lat, lon },
   });

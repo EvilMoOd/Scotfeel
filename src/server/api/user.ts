@@ -67,10 +67,10 @@ export interface FriendInfo {
 export interface User {
   userInfo?: UserInfo;
   token?: string; // 令牌
-  subscribedSpace: SubscribedSpace;
-  groupChatMember: GroupMember;
-  groupChat: GroupChat;
-  friendInfo: FriendInfo;
+  subscribedSpace: SubscribedSpace[];
+  groupChatMember: GroupMember[];
+  groupChat: GroupChat[];
+  friendInfo: FriendInfo[];
 }
 export const reqUserLogin = async (phone: string, authCode: string): Promise<User> =>
   await request<User>({

@@ -1,5 +1,15 @@
 import { executeSql, openDB, selectSql } from './baseSql';
 
+export interface ChatRecord {
+  id?: number;
+  sessionId: string;
+  userId: string;
+  content: string;
+  contentType: number;
+  belongToId: string;
+  createTime: number;
+}
+
 // 新建或查询聊天记录表
 export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
   if (!plus.sqlite.isOpenDatabase(config)) {
@@ -40,7 +50,7 @@ export async function selectSingleChat(
   return await selectSql(`
 	select id,userId,content,contentType,createTime from chatRecord 
 		where sessionId = "${sessionId}" and belongToId = "${belongToId}" and id < "${lastId}"
-	order by id
+	order by id desc
 	limit 15
 `);
 }
@@ -57,7 +67,7 @@ export async function selectGroupChat(
 			left join groupChatMember g on (g.groupId = "${sessionId}" and g.belongToId = "${belongToId}" and g.memberId = c.userId)
 				left join friend f on (c.userId = f.friendId and f.belongToId = "${belongToId}")
 					where c.sessionId = "${sessionId}" and c.belongToId = "${belongToId}" and c.id < "${lastId}"
-					order by c.id
+					order by c.id desc
 					limit 15
 	`);
 }

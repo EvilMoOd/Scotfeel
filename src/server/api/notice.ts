@@ -4,23 +4,23 @@ import { request } from '../http';
 export interface ApplyNotice {
   applyId: string;
   applicantId: string;
-  content?: any;
-  applyType: number;
-  spaceApplicantType?: any;
-  spaceId?: any;
-  applicantSpaceId?: any;
+  content: string;
+  applyType: 0 | 1 | 2;
+  spaceApplicantType?: 0 | 1;
+  spaceId?: string;
+  applicantSpaceId?: string;
   groupId: string;
   photo?: any;
-  studentFlag?: any;
-  studentNumber?: any;
-  graduateTime?: any;
-  updateTime: string;
+  studentFlag?: 0 | 1;
+  studentNumber?: string;
+  graduateTime?: number;
+  updateTime: number;
   userAvatar: string;
   userNickname: string;
-  groupChatNickname?: any;
-  spaceNickname?: any;
-  applicantSpaceAvatar?: any;
-  applicantSpaceNickname?: any;
+  groupChatNickname: string;
+  spaceNickname?: string;
+  applicantSpaceAvatar?: string;
+  applicantSpaceNickname?: string;
 }
 export const reqApplyNotice = async (offset: number): Promise<ApplyNotice[]> =>
   await request<ApplyNotice[]>({

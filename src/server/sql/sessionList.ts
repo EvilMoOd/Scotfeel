@@ -1,3 +1,4 @@
+import type { SessionListInfo } from '../../store/modules/sessionListStore';
 import { executeSql, selectSql } from './baseSql';
 
 // 执行SQL语句
@@ -17,7 +18,7 @@ export function createSessionListTable(): void {
 }
 
 // 插入数据
-export function insert(
+export function insertSession(
   sessionId: string,
   chatorName: string,
   chatorId: string,
@@ -34,7 +35,7 @@ export function insert(
 }
 
 // 查出会话列表
-export async function selectAll(belongToId: string): Promise<void> {
+export async function selectAll(belongToId: string): Promise<SessionListInfo[]> {
   return await selectSql(`
   select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as friendNickname,f.avatar as friendAvatar,f.remarkName as friendRemarkName
     from sessionList s
@@ -45,7 +46,10 @@ export async function selectAll(belongToId: string): Promise<void> {
 }
 
 // 查出一个会话
-export async function selectOneSession(sessionId: string, belongToId: string): Promise<void> {
+export async function selectOneSession(
+  sessionId: string,
+  belongToId: string
+): Promise<SessionListInfo> {
   return await selectSql(`
 			select *
 					from sessionList

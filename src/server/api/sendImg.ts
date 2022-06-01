@@ -9,6 +9,6 @@ export interface ApplyNotice {
 }
 export const reqApplyNotice = async (): Promise<ApplyNotice> =>
   await request<ApplyNotice>({
-    url: `/notice/get/applications`,
+    url: `/OBS/get/formData`,
     method: 'GET',
   });

@@ -4,8 +4,9 @@ import { reqChangeGroupChatNickname, reqUpdateGroupChatAvatar } from '../../serv
 import type { GroupMember } from '../../server/api/user';
 import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
-import { updateAvatar, updateNickname } from '../../server/sql/groupChat';
+import { updateAvatar, updateMemberCount, updateNickname } from '../../server/sql/groupChat';
 import { createUUID } from '../../server/utils/uuid';
+import { useUserStore } from './userStore';
 
 export interface GroupChat {
   groupInfo: GroupPage[];
@@ -13,20 +14,19 @@ export interface GroupChat {
 }
 export interface GroupPage {
   groupId: string; // 群聊id
-  nickname?: string; // 群聊昵称
+  nickname: string; // 群聊昵称
   avatar: string; // 群聊头像
-  memberCount?: string; // 群聊成员数
+  memberCount: number; // 群聊成员数
   spaceId?: string; // 群聊绑定的空间id
-  belongToId?: string; // 属于哪个用户
-  isDismissed?: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
+  belongToId: string; // 属于哪个用户
+  isDismissed: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
   spaceNickname?: string; // 群聊绑定的空间昵称
   spaceAvatar?: string; // 群聊绑定的空间头像
-  noticeFlag?: 0 | 1; // 是否设为免打扰，0：否，1：是
+  noticeFlag: 0 | 1; // 是否设为免打扰，0：否，1：是
   groupMember: GroupMember[];
 }
 
 const user = uni.getStorageSync('user');
-
 export const useGroupChatStore = defineStore('groupChatStore', {
   state: (): GroupChat => ({
     groupInfo: [
@@ -157,6 +157,25 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         },
       });
     },
+    updateGroupChatAvatar(groupId: string, avatar: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].avatar = avatar;
+      updateAvatar(avatar, groupId, user.userInfo?.mainId as string);
+    },
+    updateGroupChatNickname(groupId: string, nickname: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].nickname = nickname;
+      updateNickname(nickname, groupId, user.userInfo?.mainId as string);
+    },
+    updateGroupCount(groupId: string, count: number) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].memberCount = count;
+      updateMemberCount(count, groupId, user.userInfo?.mainId as string);
+    },
+    updateGroupSpaceId() {},
+    updateGroupSpaceNickname() {},
+    updateGroupSpaceAvatar() {},
+    groupBreakOut() {},
   },
   getters: {},
 });

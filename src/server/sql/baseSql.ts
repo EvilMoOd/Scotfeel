@@ -5,7 +5,7 @@ export async function selectSql(
     name: 'scotfeel',
     path: '_doc/chat.db',
   }
-): Promise<void> {
+): Promise<any> {
   return await new Promise((resolve, reject) => {
     // 1.判断是否打开数据库
     if (!plus.sqlite.isOpenDatabase(config)) {
@@ -40,9 +40,7 @@ export function executeSql(
   plus.sqlite.executeSql({
     name: config.name,
     sql,
-    success: function (e) {
-      console.log(e);
-    },
+    success: function () {},
     fail: function (e) {
       console.log(e);
     },

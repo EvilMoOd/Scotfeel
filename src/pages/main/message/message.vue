@@ -1,8 +1,4 @@
-<script setup lang="ts">
-  function goApply() {
-    uni.navigateTo({ url: '/pages/main/message/apply' });
-  }
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <view class="header">
@@ -10,15 +6,15 @@
     <view class="title">消息</view>
   </view>
   <view class="function">
-    <view @click="goApply">
-      <uni-icons type="person" color="#117986" size="30" />
-      <view>申请</view>
-    </view>
-
     <view>
       <uni-icons type="chat" color="#117986" size="30" />
       <view>评论</view>
     </view>
+    <view>
+      <uni-icons type="redo" color="#117986" size="30" />
+      <view>转发</view>
+    </view>
+
     <view>
       <uni-icons type="heart" color="#117986" size="30" />
       <view>点赞</view>
@@ -26,16 +22,6 @@
     <view>
       <uni-icons type="star" color="#117986" size="30" />
       <view>订阅</view>
-    </view>
-  </view>
-  <view class="apply-msg">
-    <image src="@/assets/images/head.png" class="avatar" />
-    <view class="chat-place">
-      <view>
-        <text class="nickname">可莉</text>
-      </view>
-      <text class="content">今晚八点一起攻沙</text>
-      <view class="btn-accept">接受</view>
     </view>
   </view>
 </template>
@@ -66,44 +52,5 @@
     padding: 50rpx 80rpx 30rpx 80rpx;
     font-size: 20rpx;
     text-align: center;
-  }
-
-  .apply-msg {
-    display: flex;
-
-    .avatar {
-      width: 96rpx;
-      height: 96rpx;
-      border-radius: 50%;
-      margin: 32rpx;
-    }
-
-    .chat-place {
-      width: 560rpx;
-      padding: 32rpx;
-      padding-left: 0;
-      border-bottom: solid 2rpx #f2f2f2;
-
-      .nickname {
-        font-size: 28rpx;
-      }
-
-      .content {
-        font-size: 22rpx;
-        color: #aaa;
-      }
-
-      .btn-accept {
-        float: right;
-        margin-top: -20rpx;
-        width: 90rpx;
-        height: 42rpx;
-        border-radius: 30rpx;
-        text-align: center;
-        border: 1px solid $color-sf;
-        color: $color-sf;
-        font-size: 24rpx;
-      }
-    }
   }
 </style>

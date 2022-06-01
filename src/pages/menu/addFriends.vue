@@ -15,6 +15,7 @@
   const message = ref(null);
   async function addFriend() {
     try {
+      console.log(apply.appliedUserId);
       await reqAddFriend(apply.content, apply.appliedUserId);
       message.value.open();
       setTimeout(() => {

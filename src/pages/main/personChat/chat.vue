@@ -3,19 +3,11 @@
   import { ref, reactive, nextTick } from 'vue';
   // import { useChattingStore } from '../../../store/modules/chatting';
   import { useFriendStore } from '../../../store/modules/friendStore';
+  import type { ChatRecord } from '../../../server/sql/chatRecord';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
-  import { _sendMessage } from '../../../server/webSocket';
+  import { personMsg, _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
   import type { FriendInfo } from '../../../server/api/user';
-  export interface ChatRecord {
-    id: number;
-    sessionId?: string;
-    userId?: string;
-    content: string;
-    contentType: number;
-    belongToId?: string;
-    createTime: number;
-  }
 
   export interface Chat {
     chatRecord: ChatRecord[];
@@ -61,14 +53,32 @@
     },
   });
   onLoad((params: any) => {
+    // 初始化sessionId
     sessionId = params.sessionId;
+    // 初始化朋友信息
     const friendInfo = friendStore.friendsInfo.find((item) => item.friendId === sessionId);
     init(friendInfo);
+    // 监听页面实时消息
+    personMsg.on('msg', (e: any) => {
+      if (e.fromId === sessionId) {
+        chat.chatRecord.push({
+          sessionId: e.fromId,
+          userId: e.fromId,
+          content: e.content,
+          contentType: e.contentType,
+          belongToId: user.userInfo.mainId,
+          createTime: e.createTime,
+        });
+        scroll.value += 1000;
+      }
+    });
   });
   // 初始化
   async function init(friendInfo: any) {
     chat.friendInfo = friendInfo;
-    chat.chatRecord = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
+    const chatRecord = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
+    chat.chatRecord = chatRecord.reverse();
+    console.log(chat.chatRecord);
     scroll.value += 1000;
   }
   // 发送消息

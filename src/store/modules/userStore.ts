@@ -12,6 +12,7 @@ import {
 } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import { createUUID } from '../../server/utils/uuid';
+import { useFriendStore } from './friendStore';
 
 // 从本地仓库捞数据
 const user: User = uni.getStorageSync('user');
@@ -24,9 +25,11 @@ export const useUserStore = defineStore('user', {
   actions: {
     // 登录
     async userLogin(phone: string, authCode: string) {
-      const { userInfo, token } = await reqUserLogin(phone, authCode);
+      const { userInfo, token, friendInfo } = await reqUserLogin(phone, authCode);
       this.userInfo = userInfo;
       this.token = token;
+      const friendStore = useFriendStore();
+      friendStore.init(friendInfo);
     },
     // 退出登录
     async userLogout() {

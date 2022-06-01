@@ -41,7 +41,7 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
   // 响应拦截请求
   return await new Promise<T>((resolve, reject) => {
     uni.request({
-      url: (import.meta.env.VITE_MOCK_URL as string) + config.url, // 默认地址
+      url: (import.meta.env.VITE_API_URL as string) + config.url, // 默认地址
       data: config.data,
       header: {
         Authorization: user.token,

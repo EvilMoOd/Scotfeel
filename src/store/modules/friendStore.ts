@@ -73,45 +73,6 @@ export const useFriendStore = defineStore('friend', {
         signature: '这是个性签名',
         noticeFlag: 0,
       },
-      {
-        friendId: '1',
-        nickname: '杜明',
-        remarkName: '起报战议去层定',
-        avatar: `http://obs.scotfeel.com/f215a614ab4040ad85518b982ddec046.jpeg?versionId=G0011180F1CDB35CFFFF92C62676C8E7`,
-        spaceId: '61',
-        isDeletedByFriend: 0,
-        belongToId: '13',
-        account: ' pariatur esse',
-        backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        signature: '这是个性签名',
-        noticeFlag: 0,
-      },
-      {
-        friendId: '2',
-        nickname: '杜明',
-        remarkName: '起报战议去层定',
-        avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        spaceId: '61',
-        isDeletedByFriend: 0,
-        belongToId: '13',
-        account: ' pariatur esse',
-        backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        signature: '这是个性签名',
-        noticeFlag: 0,
-      },
-      {
-        friendId: '3',
-        nickname: '杜明',
-        remarkName: '起报战议去层定',
-        avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        spaceId: '61',
-        isDeletedByFriend: 0,
-        belongToId: '13',
-        account: ' pariatur esse',
-        backgroundImage: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        signature: '这是个性签名',
-        noticeFlag: 0,
-      },
     ],
     friendPage: {
       friendId: '85',
@@ -128,8 +89,14 @@ export const useFriendStore = defineStore('friend', {
     },
   }),
   actions: {
+    init(friends: FriendInfo[]) {
+      this.friendsInfo = friends;
+    },
     getFriendInfo(friendId: string) {
       this.friendPage = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
+    },
+    agreeFriend(friendInfo: FriendInfo) {
+      this.friendsInfo.push(friendInfo);
     },
     async changeRemark(remark: string, friendId: string) {
       await reqChangeFriendRemark(remark, friendId);

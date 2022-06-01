@@ -1,15 +1,19 @@
+import mitt from 'mitt';
 import { useFriendStore } from '../store/modules/friendStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
 import { useNoticeStore } from '../store/modules/noticeStore';
 import { useSessionListStore } from '../store/modules/sessionListStore';
 import { useUserStore } from '../store/modules/userStore';
+import { debounce } from 'lodash-es';
 import { insertRecord } from './sql/chatRecord';
 import { createUUID } from './utils/uuid';
+import { useGroupChatStore } from '../store/modules/groupStore';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: any;
 let closeConnTime: any;
 let socketTask: any;
+export const personMsg = mitt();
 
 export function connectWebSocket(url: string, token: string): void {
   const user = useUserStore();
@@ -17,6 +21,7 @@ export function connectWebSocket(url: string, token: string): void {
   const sessionListStore = useSessionListStore();
   const noticeStore = useNoticeStore();
   const friendStore = useFriendStore();
+  const groupStore = useGroupChatStore();
   connectSocket();
   // 连接socket
   function connectSocket(): void {
@@ -65,13 +70,14 @@ export function connectWebSocket(url: string, token: string): void {
     if (messageType === 1) {
       // 1、心跳
       clearTimeout(closeConnTime); // 关掉旧的定时任务
-      console.log('关闭检测服务器10秒内是否在线定时任务');
+      // console.log('关闭检测服务器10秒内是否在线定时任务');
       _closeConn(); // 又开启一个新的定时任务
-      console.log('收到服务器心跳回复pong');
+      // console.log('收到服务器心跳回复pong');
     } else if (messageType === 2) {
       // 2、ACK
     } else if (messageType === 3) {
       // 3、一条个人消息
+      personMsg.emit('msg', content);
       insertRecord(
         content.fromId,
         content.fromId,
@@ -81,13 +87,16 @@ export function connectWebSocket(url: string, token: string): void {
         user.userInfo.mainId
       );
       console.log('收到消息');
-      // sessionListStore.newMessage(
-      //   content.fromId,
-      //   content.content,
-      //   content.contentType,
-      //   content.createTime,
-      //   1
-      // );
+      console.log(content);
+      debounce(() => {
+        sessionListStore.newMessage(
+          content.fromId,
+          content.content,
+          content.contentType,
+          content.createTime,
+          1
+        );
+      }, 1000)();
     } else if (messageType === 4) {
       // 4、一条群聊消息
       insertRecord(
@@ -98,13 +107,15 @@ export function connectWebSocket(url: string, token: string): void {
         content.createTime,
         user.userInfo.mainId
       );
-      sessionListStore.newMessage(
-        content.fromId,
-        content.content,
-        content.contentType,
-        content.createTime,
-        2
-      );
+      debounce(() => {
+        sessionListStore.newMessage(
+          content.fromId,
+          content.content,
+          content.contentType,
+          content.createTime,
+          2
+        );
+      }, 1000)();
     } else if (messageType === 5) {
       // 5、朋友动态列表
       momentStore.updateMomentList(content.firendId);
@@ -125,7 +136,15 @@ export function connectWebSocket(url: string, token: string): void {
       noticeStore.beApply();
     } else if (messageType === 11) {
       // 11、被同意添加好友
-      // TODO 会话列表插入新好友，好友store添加新好友信息
+      console.log('已成为好友');
+      friendStore.agreeFriend(content.friend);
+      sessionListStore.newMessage(
+        content.friendId,
+        `你好，我是${content.nickname as string}`,
+        0,
+        Date.now(),
+        1
+      );
     } else if (messageType === 12) {
       // 12、被删除好友
       // TODO 会话列表移除新好友，好友store移除新好友信息
@@ -167,22 +186,22 @@ export function connectWebSocket(url: string, token: string): void {
       beingKickOutGroupChat();
     } else if (messageType === 21) {
       // 21、更新群聊头像
-      updateGroupChatAvatar();
+      groupStore.updateGroupChatAvatar(content.groupId, content.avatar);
     } else if (messageType === 22) {
       // 22、更新群聊昵称
-      updateGroupChatNickname();
+      groupStore.updateGroupChatNickname(content.groupId, content.nickname);
     } else if (messageType === 23) {
       // 23、更新群聊成员数量
-      updateGroupCount();
+      groupStore.updateGroupCount(content.groupId, content.count);
     } else if (messageType === 24) {
       // 24、更新群绑定的空间ID
-      updateGroupSpaceId();
+      groupStore.updateGroupSpaceId();
     } else if (messageType === 25) {
       // 25、更新群绑定的空间昵称
-      updateGroupSpaceNickname();
+      groupStore.updateGroupSpaceNickname();
     } else if (messageType === 26) {
       // 26、更新群绑定的空间的头像
-      updateGroupSpaceAvatar();
+      groupStore.updateGroupSpaceAvatar();
     } else if (messageType === 27) {
       // 27、有群新成员加入
       newGroupMemberJoinIn();
@@ -203,7 +222,7 @@ export function connectWebSocket(url: string, token: string): void {
       GroupMemberOut();
     } else if (messageType === 33) {
       // 33、群解散
-      groupBreakOut();
+      groupStore.groupBreakOut();
     } else if (messageType === 34) {
       // 34、被同意加入空间
       beingAgreeInSpace();
@@ -224,7 +243,7 @@ export function connectWebSocket(url: string, token: string): void {
       kickOut();
     } else if (messageType === 40) {
     } else if (messageType === 43) {
-      console.log('绑定连接成功');
+      // console.log('绑定连接成功');
       _sendHeart(); // 连接服务端成功后开始发送心跳
       _closeConn(); // 并打开心跳回复检测
     }
@@ -232,13 +251,13 @@ export function connectWebSocket(url: string, token: string): void {
   // 监听关闭
   function _onClose(): void {
     // 用户下线
-    console.log('监听到连接关闭');
-    console.log('关闭心跳任务');
+    // console.log('监听到连接关闭');
+    // console.log('关闭心跳任务');
     clearInterval(sendHeartTime); // 关掉心跳任务
-    console.log('关闭检测服务器10秒内是否在线定时任务');
+    // console.log('关闭检测服务器10秒内是否在线定时任务');
     clearTimeout(closeConnTime); // 定时任务
     socketTask = null;
-    console.log('socket连接已关闭');
+    // console.log('socket连接已关闭');
     _reconnect();
   }
   // 监听连接错误
@@ -260,14 +279,14 @@ export function connectWebSocket(url: string, token: string): void {
     };
     sendHeartTime = setInterval(function () {
       _sendMessage(JSON.stringify(messageFromClient));
-      console.log('客户端发送心跳ping');
+      // console.log('客户端发送心跳ping');
     }, 5000);
   }
   // 断线重连
   function _reconnect(): void {
-    console.log('进入reconnect准备重新连接');
+    // console.log('进入reconnect准备重新连接');
     if (reconnectFlag) {
-      console.log('重连----------------------');
+      // console.log('重连----------------------');
       setTimeout(function () {
         connectSocket();
       }, 3000);
@@ -288,26 +307,26 @@ export function _sendMessage(message: any): void {
 }
 // 退出登录关闭websocket
 export function logoutCloseWebsocket(): void {
-  console.log('正在断开连接，用户退出登录...');
+  // console.log('正在断开连接，用户退出登录...');
   reconnectFlag = false; // 不需要重连
   _close();
 }
 // 10秒后如未收到服务器的回复心跳则断开
 export function _closeConn(): void {
-  console.log('开启检测服务器10秒内是否在线定时任务');
+  // console.log('开启检测服务器10秒内是否在线定时任务');
   closeConnTime = setTimeout(function () {
     _close();
   }, 10000);
 }
 // 关闭连接，不需要重连
 function _close(): void {
-  console.log('正在手动断开连接...');
+  // console.log('正在手动断开连接...');
   socketTask.close({
     success() {
-      console.log('断开success');
+      // console.log('断开success');
     },
     fail() {
-      console.log('断开fail');
+      // console.log('断开fail');
     },
   });
   clearInterval(sendHeartTime); // 关掉心跳任务

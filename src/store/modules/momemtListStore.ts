@@ -12,50 +12,7 @@ export interface MomentListInfo {
 }
 export const useMomentListStore = defineStore('momentListStore', {
   state: (): MomentList => ({
-    momentListInfo: [
-      {
-        id: 14,
-        friendId: '7d5e7e76a4534db78b79d80b221df2ae',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-      {
-        id: 2,
-        friendId: '4c157fb2bffb4e48b8068dead4d379c7',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-      {
-        id: 3,
-        friendId: '7d5e7e76a4534db78b79d80b221df2ae',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-      {
-        id: 144,
-        friendId: '7d5e7e76a4534db78b79d80b221df2ae',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-      {
-        id: 124,
-        friendId: '7d5e7e76a4534db78b79d80b221df2ae',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-      {
-        id: 114,
-        friendId: '7d5e7e76a4534db78b79d80b221df2ae',
-        noticeCount: 0,
-        belongToId: '74',
-        createTime: 1652422653,
-      },
-    ],
+    momentListInfo: [],
     momentList: ['4c157fb2bffb4e48b8068dead4d379c7'],
   }),
   actions: {

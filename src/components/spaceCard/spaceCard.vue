@@ -46,7 +46,7 @@
       <view>
         <text class="username">{{ props.posterInfo.nickname }}</text>
         <br />
-        <text class="time">{{ day().from(day.unix(props.createTime)) }}</text>
+        <text class="time">{{ day().from(day(props.createTime)) }}</text>
       </view>
     </view>
     <view>
