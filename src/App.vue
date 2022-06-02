@@ -2,38 +2,43 @@
   import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
   import { reqValidateToken } from './server/api/user';
   import { createChatRecordTable } from './server/sql/chatRecord';
+  import { createFriendTable } from './server/sql/friend';
+  import { createGroupChatTable } from './server/sql/groupChat';
   import { createSessionListTable } from './server/sql/sessionList';
   import { connectWebSocket } from './server/webSocket';
+  import { useFriendStore } from './store/modules/friendStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
   import { useUserStore } from './store/modules/userStore';
-  // import { createTable, insert } from './server/sql/groupChat';
 
   const userStore = useUserStore();
   const sessionListStore = useSessionListStore();
+  const friendStore = useFriendStore();
 
   onLaunch(() => {
     init();
   });
   onShow(() => {
-    console.log('App Show');
+    console.log('App切换至前台');
   });
   onHide(() => {
-    console.log('App Hide');
+    console.log('App切换至后台');
   });
   async function init() {
+    createFriendTable();
+    createGroupChatTable();
+    createSessionListTable();
+    createChatRecordTable();
     userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
     });
-    const { token } = await reqValidateToken();
-    userStore.token = token;
-    connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
-    createSessionListTable();
-    createChatRecordTable();
-    // TODO 启动初始化，登录的时候也要初始化
     if (!userStore.token) {
       uni.redirectTo({ url: '/pages/login' });
     } else {
-      sessionListStore.init(userStore.userInfo.mainId);
+      const { token } = await reqValidateToken();
+      userStore.token = token;
+      connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
+      sessionListStore.init(userStore.userInfo?.mainId as string);
+      friendStore.init(userStore.userInfo?.mainId as string);
     }
   }
 </script>

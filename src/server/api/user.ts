@@ -41,26 +41,26 @@ export interface GroupMember {
 }
 export interface GroupChat {
   groupId: string; // 群聊id
-  nickname?: string; // 群聊昵称
+  nickname: string; // 群聊昵称
   avatar: string; // 群聊头像
-  memberCount?: string; // 群聊成员数
+  memberCount: string; // 群聊成员数
   spaceId?: string; // 群聊绑定的空间id
-  belongToId?: string; // 属于哪个用户
-  isDismissed?: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
+  belongToId: string; // 属于哪个用户
+  isDismissed: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
   spaceNickname?: string; // 群聊绑定的空间昵称
   spaceAvatar?: string; // 群聊绑定的空间头像
-  noticeFlag?: 0 | 1; // 是否设为免打扰，0：否，1：是
+  noticeFlag: 0 | 1; // 是否设为免打扰，0：否，1：是
 }
 export interface FriendInfo {
   friendId: string; // 用户id或群聊id
   nickname: string; // 昵称
   remarkName: string; // 备注
   avatar: string; // 头像
-  spaceId?: string; // 所绑定的空间ID
+  spaceId: string; // 所绑定的空间ID
   isDeletedByFriend: 0 | 1; // 是否已被朋友删除，0：否，1：是
   belongToId: string; // 用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
   account: string; // @id(用户）
-  backgroundImage?: string; // 背景照片(用户）
+  backgroundImage: string; // 背景照片(用户）
   noticeFlag: 0 | 1; // 是否设为免打扰，0：否，1：是G
   signature: string;
 }
@@ -70,7 +70,7 @@ export interface User {
   subscribedSpace: SubscribedSpace[];
   groupChatMember: GroupMember[];
   groupChat: GroupChat[];
-  friendInfo: FriendInfo[];
+  friend: FriendInfo[];
 }
 export const reqUserLogin = async (phone: string, authCode: string): Promise<User> =>
   await request<User>({

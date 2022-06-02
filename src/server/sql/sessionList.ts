@@ -1,15 +1,15 @@
 import type { SessionListInfo } from '../../store/modules/sessionListStore';
 import { executeSql, selectSql } from './baseSql';
 
-// 执行SQL语句
+// 新建会话表
 export function createSessionListTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
       'create table if not exists sessionList("sessionId" VARCHAR(40),	"chatorName" VARCHAR(40),	"chatorId" VARCHAR(40),"content" VARCHAR(2000) , "contentType" INT(11),' +
-      '"type" INT(11),"unReadCount" INT(11),"updateTime" DATE,"belongToId" VARCHAR(40))',
+      '"type" INT(11),"unReadCount" INT(11),"updateTime" BIGINT(13),"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('executeSql success!');
+      console.log('会话表新建成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
@@ -23,25 +23,26 @@ export function insertSession(
   chatorName: string,
   chatorId: string,
   content: string,
-  contentType: string,
+  contentType: number,
   unReadCount: number,
   type: number,
-  updateTime: string,
+  updateTime: number,
   belongToId: string
 ): void {
   return executeSql(`
-		insert into sessionList values ("${sessionId}","${chatorName}","${chatorId}","${content}","${contentType}","${unReadCount}","${type}","${updateTime}","${belongToId}")
+		insert into sessionList values ("${sessionId}","${chatorName}","${chatorId}","${content}","${contentType}","${type}","${unReadCount}","${updateTime}","${belongToId}")
 	`);
 }
 
 // 查出会话列表
-export async function selectAll(belongToId: string): Promise<SessionListInfo[]> {
+export async function selectAllSession(belongToId: string): Promise<SessionListInfo[]> {
   return await selectSql(`
   select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as friendNickname,f.avatar as friendAvatar,f.remarkName as friendRemarkName
     from sessionList s
     left join groupChat g on (g.groupId = s.sessionId and g.belongToId = "${belongToId}")
     left join friend f on (s.sessionId = f.friendId and f.belongToId = "${belongToId}")
     where s.belongToId = "${belongToId}"
+    order by  s.updateTime desc
   `);
 }
 
@@ -58,12 +59,12 @@ export async function selectOneSession(
 }
 
 // 更新session
-export function update(
+export function updateSession(
   chatorName: string,
   chatorId: string,
   content: string,
-  contentType: string,
-  updateTime: string,
+  contentType: number,
+  updateTime: number,
   sessionId: string,
   belongToId: string
 ): void {
@@ -85,4 +86,18 @@ export function updateClearUnReadCount(sessionId: string, belongToId: string): v
   return executeSql(`
     update sessionList set unReadCount = 0 where sessionId = "${sessionId}" and belongToId = "${belongToId}"
   `);
+}
+
+// 清空会话表
+export function deleteSessionTable(): void {
+  return executeSql(`
+		delete from sessionList ;
+	`);
+}
+
+// 查询所有记录
+export async function selectAllSession2(): Promise<SessionListInfo[]> {
+  return await selectSql(`
+			select * from sessionList
+	`);
 }

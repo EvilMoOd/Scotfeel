@@ -22,22 +22,12 @@
 
   // 前往个人介绍页面
   function goFriendPerson() {
-    uni.navigateTo({ url: `/pages/main/personChat/friendDetail?sessionId=${sessionId}` });
+    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${sessionId}` });
   }
   // 过滤对方和自己的消息
   const scroll = ref(0);
   const chat = reactive<Chat>({
-    chatRecord: [
-      {
-        id: 1,
-        sessionId: '85',
-        userId: '',
-        content: '吃饭了吗',
-        contentType: 1,
-        belongToId: '20',
-        createTime: 11111111111,
-      },
-    ],
+    chatRecord: [],
     friendInfo: {
       friendId: '85',
       nickname: '可莉',
@@ -84,16 +74,16 @@
   // 发送消息
   function submitMessage(e: any) {
     const newMsg: ChatRecord = {
-      id: 1,
       sessionId: sessionId,
       userId: user.userInfo?.mainId,
       belongToId: user.userInfo?.mainId,
       content: e.detail.value,
       contentType: 0,
-      createTime: 11111111111,
+      createTime: Date.now(),
     };
     chat.chatRecord.push(newMsg);
     msg.value = '';
+    // TODO消息发送加载图标
     _sendMessage(
       JSON.stringify({
         toId: sessionId,
@@ -109,7 +99,7 @@
       user.userInfo?.mainId as string,
       e.detail.value,
       0,
-      11111111111,
+      Date.now(),
       user.userInfo?.mainId as string
     );
     nextTick(() => (scroll.value += 10000));

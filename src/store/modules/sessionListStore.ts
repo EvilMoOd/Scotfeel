@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { useUserStore } from './userStore';
-import { selectAll } from '../../server/sql/sessionList';
+import { insertSession, selectAllSession, updateSession } from '../../server/sql/sessionList';
 import { useFriendStore } from './friendStore';
 
 export interface SessionList {
@@ -25,7 +25,7 @@ export const useSessionListStore = defineStore('sessionListStore', {
   }),
   actions: {
     async init(userId: string) {
-      this.sessionListInfo = await selectAll(userId);
+      this.sessionListInfo = await selectAllSession(userId);
     },
     newMessage(sessionId: string, content: string, contentType: 1 | 0, date: number, type: 1 | 2) {
       const user = useUserStore();
@@ -48,12 +48,34 @@ export const useSessionListStore = defineStore('sessionListStore', {
           avatar: friendInfo?.avatar as string,
           nickname: friendInfo?.nickname as string,
         });
+        insertSession(
+          sessionId,
+          '',
+          '',
+          content,
+          contentType,
+          1,
+          type,
+          date,
+          user.userInfo?.mainId as string
+        );
+        console.log('会话列表插入完毕');
       } else if (sessionIndex === 0) {
         this.sessionListInfo[0].content = content;
         this.sessionListInfo[0].contentType = contentType;
         // this.sessionListInfo[0].chatorName = chatorName;
         this.sessionListInfo[0].unReadCount++;
         this.sessionListInfo[0].updateTime = date;
+        updateSession(
+          '',
+          '',
+          content,
+          contentType,
+          date,
+          this.sessionListInfo[0].sessionId,
+          user.userInfo?.mainId as string
+        );
+        console.log('在更新会话列表');
       } else {
         const session = this.sessionListInfo[sessionIndex];
         this.sessionListInfo.splice(sessionIndex, 1);
@@ -71,6 +93,15 @@ export const useSessionListStore = defineStore('sessionListStore', {
             avatar: friendInfo?.avatar as string,
             nickname: friendInfo?.nickname as string,
           });
+          updateSession(
+            '',
+            '',
+            content,
+            contentType,
+            date,
+            this.sessionListInfo[0].sessionId,
+            user.userInfo?.mainId as string
+          );
         }, 0);
       }
     },

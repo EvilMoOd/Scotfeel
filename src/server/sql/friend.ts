@@ -1,22 +1,24 @@
+import type { FriendInfo } from '../api/user';
 import { executeSql, selectSql } from './baseSql';
 
-// 新建或查询朋友表
+// 新建朋友表
 export function createFriendTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
-      'create table if not exists friend("friendId" VARCHAR(40),	"nickname" VARCHAR(80),	"remarkName" VARCHAR(80),	"avatar" VARCHAR(40),	"spaceId" VARCHAR(40),' +
-      '"isDeletedByFriend" INT(11),	"account" VARCHAR(40), "backgroundImage" VARCHAR(40),	"noticeFlag" INT(11) ,	"belongToId" VARCHAR(40))',
+      'create table if not exists friend("friendId" VARCHAR(40),"nickname" VARCHAR(80),"remarkName" VARCHAR(80),"avatar" VARCHAR(40),"spaceId" VARCHAR(40),' +
+      '"isDeletedByFriend" INT(11),"account" VARCHAR(40),"backgroundImage" VARCHAR(40),"noticeFlag" INT(11),"belongToId" VARCHAR(40),"signature" VARCHAR(80))',
     success: function () {
-      console.log('executeSql success!');
+      console.log('朋友表新建成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
     },
   });
 }
+
 // 插入数据
-export function insert(
+export function insertFriend(
   friendId: string,
   nickname: string,
   remarkName: string,
@@ -30,7 +32,7 @@ export function insert(
   belongToId: string
 ): void {
   return executeSql(`
-		insert into friend values ("${friendId}","${nickname}","${remarkName}","${avatar}","${spaceId}","${isDeletedByFriend}","${account}","${backgroundImage}","${signature}","${noticeFlag}","${belongToId}")
+		insert into friend values ("${friendId}","${nickname}","${remarkName}","${avatar}","${spaceId}","${isDeletedByFriend}","${account}","${backgroundImage}","${noticeFlag}","${belongToId}","${signature}")
 	`);
 }
 
@@ -113,5 +115,17 @@ export function updateIsDeletedByFriend(
 ): void {
   return executeSql(`
 		update friend set isDeletedByFriend = "${isDeletedByFriend}" where friendId = "${friendId}" and belongToId = "${belongToId}"
+	`);
+}
+// 删除朋友表
+export function deleteFriendTable(): void {
+  return executeSql(`
+		delete from friend ;
+	`);
+}
+// 查询朋友表
+export async function selectAllFriends(belongToId: string): Promise<FriendInfo[]> {
+  return await selectSql(`
+			select * from friend where belongToId = "${belongToId}"
 	`);
 }

@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
+  import { selectAllRecord } from '../../server/sql/chatRecord';
+  import { selectAllFriends } from '../../server/sql/friend';
+  import { selectAllSession } from '../../server/sql/sessionList';
   import { useNoticeStore } from '../../store/modules/noticeStore';
   import { useSessionListStore } from '../../store/modules/sessionListStore';
   import { useUserStore } from '../../store/modules/userStore';
@@ -34,6 +37,15 @@
     uni.navigateTo({ url: '/pages/subscribe/subscribeAndRecommend' });
   }
 
+  async function deleteTable() {
+    const f = await selectAllFriends(userStore.userInfo?.mainId as string);
+    console.log(f);
+    const ss = await selectAllSession(userStore.userInfo?.mainId as string);
+    console.log(ss);
+    const record = await selectAllRecord(userStore.userInfo?.mainId as string);
+    console.log(record);
+  }
+
   onLoad(() => {
     // TODO初始化
   });
@@ -52,7 +64,13 @@
         <uni-icons type="person" color="#fff" size="4vh" />
         <uni-badge :text="noticeStore.applyMessage" size="small" class="msg-tip2"></uni-badge>
       </view>
-      <uni-icons type="search" size="4vh" class="icon-search" color="#fff"></uni-icons>
+      <uni-icons
+        type="search"
+        size="4vh"
+        class="icon-search"
+        color="#fff"
+        @tap="deleteTable"
+      ></uni-icons>
     </view>
     <!-- 聊天列表 -->
     <scroll-view scroll-y="true" class="main">

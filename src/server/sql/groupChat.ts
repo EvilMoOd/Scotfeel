@@ -8,7 +8,7 @@ export function createGroupChatTable(): void {
       'create table if not exists groupChat("groupId" VARCHAR(40),	"nickname" VARCHAR(40),	"avatar" VARCHAR(40) , "memberCount" INT(11),"spaceId" VARCHAR(40),' +
       '"spaceNickname" VARCHAR(40),"spaceAvatar" VARCHAR(40),"noticeFlag" INT(11),"isDismissed" INT(11),"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('executeSql success!');
+      console.log('创建群聊表成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));

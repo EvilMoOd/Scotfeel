@@ -2,6 +2,10 @@
   import { useFriendStore } from '../../store/modules/friendStore';
 
   const friendStore = useFriendStore();
+
+  function goFriendDetail(friendId: string) {
+    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${friendId}` });
+  }
 </script>
 
 <template>
@@ -13,18 +17,25 @@
   <scroll-view scroll-y class="main">
     <view class="top">
       <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
+        <image src="@/assets/images/img3.png" class="avatar" />
         <text class="nickname">新朋友</text>
       </view>
       <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
+        <image src="@/assets/images/img3.png" class="avatar" />
         <text class="nickname">群聊</text>
       </view>
     </view>
     <view class="mail">
-      <view v-for="friend in friendStore.friendsInfo" :key="friend.friendId" class="list">
-        <image :src="friend.avatar" class="head" />
-        <text class="nickname">{{ friend.nickname }}</text>
+      <view
+        v-for="friend in friendStore.friendsInfo"
+        :key="friend.friendId"
+        class="list"
+        @tap="goFriendDetail(friend.friendId)"
+      >
+        <view v-if="friend.isDeletedByFriend === 0">
+          <image :src="friend.avatar" class="avatar" />
+          <text class="nickname">{{ friend.nickname }}</text>
+        </view>
       </view>
     </view>
   </scroll-view>
@@ -60,7 +71,7 @@
         padding: 12rpx 24rpx;
         background-color: #fff;
 
-        .head {
+        .avatar {
           width: 80rpx;
           height: 80rpx;
           border-radius: 50%;
@@ -82,7 +93,7 @@
         padding: 12rpx 24rpx;
         background-color: #fff;
 
-        .head {
+        .avatar {
           width: 80rpx;
           height: 80rpx;
           border-radius: 50%;

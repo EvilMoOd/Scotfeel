@@ -11,6 +11,8 @@ import {
   reqUserLogout,
 } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
+import { deleteFriendTable } from '../../server/sql/friend';
+import { deleteSessionTable } from '../../server/sql/sessionList';
 import { createUUID } from '../../server/utils/uuid';
 import { useFriendStore } from './friendStore';
 
@@ -25,18 +27,20 @@ export const useUserStore = defineStore('user', {
   actions: {
     // 登录
     async userLogin(phone: string, authCode: string) {
-      const { userInfo, token, friendInfo } = await reqUserLogin(phone, authCode);
+      const { userInfo, token, friend } = await reqUserLogin(phone, authCode);
       this.userInfo = userInfo;
       this.token = token;
       const friendStore = useFriendStore();
-      friendStore.init(friendInfo);
+      console.log(userInfo?.mainId);
+      friendStore.loginInit(friend, userInfo?.mainId as string);
     },
     // 退出登录
     async userLogout() {
-      const result = await reqUserLogout();
-      console.log(result);
+      await reqUserLogout();
       this.userInfo = undefined;
       this.token = undefined;
+      deleteFriendTable();
+      deleteSessionTable();
     },
     // 修改昵称
     async changeNickname(nickname: string) {

@@ -1,5 +1,6 @@
 {
   "i18n-ally.localesPaths": [],
   "editor.tabSize": 2,
-  "cSpell.words": ["scotfeel"]
+  "cSpell.words": ["scotfeel"],
+  "vue3snippets.enable-compile-vue-file-on-did-save-code": false
 }

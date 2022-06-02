@@ -10,7 +10,7 @@ export interface ChatRecord {
   createTime: number;
 }
 
-// 新建或查询聊天记录表
+// 新建聊天记录表
 export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
   if (!plus.sqlite.isOpenDatabase(config)) {
     // 2.如果没打开先打开
@@ -20,7 +20,7 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
     name: 'scotfeel',
     sql: 'create table if not exists chatRecord( "id" INTEGER PRIMARY KEY AUTOINCREMENT,"sessionId"	VARCHAR(40),"userId" VARCHAR(40),"content" VARCHAR(2000),"contentType" INT(11),"createTime" DATE,"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('executeSql success!');
+      console.log('聊天记录表新建成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
@@ -69,5 +69,19 @@ export async function selectGroupChat(
 					where c.sessionId = "${sessionId}" and c.belongToId = "${belongToId}" and c.id < "${lastId}"
 					order by c.id desc
 					limit 15
+	`);
+}
+
+// 清空消息记录
+export function deleteChatTable(): void {
+  return executeSql(`
+		delete from chatRecord
+	`);
+}
+
+// 查询所有记录
+export async function selectAllRecord(belongToId: string): Promise<ChatRecord[]> {
+  return await selectSql(`
+			select * from chatRecord where belongToId = "${belongToId}"
 	`);
 }

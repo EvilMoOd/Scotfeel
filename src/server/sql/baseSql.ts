@@ -40,7 +40,9 @@ export function executeSql(
   plus.sqlite.executeSql({
     name: config.name,
     sql,
-    success: function () {},
+    success: function () {
+      console.log('操作成功');
+    },
     fail: function (e) {
       console.log(e);
     },

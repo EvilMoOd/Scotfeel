@@ -2,7 +2,7 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
-  import type { GroupInfo } from '../../../store/modules/groupStore';
+  import type { GroupPage } from '../../../store/modules/groupStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
 
   export interface ChatRecord {
@@ -12,11 +12,11 @@
     content: string;
     contentType: number;
     belongToId?: string;
-    createTime: number;
+    updateTime: number;
   }
   export interface Chat {
     chatRecord: ChatRecord[];
-    groupInfo: GroupInfo;
+    groupInfo: GroupPage;
   }
 
   const user = uni.getStorageSync('user');
@@ -32,22 +32,12 @@
   // 过滤对方和自己的消息
   const scroll = ref(0);
   const chat = reactive<Chat>({
-    chatRecord: [
-      {
-        id: 1,
-        sessionId: '85',
-        userId: '',
-        content: '吃饭了吗',
-        contentType: 1,
-        belongToId: '20',
-        createTime: 11111111111,
-      },
-    ],
+    chatRecord: [],
     groupInfo: {
       groupId: '35',
       nickname: '考研摆烂',
       avatar: '61b0b7cc5af7a0db2c245f213bfa637b',
-      memberCount: 'in reprehenderit',
+      memberCount: 0,
       spaceId: '29',
       belongToId: '41',
       isDismissed: 0,
@@ -78,7 +68,7 @@
       belongToId: user.userInfo?.mainId,
       content: e.detail.value,
       contentType: 0,
-      createTime: 11111111111,
+      updateTime: 11111111111,
     };
     chat.chatRecord.push(newMsg);
     console.log(chat.chatRecord);

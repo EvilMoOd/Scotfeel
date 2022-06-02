@@ -14,7 +14,9 @@
   }
   // 前往个人主页
   function goPerson() {
-    uni.navigateTo({ url: '/pages/menu/person' });
+    uni.navigateTo({
+      url: `/pages/main/personPage/personPage?sessionId=${userStore.userInfo?.mainId}`,
+    });
   }
   // 前往通讯录
   function goMailList() {

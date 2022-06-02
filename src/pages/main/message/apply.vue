@@ -13,7 +13,6 @@
   });
   onLoad(async () => {
     const data = await reqApplyNotice(apply.applyInfo.length);
-    console.log(data);
     apply.applyInfo.push(...data);
   });
   // 处理好友申请
@@ -48,8 +47,8 @@
           <text class="nickname">{{ item.userNickname }}</text>
         </view>
         <text class="content">{{ item.content }}</text>
-        <view class="btn-reject" @tap="dealApply(item.applicantId, 2)">拒绝</view>
-        <view class="btn-accept" @tap="dealApply(item.applicantId, 1)">接受</view>
+        <view class="btn-reject" @tap="dealApply(item.applyId, 2)">拒绝</view>
+        <view class="btn-accept" @tap="dealApply(item.applyId, 1)">接受</view>
       </view>
     </view>
   </view>

@@ -48,13 +48,6 @@
 			}
 		},
 		{
-			"path": "pages/main/personChat/friendDetail",
-			"style": {
-				"navigationStyle": "custom",
-				"scrollIndicator": "none"
-			}
-		},
-		{
 			"path": "pages/main/groupChat/groupChat",
 			"style": {
 				"navigationStyle": "custom",
@@ -69,7 +62,7 @@
 			}
 		},
 		{
-			"path": "pages/menu/person",
+			"path": "pages/main/personPage/personPage",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -90,7 +83,7 @@
 			}
 		},
 		{
-			"path": "pages/menu/addFriends",
+			"path": "pages/main/personPage/addFriends",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -111,7 +104,7 @@
 			}
 		},
 		{
-			"path": "pages/menu/personSetting",
+			"path": "pages/menu/setting",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

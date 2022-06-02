@@ -8,15 +8,12 @@
     personInfo: undefined,
   });
   async function search(content: string) {
-    const result = await reqSearchUser(content);
-    console.log(result);
-    searchInfo.personInfo = result;
+    searchInfo.personInfo = await reqSearchUser(content);
   }
-  // 前往添加好友申请
-  function goAddFriends() {
-    uni.navigateTo({
-      url: `/pages/menu/addFriends?appliedUserId=${searchInfo.personInfo?.userId}`,
-    });
+
+  // 前往个人介绍页面
+  function goFriendPerson(sessionId: string) {
+    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${sessionId}` });
   }
 </script>
 
@@ -27,14 +24,17 @@
   </view>
   <view class="main">
     <uni-easyinput v-model="searchText" placeholder="搜索好友" @confirm="search"></uni-easyinput>
-    <view v-if="searchInfo.personInfo" class="personInfo">
+    <view
+      v-if="searchInfo.personInfo"
+      class="personInfo"
+      @tap="goFriendPerson(searchInfo.personInfo?.userId as string)"
+    >
       <image :src="searchInfo.personInfo?.avatar" class="avatar" />
       <view class="personMsg">
         <view>
           <text class="nickname">{{ searchInfo.personInfo?.nickname }}</text>
         </view>
         <text class="content">{{ searchInfo.personInfo?.signature }}</text>
-        <view class="btn-accept" @tap="goAddFriends">添加好友</view>
       </view>
     </view>
   </view>
@@ -81,18 +81,6 @@
         .content {
           font-size: 22rpx;
           color: #aaa;
-        }
-
-        .btn-accept {
-          float: right;
-          margin-top: -20rpx;
-          width: 150rpx;
-          height: 42rpx;
-          border-radius: 30rpx;
-          text-align: center;
-          border: 1px solid $color-sf;
-          color: $color-sf;
-          font-size: 24rpx;
         }
       }
     }

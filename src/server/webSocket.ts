@@ -83,7 +83,7 @@ export function connectWebSocket(url: string, token: string): void {
         content.fromId,
         content.content,
         content.contentType,
-        content.createTime,
+        content.date,
         user.userInfo.mainId
       );
       console.log('收到消息');
@@ -93,7 +93,7 @@ export function connectWebSocket(url: string, token: string): void {
           content.fromId,
           content.content,
           content.contentType,
-          content.createTime,
+          content.date,
           1
         );
       }, 1000)();
@@ -104,7 +104,7 @@ export function connectWebSocket(url: string, token: string): void {
         content.fromId,
         content.content,
         content.contentType,
-        content.createTime,
+        content.date,
         user.userInfo.mainId
       );
       debounce(() => {
@@ -112,7 +112,7 @@ export function connectWebSocket(url: string, token: string): void {
           content.fromId,
           content.content,
           content.contentType,
-          content.createTime,
+          content.date,
           2
         );
       }, 1000)();

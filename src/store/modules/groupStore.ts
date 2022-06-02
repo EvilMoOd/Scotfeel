@@ -6,7 +6,6 @@ import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import { updateAvatar, updateMemberCount, updateNickname } from '../../server/sql/groupChat';
 import { createUUID } from '../../server/utils/uuid';
-import { useUserStore } from './userStore';
 
 export interface GroupChat {
   groupInfo: GroupPage[];
@@ -29,61 +28,13 @@ export interface GroupPage {
 const user = uni.getStorageSync('user');
 export const useGroupChatStore = defineStore('groupChatStore', {
   state: (): GroupChat => ({
-    groupInfo: [
-      {
-        groupId: '35',
-        nickname: '考研摆烂',
-        avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        memberCount: 'in reprehenderit',
-        spaceId: '29',
-        belongToId: '41',
-        isDismissed: 0,
-        spaceNickname: '金娟',
-        spaceAvatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        noticeFlag: 1,
-        groupMember: [
-          {
-            memberId: '7d5e7e76a4534db78b79d80b221df2ae',
-            remarkName: '炸鱼王',
-            role: 0,
-            isExited: 0,
-            belongToId: '79',
-            nickname: '可莉',
-            avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-            groupId: '35',
-          },
-          {
-            memberId: '4c157fb2bffb4e48b8068dead4d379c7',
-            remarkName: '路飞',
-            role: 0,
-            isExited: 0,
-            belongToId: '79',
-            nickname: '路飞',
-            avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-            groupId: '35',
-          },
-        ],
-      },
-      {
-        groupId: '45',
-        nickname: 'nighttoken',
-        avatar: `http://obs.scotfeel.com/20140310191629_mfHn4.jpeg?versionId=G0011180F1864C41FFFF92CC2544BC2B`,
-        memberCount: 'in reprehenderit',
-        spaceId: '29',
-        belongToId: '41',
-        isDismissed: 0,
-        spaceNickname: '金娟',
-        spaceAvatar: `http://obs.scotfeel.com/20140310191629_mfHn4.jpeg?versionId=G0011180F1864C41FFFF92CC2544BC2B`,
-        noticeFlag: 1,
-        groupMember: [],
-      },
-    ],
+    groupInfo: [],
 
     groupPage: {
       groupId: '35',
       nickname: '考研摆烂',
       avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-      memberCount: 'in reprehenderit',
+      memberCount: 0,
       spaceId: '29',
       belongToId: '41',
       isDismissed: 0,

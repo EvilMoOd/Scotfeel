@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive, ref } from 'vue';
-  import { reqAddFriend } from '../../server/api/friend';
+  import { reqAddFriend } from '../../../server/api/friend';
 
   const apply = reactive({
     content: '',
