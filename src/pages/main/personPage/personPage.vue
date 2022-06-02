@@ -11,28 +11,42 @@
   const friendStore = useFriendStore();
   // 加载个人页信息
   let sessionId: string;
-  const personInfo = reactive<PersonMessage>({
-    userId: '7d5e7e76a4534db78b79d80b221df2ae',
-    nickname: '用户02',
-    remarkName: '丽丽',
-    account: 'SF_W0mWG6bK',
-    avatar: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
-    backgroundImage: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
-    signature: '喜欢写代码',
-    relationship: 1,
+  const personInfo = reactive<{ personPage: PersonMessage; pageType: 0 | 1 | 2 | 3 }>({
+    personPage: {
+      userId: '7d5e7e76a4534db78b79d80b221df2ae',
+      nickname: '用户02',
+      remarkName: undefined,
+      account: 'SF_W0mWG6bK',
+      avatar: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
+      backgroundImage:
+        'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
+      signature: '喜欢写代码',
+    },
+    pageType: 0, // 页面类型，1为本人，2为朋友，3为陌生人
   });
   onLoad(async (params: any) => {
     sessionId = params.sessionId;
-    const data = await reqPersonMessage(sessionId);
-    personInfo.account = data.account;
-    personInfo.avatar = data.account;
-    personInfo.backgroundImage = data.backgroundImage;
-    personInfo.nickname = data.nickname;
-    personInfo.relationship = data.relationship;
-    personInfo.remarkName = data.remarkName;
-    personInfo.signature = data.signature;
-    personInfo.userId = data.userId;
-    console.log(personInfo);
+    if (sessionId === userStore.userInfo?.mainId) {
+      personInfo.pageType = 1;
+      personInfo.personPage.userId = userStore.userInfo.mainId;
+      personInfo.personPage.nickname = userStore.userInfo.nickname;
+      personInfo.personPage.account = userStore.userInfo.account;
+      personInfo.personPage.avatar = userStore.userInfo.avatar;
+      personInfo.personPage.backgroundImage = userStore.userInfo.backgroundImage;
+      personInfo.personPage.signature = userStore.userInfo.signature;
+    } else if (friendStore.getFriendInfo(sessionId)) {
+      personInfo.pageType = 2;
+      personInfo.personPage.userId = friendStore.friendPage.friendId;
+      personInfo.personPage.nickname = friendStore.friendPage.nickname;
+      personInfo.personPage.account = friendStore.friendPage.account;
+      personInfo.personPage.avatar = friendStore.friendPage.avatar;
+      personInfo.personPage.backgroundImage = friendStore.friendPage.backgroundImage;
+      personInfo.personPage.signature = friendStore.friendPage.signature;
+    } else {
+      personInfo.pageType = 3;
+      personInfo.personPage = await reqPersonMessage(sessionId);
+      console.log(personInfo);
+    }
   });
 
   // 展示功能块
@@ -107,7 +121,7 @@
       await friendStore.changeRemark(remark.value, personInfo.userId);
       message.value.open();
       hiddenAll();
-      personInfo.remarkName = remark.value;
+      personInfo.personPage.remarkName = remark.value;
       remark.value = '';
     } catch (err) {
       uni.showModal({
@@ -122,7 +136,7 @@
     show.showMask = true;
   }
   function deleteFriend() {
-    friendStore.deleteFriend(personInfo.userId);
+    friendStore.deleteFriend(personInfo.personPage.userId);
     show.showDeleteFriend = false;
     show.showMask = false;
   }
@@ -135,7 +149,7 @@
   // 前往添加好友申请
   function goAddFriends() {
     uni.navigateTo({
-      url: `/pages/main/personPage/addFriends?appliedUserId=${personInfo.userId}`,
+      url: `/pages/main/personPage/addFriends?appliedUserId=${personInfo.personPage.userId}`,
     });
   }
 </script>
@@ -145,7 +159,7 @@
     <view class="header">
       <Back class="icon-back" />
       <uni-icons
-        v-if="personInfo.relationship === 0"
+        v-if="personInfo.pageType === 1"
         type="more-filled"
         color="#aaa"
         size="28"
@@ -153,7 +167,7 @@
         @tap="showMyConfig"
       />
       <uni-icons
-        v-else-if="personInfo.relationship === 1"
+        v-else-if="personInfo.pageType === 2"
         type="more-filled"
         color="#aaa"
         size="28"
@@ -162,25 +176,26 @@
       />
     </view>
     <view class="id-card">
-      <image :src="personInfo.avatar" mode="scaleToFill" class="avatar" />
+      <image :src="personInfo.personPage.avatar" mode="scaleToFill" class="avatar" />
       <view>
-        <text v-if="personInfo.remarkName" style="font-size: 34rpx; font-weight: bold; color: #eee">
-          {{ personInfo.remarkName }}
+        <text
+          v-if="personInfo.personPage.remarkName"
+          style="font-size: 34rpx; font-weight: bold; color: #eee"
+        >
+          {{ personInfo.personPage.remarkName }}
         </text>
         <text v-else style="font-size: 34rpx; font-weight: bold; color: #eee">
-          {{ personInfo.nickname }}
+          {{ personInfo.personPage.nickname }}
         </text>
         <br />
-        <text style="font-size: 28rpx">{{ personInfo.account }}</text>
+        <text style="font-size: 28rpx">{{ personInfo.personPage.account }}</text>
       </view>
-      <view v-if="personInfo.relationship === 1" class="send-msg-btn" @tap="sendMessage">
-        发送消息
-      </view>
-      <view v-if="personInfo.relationship === 2" class="add-friend-btn" @tap="goAddFriends">
+      <view v-if="personInfo.pageType === 2" class="send-msg-btn" @tap="sendMessage">发送消息</view>
+      <view v-if="personInfo.pageType === 3" class="add-friend-btn" @tap="goAddFriends">
         添加好友
       </view>
     </view>
-    <view class="introduction">{{ personInfo.signature }}</view>
+    <view class="introduction">{{ personInfo.personPage.signature }}</view>
     <TopTab tab1="订阅空间" tab2="动态" height="350px">
       <template #s1>
         <view class="my-space">
@@ -259,7 +274,7 @@
     transition: 0.7s;
     .header {
       height: 304rpx;
-      background-image: v-bind('personInfo.backgroundImage');
+      background-image: v-bind('personInfo.personPage.backgroundImage');
       .icon-back {
         float: left;
         margin-left: 26rpx;

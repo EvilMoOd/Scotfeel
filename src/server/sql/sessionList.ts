@@ -37,7 +37,7 @@ export function insertSession(
 // 查出会话列表
 export async function selectAllSession(belongToId: string): Promise<SessionListInfo[]> {
   return await selectSql(`
-  select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as friendNickname,f.avatar as friendAvatar,f.remarkName as friendRemarkName
+  select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as nickname,f.avatar as avatar,f.remarkName as remarkName
     from sessionList s
     left join groupChat g on (g.groupId = s.sessionId and g.belongToId = "${belongToId}")
     left join friend f on (s.sessionId = f.friendId and f.belongToId = "${belongToId}")

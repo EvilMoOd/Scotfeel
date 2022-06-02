@@ -16,7 +16,7 @@ export interface UserInfo {
   nickname: string; // 用户昵称
   account: string; // 用户@id
   phone: string; // 用户手机号
-  avatar: string | string[]; // 用户头像
+  avatar: string; // 用户头像
   backgroundImage: string; // 用户背景照片
   qrcode: string; // 用户二维码
   signature: string; // 用户个性签名
@@ -147,7 +147,6 @@ export interface PersonMessage {
   avatar: string;
   backgroundImage?: string;
   signature?: string;
-  relationship: 0 | 1 | 2; // 关系：0：自己，1：朋友，2：非朋友
 }
 export const reqPersonMessage = async (mainId: string): Promise<PersonMessage> =>
   await request<PersonMessage>({

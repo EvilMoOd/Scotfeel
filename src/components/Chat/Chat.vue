@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { SessionListInfo } from '../../store/modules/sessionListStore';
+  import { useSessionListStore } from '../../store/modules/sessionListStore';
   import day from 'dayjs';
   import relativeTime from 'dayjs/plugin/relativeTime';
   import 'dayjs/locale/zh-cn';
@@ -10,8 +11,12 @@
     list: SessionListInfo;
   }>();
 
+  const sessionStore = useSessionListStore();
   // 前往聊天页详情
   function goChat(type: 1 | 2, params: string) {
+    // 未读数量置0
+    const index = sessionStore.sessionListInfo.findIndex((item) => item.sessionId === params);
+    sessionStore.sessionListInfo[index].unReadCount = 0;
     type === 1
       ? uni.navigateTo({ url: `/pages/main/personChat/chat?sessionId=${params}` })
       : uni.navigateTo({ url: `/pages/main/groupChat/groupChat?sessionId=${params}` });

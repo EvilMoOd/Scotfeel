@@ -8,14 +8,18 @@
   import { personMsg, _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
   import type { FriendInfo } from '../../../server/api/user';
+  import { useSessionListStore } from '../../../store/modules/sessionListStore';
+  import { debounce } from 'lodash-es';
+  import { useUserStore } from '../../../store/modules/userStore';
 
   export interface Chat {
     chatRecord: ChatRecord[];
     friendInfo: FriendInfo;
   }
 
-  const user = uni.getStorageSync('user');
+  const userStore = useUserStore();
   const friendStore = useFriendStore();
+  const sessionListStore = useSessionListStore();
   let sessionId: string;
   // 输入信息
   const msg = ref('');
@@ -56,7 +60,7 @@
           userId: e.fromId,
           content: e.content,
           contentType: e.contentType,
-          belongToId: user.userInfo.mainId,
+          belongToId: userStore.userInfo?.mainId as string,
           createTime: e.createTime,
         });
         scroll.value += 1000;
@@ -66,7 +70,7 @@
   // 初始化
   async function init(friendInfo: any) {
     chat.friendInfo = friendInfo;
-    const chatRecord = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
+    const chatRecord = await selectSingleChat(10000, sessionId, userStore.userInfo?.mainId);
     chat.chatRecord = chatRecord.reverse();
     console.log(chat.chatRecord);
     scroll.value += 1000;
@@ -75,8 +79,8 @@
   function submitMessage(e: any) {
     const newMsg: ChatRecord = {
       sessionId: sessionId,
-      userId: user.userInfo?.mainId,
-      belongToId: user.userInfo?.mainId,
+      userId: userStore.userInfo?.mainId as string,
+      belongToId: userStore.userInfo?.mainId as string,
       content: e.detail.value,
       contentType: 0,
       createTime: Date.now(),
@@ -96,12 +100,15 @@
     );
     insertRecord(
       sessionId,
-      user.userInfo?.mainId as string,
+      userStore.userInfo?.mainId as string,
       e.detail.value,
       0,
       Date.now(),
-      user.userInfo?.mainId as string
+      userStore.userInfo?.mainId as string
     );
+    debounce(() => {
+      sessionListStore.newMessage(sessionId, e.detail.value, 0, Date.now(), 1);
+    }, 1000)();
     nextTick(() => (scroll.value += 10000));
   }
 </script>
@@ -120,7 +127,7 @@
     <view v-for="cr in chat.chatRecord" :key="cr.id">
       <!-- 我的消息 -->
 
-      <view v-if="cr.userId === user.userInfo?.mainId" class="contain">
+      <view v-if="cr.userId === userStore.userInfo?.mainId" class="contain">
         <view :class="cr.contentType === 0 ? 'chat-me' : 'chat-me-img'">
           <view v-if="cr.contentType === 0">{{ cr.content }}</view>
           <image v-if="cr.contentType === 1" :src="cr.content" mode="aspectFit" lazy-load />

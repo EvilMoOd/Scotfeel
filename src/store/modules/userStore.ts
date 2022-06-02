@@ -40,7 +40,6 @@ export const useUserStore = defineStore('user', {
       this.userInfo = undefined;
       this.token = undefined;
       deleteFriendTable();
-      deleteSessionTable();
     },
     // 修改昵称
     async changeNickname(nickname: string) {

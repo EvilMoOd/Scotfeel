@@ -139,7 +139,7 @@ export function connectWebSocket(url: string, token: string): void {
       console.log('已成为好友');
       friendStore.agreeFriend(content.friend);
       sessionListStore.newMessage(
-        content.friendId,
+        content.friend.friendId,
         `你好，我是${content.nickname as string}`,
         0,
         Date.now(),

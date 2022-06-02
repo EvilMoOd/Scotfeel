@@ -60,7 +60,9 @@ export const useFriendStore = defineStore('friend', {
       }
     },
     getFriendInfo(friendId: string) {
-      this.friendPage = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
+      const friend = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
+      this.friendPage = friend;
+      return friend;
     },
     agreeFriend(friendInfo: FriendInfo) {
       this.friendsInfo.push(friendInfo);
