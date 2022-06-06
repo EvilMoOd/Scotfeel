@@ -4,15 +4,18 @@
   import { createChatRecordTable } from './server/sql/chatRecord';
   import { createFriendTable } from './server/sql/friend';
   import { createGroupChatTable } from './server/sql/groupChat';
+  import { createGroupMemberTable } from './server/sql/groupChatMember';
   import { createSessionListTable } from './server/sql/sessionList';
   import { connectWebSocket } from './server/webSocket';
   import { useFriendStore } from './store/modules/friendStore';
+  import { useGroupChatStore } from './store/modules/groupStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
   import { useUserStore } from './store/modules/userStore';
 
   const userStore = useUserStore();
   const sessionListStore = useSessionListStore();
   const friendStore = useFriendStore();
+  const groupStore = useGroupChatStore();
 
   onLaunch(() => {
     init();
@@ -24,21 +27,27 @@
     console.log('App切换至后台');
   });
   async function init() {
+    // 初始化数据库
     createFriendTable();
     createGroupChatTable();
+    createGroupMemberTable();
     createSessionListTable();
     createChatRecordTable();
+    // 初始化用户信息
     userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
     });
     if (!userStore.token) {
       uni.redirectTo({ url: '/pages/login' });
     } else {
+      // 鉴权
       const { token } = await reqValidateToken();
       userStore.token = token;
+      // 连接ws
       connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
       sessionListStore.init(userStore.userInfo?.mainId as string);
       friendStore.init(userStore.userInfo?.mainId as string);
+      groupStore.init(userStore.userInfo?.mainId as string);
     }
   }
 </script>

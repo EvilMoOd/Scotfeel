@@ -10,7 +10,7 @@ export const NO_PERMISSION = 403;
 export interface HTTPConfig {
   url: string;
   method: 'OPTIONS' | 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'TRACE' | 'CONNECT';
-  data?: { [key: string]: unknown }; // GET方法默认json转string，以params默认发送，post则不变
+  data?: string | AnyObject | ArrayBuffer; // GET方法默认json转string，以params默认发送，post则不变
   type?: 'application/json' | 'application/x-www-form-urlencoded';
 }
 // 响应参数

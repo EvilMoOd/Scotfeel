@@ -20,7 +20,7 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
     name: 'scotfeel',
     sql: 'create table if not exists chatRecord( "id" INTEGER PRIMARY KEY AUTOINCREMENT,"sessionId"	VARCHAR(40),"userId" VARCHAR(40),"content" VARCHAR(2000),"contentType" INT(11),"createTime" DATE,"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('聊天记录表新建成功');
+      console.log('聊天记录表初始化成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));

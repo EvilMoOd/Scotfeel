@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@dcloudio/types': ^2.6.10
+  '@dcloudio/types': 2.5.17
   '@dcloudio/uni-app': 3.0.0-alpha-3031320220314002
   '@dcloudio/uni-app-plus': 3.0.0-alpha-3031320220314002
   '@dcloudio/uni-automator': 3.0.0-alpha-3031320220314002
@@ -56,7 +56,7 @@ dependencies:
   vue-i18n: 9.1.10_vue@3.2.36
 
 devDependencies:
-  '@dcloudio/types': 2.6.11
+  '@dcloudio/types': registry.npmmirror.com/@dcloudio/types/2.5.17
   '@dcloudio/uni-automator': 3.0.0-alpha-3031320220314002_vue@3.2.36
   '@dcloudio/uni-cli-shared': 3.0.0-alpha-3031320220314002_vue@3.2.36
   '@dcloudio/vite-plugin-uni': 3.0.0-alpha-3031320220314002_vite@2.9.9+vue@3.2.36
@@ -1242,10 +1242,6 @@ packages:
     dependencies:
       '@babel/helper-validator-identifier': 7.16.7
       to-fast-properties: 2.0.0
-
-  /@dcloudio/types/2.6.11:
-    resolution: {integrity: sha512-nTlGWxGAI0Xq7twTThdRJTJa0kBtNDyWACO2xYJyhVQXNKKIci1PwDuQmpvZCD1apbwWWVi+jm9RBMNsjAtxZw==}
-    dev: true
 
   /@dcloudio/uni-app-plus/3.0.0-alpha-3031320220314002_mqyh7kd2agoktl3mhl3ezhopte:
     resolution: {integrity: sha512-os23QBO8Oxq/5cE4FYl7ge3rgEzlw9uuYHtBjNJBQqgzDrkPhAR7CP+vDOGQH0BncB3YsXbrvFRWezFwbMzrYQ==}
@@ -6242,6 +6238,12 @@ packages:
     dependencies:
       '@babel/helper-validator-identifier': registry.npmmirror.com/@babel/helper-validator-identifier/7.16.7
       to-fast-properties: registry.npmmirror.com/to-fast-properties/2.0.0
+
+  registry.npmmirror.com/@dcloudio/types/2.5.17:
+    resolution: {integrity: sha512-PMxXWdFOAmDQUo7BNx19O4htfaztdOT7RuD5jTVm8/jFcUd/hkNJJXLcSLePqXZwyTjjirstLBhC3FU709Y+8Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@dcloudio/types/-/types-2.5.17.tgz}
+    name: '@dcloudio/types'
+    version: 2.5.17
+    dev: true
 
   registry.npmmirror.com/esbuild-android-64/0.14.42:
     resolution: {integrity: sha512-P4Y36VUtRhK/zivqGVMqhptSrFILAGlYp0Z8r9UQqHJ3iWztRCNWnlBzD9HRx0DbueXikzOiwyOri+ojAFfW6A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/esbuild-android-64/-/esbuild-android-64-0.14.42.tgz}

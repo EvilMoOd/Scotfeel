@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
-  // import { useChattingStore } from '../../../store/modules/chatting';
   import { useFriendStore } from '../../../store/modules/friendStore';
   import type { ChatRecord } from '../../../server/sql/chatRecord';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
@@ -70,7 +69,12 @@
   // 初始化
   async function init(friendInfo: any) {
     chat.friendInfo = friendInfo;
-    const chatRecord = await selectSingleChat(10000, sessionId, userStore.userInfo?.mainId);
+    // TODO lastid需要修改
+    const chatRecord = await selectSingleChat(
+      10000,
+      sessionId,
+      userStore.userInfo?.mainId as string
+    );
     chat.chatRecord = chatRecord.reverse();
     console.log(chat.chatRecord);
     scroll.value += 1000;

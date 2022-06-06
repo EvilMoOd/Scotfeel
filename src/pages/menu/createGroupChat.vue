@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue';
   import { reqCreateGroupChat } from '../../server/api/groupChat';
-  import type { FriendInfo } from '../../store/modules/friendStore';
+  import type { FriendInfo } from '../../server/api/user';
   import { useFriendStore } from '../../store/modules/friendStore';
 
   const friendStore = useFriendStore();
@@ -21,7 +21,8 @@
   });
   async function done() {
     console.log(createInfo.value);
-    await reqCreateGroupChat(createInfo.value);
+    const data = await reqCreateGroupChat(createInfo.value);
+    console.log(data);
   }
 </script>
 

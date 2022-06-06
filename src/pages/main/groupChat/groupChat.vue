@@ -1,26 +1,24 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
+  import type { ChatRecord } from '../../../server/sql/chatRecord';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
-  import type { GroupPage } from '../../../store/modules/groupStore';
+  import { personMsg, _sendMessage } from '../../../server/webSocket';
+  import { createUUID } from '../../../server/utils/uuid';
+  import type { GroupChat } from '../../../server/api/user';
+  import { useSessionListStore } from '../../../store/modules/sessionListStore';
+  import { debounce } from 'lodash-es';
+  import { useUserStore } from '../../../store/modules/userStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
 
-  export interface ChatRecord {
-    id: number;
-    sessionId: string;
-    userId?: string;
-    content: string;
-    contentType: number;
-    belongToId?: string;
-    updateTime: number;
-  }
   export interface Chat {
     chatRecord: ChatRecord[];
-    groupInfo: GroupPage;
+    groupInfo: GroupChat;
   }
 
-  const user = uni.getStorageSync('user');
+  const userStore = useUserStore();
   const groupStore = useGroupChatStore();
+  const sessionListStore = useSessionListStore();
   let sessionId: string;
   // 输入信息
   const msg = ref('');
@@ -44,43 +42,71 @@
       spaceNickname: '金娟',
       spaceAvatar: '61b0b7cc5af7a0db2c245f213bfa637b',
       noticeFlag: 1,
-      groupMember: [],
     },
   });
   onLoad((params: any) => {
+    // 初始化sessionId
     sessionId = params.sessionId;
+    // 初始化朋友信息
     const groupInfo = groupStore.groupInfo.find((item) => item.groupId === sessionId);
     init(groupInfo);
+    // 监听页面实时消息
+    personMsg.on('gMsg', (e: any) => {
+      if (e.groupId === sessionId) {
+        chat.chatRecord.push({
+          sessionId: e.groupId,
+          userId: e.fromId,
+          content: e.content,
+          contentType: e.contentType,
+          belongToId: userStore.userInfo?.mainId as string,
+          createTime: e.createTime,
+        });
+        scroll.value += 1000;
+      }
+    });
   });
   // 初始化
   async function init(groupInfo: any) {
     chat.groupInfo = groupInfo;
-    const record = await selectSingleChat(10000, sessionId, user.userInfo?.mainId);
+    // TODO lastid需要修改
+    const record = await selectSingleChat(10000, sessionId, userStore.userInfo?.mainId as string);
     chat.chatRecord = record as ChatRecord[];
     scroll.value += 1000;
   }
   // 发送消息
   function submitMessage(e: any) {
-    const newMsg = {
-      id: 1,
+    const newMsg: ChatRecord = {
       sessionId: sessionId,
-      userId: user.userInfo?.mainId,
-      belongToId: user.userInfo?.mainId,
+      userId: userStore.userInfo?.mainId as string,
+      belongToId: userStore.userInfo?.mainId as string,
       content: e.detail.value,
       contentType: 0,
-      updateTime: 11111111111,
+      createTime: Date.now(),
     };
     chat.chatRecord.push(newMsg);
-    console.log(chat.chatRecord);
     msg.value = '';
+    // TODO消息发送加载图标
+    _sendMessage(
+      JSON.stringify({
+        toId: sessionId,
+        content: e.detail.value,
+        contentType: 0,
+        messageType: 3,
+        time: Date.now(),
+        sequenceId: createUUID(),
+      })
+    );
     insertRecord(
       sessionId,
-      user.userInfo?.mainId as string,
+      userStore.userInfo?.mainId as string,
       e.detail.value,
       0,
       Date.now(),
-      user.userInfo?.mainId as string
+      userStore.userInfo?.mainId as string
     );
+    debounce(() => {
+      sessionListStore.newMessage(sessionId, e.detail.value, 0, Date.now(), 2);
+    }, 1000)();
     nextTick(() => (scroll.value += 10000));
   }
 </script>
@@ -99,7 +125,7 @@
     <view v-for="cr in chat.chatRecord" :key="cr.id">
       <!-- 我的消息 -->
 
-      <view v-if="cr.userId === user.userInfo?.mainId" class="contain">
+      <view v-if="cr.userId === userStore.userInfo?.mainId" class="contain">
         <view :class="cr.contentType === 0 ? 'chat-me' : 'chat-me-img'">
           <view v-if="cr.contentType === 0">{{ cr.content }}</view>
           <image v-if="cr.contentType === 1" :src="cr.content" mode="aspectFit" lazy-load />

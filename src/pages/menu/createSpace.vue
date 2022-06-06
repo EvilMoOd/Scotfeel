@@ -1,66 +1,58 @@
-<script setip lang="ts"></script>
+<script setup lang="ts">
+  import { computed, reactive } from 'vue';
+  import { reqSetSpace } from '../../server/api/space';
+  import type { FriendInfo } from '../../server/api/user';
+  import { useFriendStore } from '../../store/modules/friendStore';
+
+  const friendStore = useFriendStore();
+
+  const chooseFriends = reactive<FriendInfo[]>([]);
+  const createInfo = computed(() => {
+    const InfoArr: any[] = [];
+    chooseFriends.forEach((element) => {
+      const info = {
+        memberId: element.friendId,
+        memberNickname: element.nickname,
+        memberAvatar: element.avatar,
+      };
+      InfoArr.push(info);
+    });
+    return InfoArr;
+  });
+  async function done() {
+    console.log(createInfo.value);
+    const data = await reqSetSpace(createInfo.value);
+    console.log(data);
+  }
+</script>
 
 <template>
   <view class="header">
     <Back />
-    <view class="title">创建空间</view>
-    <uni-icons class="back" type="search" size="5vh" color="#fff"></uni-icons>
+    <view class="title">创建群聊</view>
+    <uni-icons class="next" type="checkmarkempty" size="5vh" color="#fff" @tap="done"></uni-icons>
   </view>
-  <scroll-view scroll-y class="main">
-    <view class="top">
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">群聊</text>
-      </view>
+  <scroll-view scroll-x class="top">
+    <view class="choose">
+      <image
+        v-for="friend in chooseFriends"
+        :key="friend.friendId"
+        :src="friend.avatar"
+        mode="scaleToFill"
+        class="avatar"
+      />
     </view>
+  </scroll-view>
+  <scroll-view scroll-y class="main">
     <view class="mail">
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
-      </view>
-      <view class="list">
-        <image src="@/assets/images/img3.png" class="head" />
-        <text class="nickname">新朋友</text>
+      <view
+        v-for="friend in friendStore.friendsInfo"
+        :key="friend.friendId"
+        class="list"
+        @tap="chooseFriends.find((item) => item === friend) ? '' : chooseFriends.push(friend)"
+      >
+        <image :src="friend.avatar" class="avatar" />
+        <text class="nickname">{{ friend.nickname }}</text>
       </view>
     </view>
   </scroll-view>
@@ -74,7 +66,7 @@
     justify-content: space-between;
     align-items: flex-end;
 
-    .back {
+    .next {
       margin: 20rpx;
     }
 
@@ -86,30 +78,23 @@
       color: #fff;
     }
   }
-
+  .top {
+    height: 92rpx;
+    background-color: #fff;
+    padding: 15rpx;
+    .choose {
+      .avatar {
+        width: 80rpx;
+        height: 80rpx;
+        border-radius: 50%;
+        vertical-align: middle;
+        margin-left: 20rpx;
+      }
+    }
+  }
   .main {
     height: 1170rpx;
     background-color: #f0f1f2;
-
-    .top {
-      .list {
-        padding: 12rpx 24rpx;
-        background-color: #fff;
-
-        .head {
-          width: 80rpx;
-          height: 80rpx;
-          border-radius: 50%;
-          vertical-align: middle;
-          margin-right: 32rpx;
-        }
-
-        .nickname {
-          font-size: 36rpx;
-          font-weight: bolder;
-        }
-      }
-    }
 
     .mail {
       margin-top: 40rpx;
@@ -118,7 +103,7 @@
         padding: 12rpx 24rpx;
         background-color: #fff;
 
-        .head {
+        .avatar {
           width: 80rpx;
           height: 80rpx;
           border-radius: 50%;

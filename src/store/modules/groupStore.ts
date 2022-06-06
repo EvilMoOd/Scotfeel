@@ -1,33 +1,27 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
 import { reqChangeGroupChatNickname, reqUpdateGroupChatAvatar } from '../../server/api/groupChat';
-import type { GroupMember } from '../../server/api/user';
+import type { GroupChat, GroupMember } from '../../server/api/user';
 import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
-import { updateAvatar, updateMemberCount, updateNickname } from '../../server/sql/groupChat';
+import {
+  insertGroup,
+  selectAllGroupChat,
+  updateAvatar,
+  updateMemberCount,
+  updateNickname,
+} from '../../server/sql/groupChat';
+import { insertGroupMember } from '../../server/sql/groupChatMember';
 import { createUUID } from '../../server/utils/uuid';
 
-export interface GroupChat {
-  groupInfo: GroupPage[];
-  groupPage: GroupPage;
-}
-export interface GroupPage {
-  groupId: string; // 群聊id
-  nickname: string; // 群聊昵称
-  avatar: string; // 群聊头像
-  memberCount: number; // 群聊成员数
-  spaceId?: string; // 群聊绑定的空间id
-  belongToId: string; // 属于哪个用户
-  isDismissed: 0 | 1; // 是否已解散，0：否，1：是；当群聊已解散时，则客户端直接在会话列表标识，并且将不能够再进入到群聊的聊天框中
-  spaceNickname?: string; // 群聊绑定的空间昵称
-  spaceAvatar?: string; // 群聊绑定的空间头像
-  noticeFlag: 0 | 1; // 是否设为免打扰，0：否，1：是
-  groupMember: GroupMember[];
+export interface Group {
+  groupInfo: GroupChat[];
+  groupPage: GroupChat;
 }
 
 const user = uni.getStorageSync('user');
 export const useGroupChatStore = defineStore('groupChatStore', {
-  state: (): GroupChat => ({
+  state: (): Group => ({
     groupInfo: [],
 
     groupPage: {
@@ -41,14 +35,48 @@ export const useGroupChatStore = defineStore('groupChatStore', {
       spaceNickname: '金娟',
       spaceAvatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
       noticeFlag: 1,
-      groupMember: [],
     },
   }),
 
   actions: {
+    async init(belongToId: string) {
+      this.groupInfo = await selectAllGroupChat(belongToId);
+    },
+    loginInit(groupChat: GroupChat[], belongToId: string, groupChatMember: GroupMember[]) {
+      this.groupInfo = groupChat;
+      console.log(this.groupInfo);
+      // 所有群聊信心载入数据库
+      for (const g of groupChat) {
+        insertGroup(
+          g.groupId,
+          g.nickname,
+          g.avatar,
+          g.memberCount,
+          g.spaceId,
+          g.spaceNickname,
+          g.spaceAvatar,
+          g.noticeFlag,
+          g.isDismissed,
+          belongToId
+        );
+      }
+      // 所有群成员载入数据库
+      for (const g of groupChatMember) {
+        insertGroupMember(
+          g.groupId,
+          g.memberId,
+          g.nickname,
+          g.remarkName,
+          g.avatar,
+          g.role,
+          g.isExited,
+          belongToId
+        );
+      }
+    },
     // 获取群聊信息
-    getFriendInfo(groupId: string) {
-      this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupPage;
+    getGroupInfo(groupId: string) {
+      this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupChat;
     },
     // 修改昵称
     async changeNickname(nickname: string, groupId: string) {

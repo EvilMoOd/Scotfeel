@@ -12,7 +12,7 @@ export const reqCreateGroupChat = async (createInfo: CreateInfo[]): Promise<null
   await request<null>({
     url: `/groupChat/create/group`,
     method: 'POST',
-    data: { createInfo },
+    data: createInfo,
   });
 // 申请加入群聊
 export const reqApplyJoinInGroupChat = async (groupId: string): Promise<null> =>

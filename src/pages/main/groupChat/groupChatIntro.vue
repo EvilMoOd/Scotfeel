@@ -13,7 +13,7 @@
   let sessionId: string;
   onLoad((params: any) => {
     sessionId = params.sessionId;
-    groupStore.getFriendInfo(sessionId);
+    groupStore.getGroupInfo(sessionId);
   });
 
   // 展示功能块

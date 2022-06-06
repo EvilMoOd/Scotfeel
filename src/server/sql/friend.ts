@@ -9,12 +9,19 @@ export function createFriendTable(): void {
       'create table if not exists friend("friendId" VARCHAR(40),"nickname" VARCHAR(80),"remarkName" VARCHAR(80),"avatar" VARCHAR(40),"spaceId" VARCHAR(40),' +
       '"isDeletedByFriend" INT(11),"account" VARCHAR(40),"backgroundImage" VARCHAR(40),"noticeFlag" INT(11),"belongToId" VARCHAR(40),"signature" VARCHAR(80))',
     success: function () {
-      console.log('朋友表新建成功');
+      console.log('朋友表初始化成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
     },
   });
+}
+
+// 初始化仓库，查询朋友表所有信息
+export async function selectAllFriends(belongToId: string): Promise<FriendInfo[]> {
+  return await selectSql(`
+			select * from friend where belongToId = "${belongToId}"
+	`);
 }
 
 // 插入数据
@@ -42,19 +49,7 @@ export function _delete(friendId: string, belongToId: string): void {
 		delete from friend where friendId = "${friendId}" and belongToId = "${belongToId}"
 	`);
 }
-// 通讯录
-export async function selectContacts(belongToId: string): Promise<void> {
-  return await selectSql(`
-	select friendId,nickname,remarkName,avatar from friend where belongToId = "${belongToId}"
-	`);
-}
 
-// 朋友基本信息
-export async function selectInfo(friendId: string, belongToId: string): Promise<void> {
-  return await selectSql(`
-			select * from friend where friendId = "${friendId}" and belongToId = "${belongToId}" 
-	`);
-}
 // 更新昵称
 export function updateNickname(nickname: string, friendId: string, belongToId: string): void {
   return executeSql(`
@@ -121,11 +116,5 @@ export function updateIsDeletedByFriend(
 export function deleteFriendTable(): void {
   return executeSql(`
 		delete from friend ;
-	`);
-}
-// 查询朋友表
-export async function selectAllFriends(belongToId: string): Promise<FriendInfo[]> {
-  return await selectSql(`
-			select * from friend where belongToId = "${belongToId}"
 	`);
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import mitt from 'mitt';
 import { useFriendStore } from '../store/modules/friendStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
@@ -78,6 +79,8 @@ export function connectWebSocket(url: string, token: string): void {
     } else if (messageType === 3) {
       // 3、一条个人消息
       personMsg.emit('msg', content);
+      console.log('收到消息');
+      console.log(content);
       insertRecord(
         content.fromId,
         content.fromId,
@@ -86,8 +89,7 @@ export function connectWebSocket(url: string, token: string): void {
         content.date,
         user.userInfo.mainId
       );
-      console.log('收到消息');
-      console.log(content);
+      // 插入会话列表中，防抖
       debounce(() => {
         sessionListStore.newMessage(
           content.fromId,
@@ -99,6 +101,9 @@ export function connectWebSocket(url: string, token: string): void {
       }, 1000)();
     } else if (messageType === 4) {
       // 4、一条群聊消息
+      personMsg.emit('gMsg', content);
+      console.log('收到消息');
+      console.log(content);
       insertRecord(
         content.groupId,
         content.fromId,
@@ -109,11 +114,12 @@ export function connectWebSocket(url: string, token: string): void {
       );
       debounce(() => {
         sessionListStore.newMessage(
-          content.fromId,
+          content.groupId,
           content.content,
           content.contentType,
           content.date,
-          2
+          2,
+          content.fromId
         );
       }, 1000)();
     } else if (messageType === 5) {
@@ -242,6 +248,8 @@ export function connectWebSocket(url: string, token: string): void {
       // 39、kickout
       kickOut();
     } else if (messageType === 40) {
+    } else if (messageType === 41) {
+      console.log(content);
     } else if (messageType === 43) {
       // console.log('绑定连接成功');
       _sendHeart(); // 连接服务端成功后开始发送心跳
@@ -273,8 +281,7 @@ export function connectWebSocket(url: string, token: string): void {
       content: '..',
       contentType: 0,
       messageType: 1,
-      // TODO
-      time: 723409723432,
+      time: Date.now(),
       sequenceId: createUUID(),
     };
     sendHeartTime = setInterval(function () {

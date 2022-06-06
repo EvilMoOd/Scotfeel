@@ -1,6 +1,7 @@
+import type { GroupChat } from '../api/user';
 import { executeSql, selectSql } from './baseSql';
 
-// 执行SQL语句
+// 新建群聊表
 export function createGroupChatTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
@@ -8,15 +9,23 @@ export function createGroupChatTable(): void {
       'create table if not exists groupChat("groupId" VARCHAR(40),	"nickname" VARCHAR(40),	"avatar" VARCHAR(40) , "memberCount" INT(11),"spaceId" VARCHAR(40),' +
       '"spaceNickname" VARCHAR(40),"spaceAvatar" VARCHAR(40),"noticeFlag" INT(11),"isDismissed" INT(11),"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('创建群聊表成功');
+      console.log('群聊表初始化成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
     },
   });
 }
+
+// 初始化仓库，查找所有群聊
+export async function selectAllGroupChat(belongToId: string): Promise<GroupChat[]> {
+  return await selectSql(`
+	select * from groupChat where belongToId = "${belongToId}"
+			`);
+}
+
 // 插入数据
-export function insert(
+export function insertGroup(
   groupId: string,
   nickname: string,
   avatar: string,
@@ -24,7 +33,7 @@ export function insert(
   spaceId: string,
   spaceNickname: string,
   spaceAvatar: string,
-  noticeFlag: string,
+  noticeFlag: 1 | 0,
   isDismissed: 1 | 0,
   belongToId: string
 ): void {
@@ -39,12 +48,7 @@ export function _delete(groupId: string, belongToId: string): void {
 				delete from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
 }
-// 查找所有群聊
-export async function selectAll(belongToId: string): Promise<void> {
-  return await selectSql(`
-	select groupId,nickname,avatar from groupChat where belongToId = "${belongToId}"
-			`);
-}
+
 // 群聊基本信息
 export async function selectInfo(groupId: string, belongToId: string): Promise<void> {
   return await selectSql(`
@@ -102,4 +106,11 @@ export function updateNoticeFlag(noticeFlag: string, groupId: string, belongToId
   return executeSql(`
 				update groupChat set noticeFlag = "${noticeFlag}" where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
+}
+
+// 删除群聊表
+export function deleteGroupTable(): void {
+  return executeSql(`
+		delete from groupChat ;
+	`);
 }

@@ -1,6 +1,7 @@
+import type { GroupMember } from '../api/user';
 import { executeSql, selectSql } from './baseSql';
 
-// 执行SQL语句
+// 创建群成员表
 export function createGroupMemberTable(): void {
   plus.sqlite.executeSql({
     name: 'scotfeel',
@@ -8,7 +9,7 @@ export function createGroupMemberTable(): void {
       'create table if not exists groupChatMember("groupId" VARCHAR(40),	"memberId" VARCHAR(40),"nickname" VARCHAR(40) ,' +
       '"avatar" VARCHAR(40),"remarkName" VARCHAR(40),"role" INT(11),"isExited" INT(11),"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('executeSql success!');
+      console.log('群成员表初始化成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));
@@ -28,14 +29,14 @@ export interface RootObject {
   noticeFlag: number;
 }
 // 插入数据
-export function insert(
+export function insertGroupMember(
   groupId: string,
   memberId: string,
   nickname: string,
   remarkName: string,
   avatar: string,
-  role: string,
-  isExited: string,
+  role: 0 | 1 | 2,
+  isExited: 0 | 1,
   belongToId: string
 ): void {
   return executeSql(`
@@ -50,7 +51,10 @@ export function _delete(groupId: string, memberId: string, belongToId: string): 
 			`);
 }
 // 查找所有群成员信息
-export async function selectAllMemberInfo(groupId: string, belongToId: string): Promise<void> {
+export async function selectAllMemberInfo(
+  groupId: string,
+  belongToId: string
+): Promise<GroupMember[]> {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
@@ -64,7 +68,7 @@ export async function selectOneMemberInfo(
   groupId: string,
   memberId: string,
   belongToId: string
-): Promise<void> {
+): Promise<GroupMember> {
   return await selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g

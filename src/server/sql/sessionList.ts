@@ -9,7 +9,7 @@ export function createSessionListTable(): void {
       'create table if not exists sessionList("sessionId" VARCHAR(40),	"chatorName" VARCHAR(40),	"chatorId" VARCHAR(40),"content" VARCHAR(2000) , "contentType" INT(11),' +
       '"type" INT(11),"unReadCount" INT(11),"updateTime" BIGINT(13),"belongToId" VARCHAR(40))',
     success: function () {
-      console.log('会话表新建成功');
+      console.log('会话表初始化成功');
     },
     fail: function (e) {
       console.log('executeSql failed: ' + JSON.stringify(e));

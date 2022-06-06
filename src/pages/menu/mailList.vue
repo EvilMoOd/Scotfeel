@@ -6,6 +6,9 @@
   function goFriendDetail(friendId: string) {
     uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${friendId}` });
   }
+  function goGroupChatList() {
+    uni.navigateTo({ url: '/pages/menu/groupChatList' });
+  }
 </script>
 
 <template>
@@ -22,7 +25,7 @@
       </view>
       <view class="list">
         <image src="@/assets/images/img3.png" class="avatar" />
-        <text class="nickname">群聊</text>
+        <text class="nickname" @tap="goGroupChatList">群聊</text>
       </view>
     </view>
     <view class="mail">

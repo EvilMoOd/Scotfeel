@@ -76,6 +76,13 @@
 			}
 		},
 		{
+			"path": "pages/menu/groupChatList",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/menu/searchFriend",
 			"style": {
 				"navigationStyle": "custom",

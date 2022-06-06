@@ -40,10 +40,10 @@ export const useFriendStore = defineStore('friend', {
     async init(belongToId: string) {
       this.friendsInfo = await selectAllFriends(belongToId);
     },
+    // 登录初始化
     loginInit(friends: FriendInfo[], belongToId: string) {
       this.friendsInfo = friends;
       for (const f of friends) {
-        console.log(belongToId);
         insertFriend(
           f.friendId,
           f.nickname,
