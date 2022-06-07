@@ -25,7 +25,7 @@
 
   // 前往个人介绍页面
   function goFriendPerson() {
-    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${sessionId}` });
+    uni.navigateTo({ url: `/pages/main/chat/personPage?sessionId=${sessionId}` });
   }
   // 过滤对方和自己的消息
   const scroll = ref(0);

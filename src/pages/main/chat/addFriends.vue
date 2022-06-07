@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { reactive, ref } from 'vue';
+  import { onBeforeUnmount, reactive, ref } from 'vue';
   import { reqAddFriend } from '../../../server/api/friend';
 
   const apply = reactive({
@@ -11,24 +11,33 @@
   onLoad((params: any) => {
     apply.appliedUserId = params.appliedUserId;
   });
-
-  const message = ref(null);
+  // 添加好友
+  const pop = ref(null);
+  const popMsg = reactive({
+    message: '',
+    type: '',
+  });
+  let timer: any;
   async function addFriend() {
     try {
-      console.log(apply.appliedUserId);
       await reqAddFriend(apply.content, apply.appliedUserId);
-      message.value.open();
-      setTimeout(() => {
+      popMsg.message = '添加好友成功';
+      popMsg.type = 'success';
+      pop.value.open();
+      timer = setTimeout(() => {
         uni.navigateBack({
           delta: 1,
         });
       }, 3000);
     } catch (err) {
-      uni.showModal({
-        title: '添加失败，请检查网络',
-      });
+      popMsg.message = '添加好友失败';
+      popMsg.type = 'error';
+      pop.value.open();
     }
   }
+  onBeforeUnmount(() => {
+    clearTimeout(timer);
+  });
 </script>
 
 <template>
@@ -46,8 +55,12 @@
       @tap="addFriend"
     />
   </view>
-  <uni-popup ref="message" type="message">
-    <uni-popup-message type="success" message="添加成功" :duration="2000"></uni-popup-message>
+  <uni-popup ref="pop" type="message">
+    <uni-popup-message
+      :type="popMsg.type"
+      :message="popMsg.message"
+      :duration="2000"
+    ></uni-popup-message>
   </uni-popup>
 </template>
 

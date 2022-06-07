@@ -7,13 +7,22 @@
     reqSetGroupNoNotify,
     reqUpdateVerify,
   } from '../../../server/api/groupChat';
+  import type { GroupMember } from '../../../server/api/user';
+  import { selectAllMemberInfo } from '../../../server/sql/groupChatMember';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
+  import { useUserStore } from '../../../store/modules/userStore';
 
+  const userStore = useUserStore();
   const groupStore = useGroupChatStore();
+  // 获取群成员信息
+  const group = reactive<{ groupMember: GroupMember[] }>({
+    groupMember: [],
+  });
   let sessionId: string;
-  onLoad((params: any) => {
+  onLoad(async (params: any) => {
     sessionId = params.sessionId;
     groupStore.getGroupInfo(sessionId);
+    group.groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
   });
 
   // 展示功能块
@@ -23,8 +32,6 @@
     isShowChangeNickname: false,
     isShowChangeRemark: false,
   });
-
-  // 展示功能块
   function showConfig() {
     show.isShowConfig = true;
     show.isShow = true;
@@ -46,32 +53,35 @@
     show.isShowConfig = false;
     show.isShow = true;
   }
+  // 修改群聊昵称
   const Input = reactive({
     nickname: '',
     remark: '',
   });
-  // 修改群聊昵称
   function changeGroupNickname(e: string) {
     groupStore.changeNickname(e, sessionId);
     show.isShowChangeRemark = false;
     Input.remark = '';
   }
-  // 解散群聊
-  const dismissGroup = async () => {
-    await reqDismissGroupChat(sessionId);
-    console.log('群聊已解散');
-  };
   // 修改我的群聊备注
   const setMyRemark = async (e: string) => {
     await reqChangeRemark(e, sessionId);
     show.isShowChangeRemark = false;
     Input.remark = '';
   };
+  // 解散群聊
+  const dismissGroup = async () => {
+    await reqDismissGroupChat(sessionId);
+    uni.navigateBack({
+      delta: 2,
+    });
+  };
+
+  // 消息免打扰
   const switches = reactive<{ mute: boolean; verify: boolean }>({
     mute: true,
     verify: false,
   });
-  // 消息免打扰
   async function changeMute() {
     await reqSetGroupNoNotify(sessionId, switches.mute ? 1 : 0);
   }
@@ -86,8 +96,8 @@
     <view class="header">
       <Back />
       <uni-icons type="more-filled" color="#fff" size="28" class="more-icon" @click="showConfig" />
-      <image src="@/assets/images/head.png" class="head" />
-      <view>AMCC肌肉车俱乐部</view>
+      <image :src="groupStore.groupPage.avatar" class="head" />
+      <view>{{ groupStore.groupPage.nickname }}</view>
     </view>
     <view class="list">
       <view class="item">
@@ -126,14 +136,16 @@
     </view>
     <hr />
     <view class="list3">
-      <view class="item">
-        <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-        <text>海浪线</text>
-        <view style="float: right; color: #3ea8c2; margin-top: 10rpx">群主</view>
-      </view>
-      <view class="item">
-        <image src="@/assets/images/head.png" class="head-user" mode="scaleToFill" />
-        <text>法医</text>
+      <view v-for="item in group.groupMember" :key="item.groupId" class="item">
+        <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
+        <text>{{ item.nickname }}</text>
+        <view v-if="item.role === 0" style="float: right; color: #3ea8c2; margin-top: 10rpx">
+          群主
+        </view>
+        <view v-else-if="item.role === 1" style="float: right; color: #3ea8c2; margin-top: 10rpx">
+          管理员
+        </view>
+        <view v-else style="float: right; color: #aaa; margin-top: 10rpx">成员</view>
       </view>
     </view>
   </view>
@@ -251,7 +263,7 @@
       .item {
         margin: 30rpx 0;
 
-        .head-user {
+        .avatar-user {
           width: 66rpx;
           height: 66rpx;
           border-radius: 50%;

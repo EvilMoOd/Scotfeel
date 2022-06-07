@@ -142,14 +142,14 @@
   }
   // 发送消息
   function sendMessage() {
-    uni.navigateTo({ url: `/pages/main/personChat/chat?sessionId=${sessionId}` });
+    uni.navigateTo({ url: `/pages/main/chat/chat?sessionId=${sessionId}` });
   }
   //
   // 非好友
   // 前往添加好友申请
   function goAddFriends() {
     uni.navigateTo({
-      url: `/pages/main/personPage/addFriends?appliedUserId=${personInfo.personPage.userId}`,
+      url: `/pages/main/chat/addFriends?appliedUserId=${personInfo.personPage.userId}`,
     });
   }
 </script>
@@ -264,7 +264,9 @@
     />
   </PopWindow>
   <PopBottom :pop-show="show.showDeleteFriend">
-    <view style="color: red" @tap="deleteFriend">删除好友</view>
+    <view style="color: red; margin: 50rpx 0; text-align: center" @tap="deleteFriend">
+      删除好友
+    </view>
   </PopBottom>
   <Mask :show="show.showMask" :hidden="hiddenAll" />
 </template>

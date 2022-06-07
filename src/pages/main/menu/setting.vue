@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { deleteChatTable } from '../../server/sql/chatRecord';
-  import { deleteSessionTable } from '../../server/sql/sessionList';
+  import { deleteChatTable } from '../../../server/sql/chatRecord';
+  import { deleteSessionTable } from '../../../server/sql/sessionList';
 
   async function clearRecord() {
     const data = await deleteChatTable();

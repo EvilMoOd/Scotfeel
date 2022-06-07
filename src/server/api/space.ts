@@ -137,20 +137,57 @@ export interface SpaceInfo {
   countSubscriber: number;
   countMember: number;
   backgroundImage: string;
+  privateFlag: 0 | 1; // 是否为私密空间，0：否，1:是
+  verifyFlag: 0 | 1; // 是否需要审核，0:否，1：是
+  inviteFlag: 0 | 1; // 是否只能通过邀请进入，0：否，1：是
+  recommendFlag: 0 | 1; // 是否允许系统推荐给其它用户，0：否，1：是
 }
 export const reqSpaceInfo = async (spaceId: string): Promise<SpaceInfo> =>
   await request<SpaceInfo>({
     url: `/space/getInfo`,
     method: 'GET',
+    data: { spaceId },
   });
-// TODO获取空间的角色信息
-export const reqUpdateMemberRole = async (): Promise<null> =>
+// 更新成员角色
+export const reqUpdateRole = async (userId: string, role: string, spaceId: string): Promise<null> =>
   await request<null>({
     url: `/space/updateMemberRole`,
     method: 'POST',
+    data: { userId, role, spaceId },
     type: 'application/x-www-form-urlencoded',
   });
-
+// 移除成员
+export const reqDeleteMember = async (
+  memberId: string,
+  memberType: string,
+  spaceId: string
+): Promise<null> =>
+  await request<null>({
+    url: `/space/deleteMember`,
+    method: 'POST',
+    data: { memberId, memberType, spaceId },
+    type: 'application/x-www-form-urlencoded',
+  });
+export const reqUpdateRemark = async (spaceId: string, remarkName: string): Promise<null> =>
+  await request<null>({
+    url: `/space/updateUserMemberRemarkName`,
+    method: 'POST',
+    data: { remarkName, spaceId },
+    type: 'application/x-www-form-urlencoded',
+  });
+export interface SubscribedSpaceInfo {
+  spaceId: string;
+  nickName: string;
+  avatar: string;
+  role: number;
+}
+// 获取订阅空间信息
+export const reqSubscribedSpace = async (userId: string): Promise<SubscribedSpaceInfo> =>
+  await request<SubscribedSpaceInfo>({
+    url: `/space/get/subscribedSpaces`,
+    method: 'GET',
+    data: { userId },
+  });
 // 空间动态
 // 获取一个空间的动态
 export interface PosterInfo {

@@ -3,9 +3,9 @@
 import { request } from '../http';
 
 export interface CreateInfo {
-  memberIds: string;
-  memberNicknames: string;
-  memberAvatars: string;
+  memberId: string;
+  memberNickname: string;
+  memberAvatar: string;
 }
 // 创建群聊
 export const reqCreateGroupChat = async (createInfo: CreateInfo[]): Promise<null> =>
@@ -66,22 +66,9 @@ export const reqRemoveGroupMember = async (memberId: string, groupId: string): P
 // 解散群聊
 export const reqDismissGroupChat = async (groupId: string): Promise<null> =>
   await request<null>({
-    url: `/groupId/dismiss/group`,
+    url: `/groupChat/dismiss/group`,
     method: 'GET',
     data: { groupId },
-  });
-// 获取全部成员信息
-export interface MemberInfo {
-  mainId: string;
-  remarkName?: any;
-  nickname: string;
-  avatar: string;
-  role: string;
-}
-export const reqGetAllMemberInfo = async (): Promise<MemberInfo[]> =>
-  await request<MemberInfo[]>({
-    url: `/groupChat/get/allMembers`,
-    method: 'GET',
   });
 // 设置群聊免打扰
 export const reqSetGroupNoNotify = async (groupId: string, noticeFlag: 0 | 1): Promise<null> =>

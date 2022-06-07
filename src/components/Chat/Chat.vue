@@ -18,7 +18,7 @@
     const index = sessionStore.sessionListInfo.findIndex((item) => item.sessionId === params);
     sessionStore.sessionListInfo[index].unReadCount = 0;
     type === 1
-      ? uni.navigateTo({ url: `/pages/main/personChat/chat?sessionId=${params}` })
+      ? uni.navigateTo({ url: `/pages/main/chat/chat?sessionId=${params}` })
       : uni.navigateTo({ url: `/pages/main/groupChat/groupChat?sessionId=${params}` });
   }
 </script>

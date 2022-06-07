@@ -1,9 +1,11 @@
 <script setup lang="ts">
-  import { computed, reactive } from 'vue';
-  import { reqCreateGroupChat } from '../../server/api/groupChat';
-  import type { FriendInfo } from '../../server/api/user';
-  import { useFriendStore } from '../../store/modules/friendStore';
+  import { computed, onBeforeUnmount, reactive, ref } from 'vue';
+  import { reqCreateGroupChat } from '../../../server/api/groupChat';
+  import type { FriendInfo } from '../../../server/api/user';
+  import { useFriendStore } from '../../../store/modules/friendStore';
+  import { useUserStore } from '../../../store/modules/userStore';
 
+  const userStore = useUserStore();
   const friendStore = useFriendStore();
 
   const chooseFriends = reactive<FriendInfo[]>([]);
@@ -19,11 +21,41 @@
     });
     return InfoArr;
   });
+  // 创建群聊
+  const pop = ref(null);
+  const popMsg = reactive({
+    message: '',
+    type: '',
+  });
+  let timer: any;
   async function done() {
-    console.log(createInfo.value);
-    const data = await reqCreateGroupChat(createInfo.value);
-    console.log(data);
+    try {
+      await reqCreateGroupChat([
+        {
+          memberId: userStore.userInfo?.mainId,
+          memberNickname: userStore.userInfo?.nickname,
+          memberAvatar: userStore.userInfo?.avatar,
+        },
+        ...createInfo.value,
+      ]);
+      popMsg.message = '创建群聊成功';
+      popMsg.type = 'success';
+      pop.value.open();
+      timer = setTimeout(() => {
+        uni.navigateBack({
+          delta: 1,
+        });
+      }, 3000);
+    } catch (err) {
+      popMsg.message = '创建群聊失败';
+      popMsg.type = 'error';
+      pop.value.open();
+    }
   }
+
+  onBeforeUnmount(() => {
+    clearTimeout(timer);
+  });
 </script>
 
 <template>
@@ -56,6 +88,13 @@
       </view>
     </view>
   </scroll-view>
+  <uni-popup ref="pop" type="message">
+    <uni-popup-message
+      :type="popMsg.type"
+      :message="popMsg.message"
+      :duration="2000"
+    ></uni-popup-message>
+  </uni-popup>
 </template>
 
 <style lang="scss" scoped>

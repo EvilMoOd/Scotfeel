@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
-  import type { PersonInfo } from '../../server/api/user';
-  import { reqSearchUser } from '../../server/api/user';
+  import type { PersonInfo } from '../../../server/api/user';
+  import { reqSearchUser } from '../../../server/api/user';
 
   const searchText = ref('');
   const searchInfo = reactive<{ personInfo: PersonInfo | undefined }>({
@@ -13,7 +13,7 @@
 
   // 前往个人介绍页面
   function goFriendPerson(sessionId: string) {
-    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${sessionId}` });
+    uni.navigateTo({ url: `/pages/main/chat/personPage?sessionId=${sessionId}` });
   }
 </script>
 

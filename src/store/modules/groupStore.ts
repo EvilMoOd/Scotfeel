@@ -8,8 +8,12 @@ import {
   insertGroup,
   selectAllGroupChat,
   updateAvatar,
+  updateIsDismissed,
   updateMemberCount,
   updateNickname,
+  updateSpaceAvatar,
+  updateSpaceId,
+  updateSpaceNickname,
 } from '../../server/sql/groupChat';
 import { insertGroupMember } from '../../server/sql/groupChatMember';
 import { createUUID } from '../../server/utils/uuid';
@@ -74,11 +78,42 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         );
       }
     },
+    // 创建或被拉入新的群聊
+    newGroup(groupChatInfo: GroupChat, memberInfo: GroupMember[], belongToId: string) {
+      this.groupInfo.push(groupChatInfo);
+      console.log(this.groupInfo);
+      // 所有群聊信心载入数据库
+      insertGroup(
+        groupChatInfo.groupId,
+        groupChatInfo.nickname,
+        groupChatInfo.avatar,
+        groupChatInfo.memberCount,
+        groupChatInfo.spaceId,
+        groupChatInfo.spaceNickname,
+        groupChatInfo.spaceAvatar,
+        groupChatInfo.noticeFlag,
+        0,
+        belongToId
+      );
+      // 所有群成员载入数据库
+      for (const g of memberInfo) {
+        insertGroupMember(
+          g.groupId,
+          g.memberId,
+          g.nickname,
+          g.remarkName,
+          g.avatar,
+          g.role,
+          g.isExited,
+          belongToId
+        );
+      }
+    },
     // 获取群聊信息
     getGroupInfo(groupId: string) {
       this.groupPage = this.groupInfo.find((item) => item.groupId === groupId) as GroupChat;
     },
-    // 修改昵称
+    // 修改群聊信息
     async changeNickname(nickname: string, groupId: string) {
       try {
         await reqChangeGroupChatNickname(nickname, groupId);
@@ -94,7 +129,6 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         });
       }
     },
-    // 修改头像
     changeAvatar(groupId: string) {
       uni.chooseImage({
         count: 1,
@@ -136,6 +170,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         },
       });
     },
+    // ws更新群聊信息
     updateGroupChatAvatar(groupId: string, avatar: string) {
       const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
       this.groupInfo[index].avatar = avatar;
@@ -151,10 +186,27 @@ export const useGroupChatStore = defineStore('groupChatStore', {
       this.groupInfo[index].memberCount = count;
       updateMemberCount(count, groupId, user.userInfo?.mainId as string);
     },
-    updateGroupSpaceId() {},
-    updateGroupSpaceNickname() {},
-    updateGroupSpaceAvatar() {},
-    groupBreakOut() {},
+    updateGroupSpaceId(groupId: string, spaceId: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].spaceId = spaceId;
+      updateSpaceId(spaceId, groupId, user.userInfo?.mainId as string);
+    },
+    updateGroupSpaceNickname(groupId: string, spaceNickname: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].spaceNickname = spaceNickname;
+      updateSpaceNickname(spaceNickname, groupId, user.userInfo?.mainId as string);
+    },
+    updateGroupSpaceAvatar(groupId: string, avatar: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].spaceAvatar = avatar;
+      updateSpaceAvatar(avatar, groupId, user.userInfo?.mainId as string);
+    },
+    // 群解散
+    groupBreakOut(groupId: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].isDismissed = 1;
+      updateIsDismissed(1, groupId, user.userInfo?.mainId as string);
+    },
   },
   getters: {},
 });

@@ -16,18 +16,6 @@ export function createGroupMemberTable(): void {
     },
   });
 }
-export interface RootObject {
-  groupId: string;
-  nickname: string;
-  avatar: string;
-  memberCount: string;
-  spaceId: string;
-  belongToId: string;
-  isDismissed: number;
-  spaceNickname: string;
-  spaceAvatar: string;
-  noticeFlag: number;
-}
 // 插入数据
 export function insertGroupMember(
   groupId: string,
@@ -77,7 +65,7 @@ export async function selectOneMemberInfo(
 			`);
 }
 // 更新昵称
-export function updateNickname(
+export function updateGMNickname(
   nickname: string,
   groupId: string,
   memberId: string,
@@ -88,7 +76,7 @@ export function updateNickname(
 			`);
 }
 // 更新头像
-export function updateAvatar(
+export function updateGMAvatar(
   avatar: string,
   groupId: string,
   memberId: string,
@@ -99,7 +87,7 @@ export function updateAvatar(
 			`);
 }
 // 更新成员备注
-export function updateRemarkName(
+export function updateGMRemarkName(
   remarkName: string,
   groupId: string,
   memberId: string,
@@ -110,7 +98,7 @@ export function updateRemarkName(
 			`);
 }
 // 更新成员角色
-export function updateRole(
+export function updateGMRole(
   role: string,
   groupId: string,
   memberId: string,
@@ -122,7 +110,7 @@ export function updateRole(
 }
 // 更新成员退出状态
 export function updateIsExited(
-  isExited: string,
+  isExited: 1 | 0,
   groupId: string,
   memberId: string,
   belongToId: string
@@ -130,4 +118,11 @@ export function updateIsExited(
   return executeSql(`
 				update groupChatMember set isExited = "${isExited}" where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
+}
+
+// 删除群聊成员表
+export function deleteGroupMemberTable(): void {
+  return executeSql(`
+		delete from groupChatMember ;
+	`);
 }

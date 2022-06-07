@@ -13,6 +13,7 @@ import {
 import { OBS_URL } from '../../server/http';
 import { deleteFriendTable } from '../../server/sql/friend';
 import { deleteGroupTable } from '../../server/sql/groupChat';
+import { deleteGroupMemberTable } from '../../server/sql/groupChatMember';
 import { createUUID } from '../../server/utils/uuid';
 import { useFriendStore } from './friendStore';
 import { useGroupChatStore } from './groupStore';
@@ -47,12 +48,13 @@ export const useUserStore = defineStore('user', {
       this.token = undefined;
       deleteFriendTable();
       deleteGroupTable();
+      deleteGroupMemberTable();
     },
     // 修改昵称
     async changeNickname(nickname: string) {
       try {
         await reqChangeNickname(nickname);
-        this.userInfo.signature = nickname;
+        this.userInfo.nickname = nickname;
         uni.showModal({
           title: '修改成功',
         });

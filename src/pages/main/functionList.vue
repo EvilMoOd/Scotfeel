@@ -15,28 +15,28 @@
   // 前往个人主页
   function goPerson() {
     uni.navigateTo({
-      url: `/pages/main/personPage/personPage?sessionId=${userStore.userInfo?.mainId}`,
+      url: `/pages/main/chat/personPage?sessionId=${userStore.userInfo?.mainId}`,
     });
   }
   // 前往通讯录
   function goMailList() {
-    uni.navigateTo({ url: '/pages/menu/mailList' });
+    uni.navigateTo({ url: '/pages/main/menu/mailList' });
   }
   // 前往添加好友
   function goAddFriends() {
-    uni.navigateTo({ url: '/pages/menu/searchFriend' });
+    uni.navigateTo({ url: '/pages/main/menu/searchFriend' });
   }
   // 前往创建群聊
   function goCreateGroupChat() {
-    uni.navigateTo({ url: '/pages/menu/createGroupChat' });
+    uni.navigateTo({ url: '/pages/main/menu/createGroupChat' });
   }
   // 前往创建空间
   function goCreateSpace() {
-    uni.navigateTo({ url: '/pages/menu/createSpace' });
+    uni.navigateTo({ url: '/pages/main/menu/createSpace' });
   }
   // 前往设置与隐私
   function goSetting() {
-    uni.navigateTo({ url: '/pages/menu/setting' });
+    uni.navigateTo({ url: '/pages/main/menu/setting' });
   }
 
   // 退出登录

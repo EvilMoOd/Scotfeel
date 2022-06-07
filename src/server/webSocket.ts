@@ -9,6 +9,13 @@ import { debounce } from 'lodash-es';
 import { insertRecord } from './sql/chatRecord';
 import { createUUID } from './utils/uuid';
 import { useGroupChatStore } from '../store/modules/groupStore';
+import {
+  updateGMAvatar,
+  updateGMNickname,
+  updateGMRemarkName,
+  updateGMRole,
+  updateIsExited,
+} from './sql/groupChatMember';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: any;
@@ -87,7 +94,7 @@ export function connectWebSocket(url: string, token: string): void {
         content.content,
         content.contentType,
         content.date,
-        user.userInfo.mainId
+        user.userInfo?.mainId as string
       );
       // 插入会话列表中，防抖
       debounce(() => {
@@ -110,7 +117,7 @@ export function connectWebSocket(url: string, token: string): void {
         content.content,
         content.contentType,
         content.date,
-        user.userInfo.mainId
+        user.userInfo?.mainId as string
       );
       debounce(() => {
         sessionListStore.newMessage(
@@ -156,40 +163,50 @@ export function connectWebSocket(url: string, token: string): void {
       // TODO 会话列表移除新好友，好友store移除新好友信息
     } else if (messageType === 13) {
       // 13、更新好友头像
-      void friendStore.updateFriendAvatar(content.friendId, content.avatar, user.userInfo.mainId);
+      void friendStore.updateFriendAvatar(
+        content.friendId,
+        content.avatar,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 14) {
       // 14、更新朋友昵称
       void friendStore.updateFriendNickname(
         content.friendId,
         content.nickname,
-        user.userInfo.mainId
+        user.userInfo?.mainId as string
       );
     } else if (messageType === 15) {
       // 15、更新朋友account
-      void friendStore.updateFriendAccount(content.friendId, content.account, user.userInfo.mainId);
+      void friendStore.updateFriendAccount(
+        content.friendId,
+        content.account,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 16) {
       // 16、更新朋友背景照片
       void friendStore.updateFriendBackgroundImg(
         content.friendId,
         content.backgroundImage,
-        user.userInfo.mainId
+        user.userInfo?.mainId as string
       );
     } else if (messageType === 17) {
       // 17、更新朋友个性签名
       void friendStore.updateFriendSignature(
         content.friendId,
         content.signature,
-        user.userInfo.mainId
+        user.userInfo?.mainId as string
       );
     } else if (messageType === 18) {
       // 18、更新我和朋友所绑定的空间ID
-      void friendStore.updateFriendSpaceId(content.friendId, content.spaceId, user.userInfo.mainId);
+      void friendStore.updateFriendSpaceId(
+        content.friendId,
+        content.spaceId,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 19) {
-      // 19、被同意加入群聊
-      beingAgreeJoinGroupChat();
+      // TODO 19、被同意加入群聊
     } else if (messageType === 20) {
-      // 20、被移除群聊
-      beingKickOutGroupChat();
+      // TODO 20、被移除群聊
     } else if (messageType === 21) {
       // 21、更新群聊头像
       groupStore.updateGroupChatAvatar(content.groupId, content.avatar);
@@ -201,59 +218,83 @@ export function connectWebSocket(url: string, token: string): void {
       groupStore.updateGroupCount(content.groupId, content.count);
     } else if (messageType === 24) {
       // 24、更新群绑定的空间ID
-      groupStore.updateGroupSpaceId();
+      groupStore.updateGroupSpaceId(content.groupId, content.spaceId);
     } else if (messageType === 25) {
       // 25、更新群绑定的空间昵称
-      groupStore.updateGroupSpaceNickname();
+      groupStore.updateGroupSpaceNickname(content.groupId, content.spaceNickname);
     } else if (messageType === 26) {
       // 26、更新群绑定的空间的头像
-      groupStore.updateGroupSpaceAvatar();
+      groupStore.updateGroupSpaceAvatar(content.groupId, content.spaceAvatar);
     } else if (messageType === 27) {
-      // 27、有群新成员加入
-      newGroupMemberJoinIn();
+      // TODO27、有群新成员加入
     } else if (messageType === 28) {
       // 28、群成员头像更新
-      updateGroupMemberAvatar();
+      updateGMAvatar(
+        content.avatar,
+        content.groupId,
+        content.memberId,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 29) {
+      updateGMNickname(
+        content.nickname,
+        content.groupId,
+        content.memberId,
+        user.userInfo?.mainId as string
+      );
       // 29、群成员昵称更新
-      updateGroupMemberNickname();
     } else if (messageType === 30) {
       // 30、群成员的群备注更新
-      updateGroupMemberRemark();
+      updateGMRemarkName(
+        content.memberRemark,
+        content.groupId,
+        content.memberId,
+        content.user.userInfo?.mainId as string
+      );
     } else if (messageType === 31) {
       // 31、群成员的角色更新
-      updateGroupMember();
+      updateGMRole(
+        content.role,
+        content.groupId,
+        content.memberId,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 32) {
       // 32、群成员退出
-      GroupMemberOut();
+      updateIsExited(1, content.groupId, content.memberId, user.userInfo?.mainId as string);
     } else if (messageType === 33) {
       // 33、群解散
-      groupStore.groupBreakOut();
+      groupStore.groupBreakOut(content.groupId);
+      console.log('群聊解散');
     } else if (messageType === 34) {
-      // 34、被同意加入空间
-      beingAgreeInSpace();
+      // TODO 34、被同意加入空间
     } else if (messageType === 35) {
-      // 35、更新空间昵称
-      updateSpaceNickname();
+      // TODO 35、更新空间昵称
     } else if (messageType === 36) {
-      // 36、更新空间头像
-      updateSpaceAvatar();
+      // TODO 36、更新空间头像
     } else if (messageType === 37) {
-      // 37、空间内的角色更新
-      updateSpaceRole();
+      // TODO 37、空间内的角色更新
     } else if (messageType === 38) {
-      // 38、空间被设为私密空间
-      changeSpaceToPrivate();
+      // TODO 38、空间被设为私密空间
     } else if (messageType === 39) {
-      // 39、kickout
-      kickOut();
+      // TODO 39、kickout
     } else if (messageType === 40) {
+      // TODO 40、用户二维码更新
     } else if (messageType === 41) {
       console.log(content);
+      groupStore.newGroup(
+        content.groupChatInfo,
+        content.memberInfo,
+        user.userInfo?.mainId as string
+      );
+    } else if (messageType === 42) {
+      // TODO 42、创建空间
     } else if (messageType === 43) {
       // console.log('绑定连接成功');
       _sendHeart(); // 连接服务端成功后开始发送心跳
       _closeConn(); // 并打开心跳回复检测
+    } else if (messageType === 44) {
+      // TODO 44、动态被转发
     }
   }
   // 监听关闭

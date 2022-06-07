@@ -14,6 +14,7 @@
   <view class="header">
     <Home />
     <text class="title">朋友动态</text>
+    <uni-icons type="camera" color="#fff" size="30" class="send-moment" @tap="" />
   </view>
   <MomentList style="background-color: #f2f2f2" />
   <scroll-view scroll-y class="main">
@@ -38,6 +39,11 @@
       font-weight: bold;
       font-size: 38rpx;
       color: #fff;
+    }
+    .send-moment {
+      position: absolute;
+      top: 58rpx;
+      left: 668rpx;
     }
   }
 

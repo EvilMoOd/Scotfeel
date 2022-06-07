@@ -17,7 +17,6 @@
     box-sizing: border-box;
     bottom: 0;
     left: 34rpx;
-    height: 366rpx;
     width: 680rpx;
     background-color: #fff;
     border-radius: 30rpx 30rpx 0 0;

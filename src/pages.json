@@ -34,14 +34,14 @@
 			}
 		},
 		{
-			"path": "pages/main/moment",
+			"path": "pages/main/moment/moment",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/main/personChat/chat",
+			"path": "pages/main/chat/chat",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
@@ -62,56 +62,56 @@
 			}
 		},
 		{
-			"path": "pages/main/personPage/personPage",
+			"path": "pages/main/chat/personPage",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/mailList",
+			"path": "pages/main/chat/addFriends",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/groupChatList",
+			"path": "pages/main/menu/mailList",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/searchFriend",
+			"path": "pages/main/menu/groupChatList",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/main/personPage/addFriends",
+			"path": "pages/main/menu/searchFriend",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/createGroupChat",
+			"path": "pages/main/menu/createGroupChat",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/createSpace",
+			"path": "pages/main/menu/createSpace",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
 		},
 		{
-			"path": "pages/menu/setting",
+			"path": "pages/main/menu/setting",
 			"style": {
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"

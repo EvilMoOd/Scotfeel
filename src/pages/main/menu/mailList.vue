@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  import { useFriendStore } from '../../store/modules/friendStore';
+  import { useFriendStore } from '../../../store/modules/friendStore';
 
   const friendStore = useFriendStore();
 
   function goFriendDetail(friendId: string) {
-    uni.navigateTo({ url: `/pages/main/personPage/personPage?sessionId=${friendId}` });
+    uni.navigateTo({ url: `/pages/main/chat/personPage?sessionId=${friendId}` });
   }
   function goGroupChatList() {
-    uni.navigateTo({ url: '/pages/menu/groupChatList' });
+    uni.navigateTo({ url: '/pages/main/menu/groupChatList' });
   }
 </script>
 
@@ -29,15 +29,12 @@
       </view>
     </view>
     <view class="mail">
-      <view
-        v-for="friend in friendStore.friendsInfo"
-        :key="friend.friendId"
-        class="list"
-        @tap="goFriendDetail(friend.friendId)"
-      >
-        <view v-if="friend.isDeletedByFriend === 0">
-          <image :src="friend.avatar" class="avatar" />
-          <text class="nickname">{{ friend.nickname }}</text>
+      <view v-for="friend in friendStore.friendsInfo" :key="friend.friendId">
+        <view class="list" @tap="goFriendDetail(friend.friendId)">
+          <view v-if="friend.isDeletedByFriend === 0">
+            <image :src="friend.avatar" class="avatar" />
+            <text class="nickname">{{ friend.nickname }}</text>
+          </view>
         </view>
       </view>
     </view>

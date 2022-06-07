@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue';
-  import { reqSetSpace } from '../../server/api/space';
-  import type { FriendInfo } from '../../server/api/user';
-  import { useFriendStore } from '../../store/modules/friendStore';
+  import { reqSetSpace } from '../../../server/api/space';
+  import type { FriendInfo } from '../../../server/api/user';
+  import { useFriendStore } from '../../../store/modules/friendStore';
 
   const friendStore = useFriendStore();
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useGroupChatStore } from '../../store/modules/groupStore';
+  import { useGroupChatStore } from '../../../store/modules/groupStore';
 
   const groupStore = useGroupChatStore();
 

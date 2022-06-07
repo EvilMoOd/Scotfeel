@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import { onLoad } from '@dcloudio/uni-app';
   import { ref } from 'vue';
   import { selectAllRecord } from '../../server/sql/chatRecord';
   import { selectAllFriends } from '../../server/sql/friend';
+  import { selectAllGroupChat } from '../../server/sql/groupChat';
   import { selectAllSession } from '../../server/sql/sessionList';
   import { useNoticeStore } from '../../store/modules/noticeStore';
   import { useSessionListStore } from '../../store/modules/sessionListStore';
@@ -44,11 +44,10 @@
     console.log(ss);
     const record = await selectAllRecord(userStore.userInfo?.mainId as string);
     console.log(record);
+    const group = await selectAllGroupChat(userStore.userInfo?.mainId as string);
+    console.log(group);
+    console.log(userStore.token);
   }
-
-  onLoad(() => {
-    // TODO初始化
-  });
 </script>
 
 <template>
