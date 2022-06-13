@@ -1,13 +1,17 @@
 <script setup lang="ts">
-  // import { onLoad } from '@dcloudio/uni-app';
-  // import { useMomentListStore } from '../../store/modules/momemtListStore';
-  // import { getParam } from '../../util/url';
+  import { onLoad } from '@dcloudio/uni-app';
+  import { useMomentStore } from '../../../store/modules/momentStore';
 
-  // const friendId = getParam('friendId');
-  // const momentStore = useMomentListStore();
-  // onLoad(() => {
-  // momentStore.getMoment(friendId);
-  // });
+  const momentStore = useMomentStore();
+  onLoad((params) => {
+    momentStore.init(params);
+  });
+  // 点赞
+  async function changeLikeStatus(index: number) {
+    momentStore.momentInfo[index].likeStatus === 1
+      ? momentStore.cancelLike(index)
+      : momentStore.like(index);
+  }
 </script>
 
 <template>
@@ -19,10 +23,13 @@
   <MomentList style="background-color: #f2f2f2" />
   <scroll-view scroll-y class="main">
     <view class="posts">
-      <ActiveCard />
-      <ActiveCard />
-      <ActiveCard />
-      <ActiveCard />
+      <ActiveCard
+        v-for="(item, index) in momentStore.momentInfo"
+        :key="item._id"
+        :moment="item"
+        :index="index"
+        :change-like-status="changeLikeStatus"
+      />
     </view>
     <view></view>
   </scroll-view>

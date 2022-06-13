@@ -35,6 +35,10 @@
       countSubscriber: 2,
       countMember: 3,
       backgroundImage: 'http://dummyimage.com/100x100',
+      privateFlag: 0, // 是否为私密空间，0：否，1:是
+      verifyFlag: 0, // 是否需要审核，0:否，1：是
+      inviteFlag: 0, // 是否只能通过邀请进入，0：否，1：是
+      recommendFlag: 0, // 是否允许系统推荐给其它用户，0：否，1：是
     },
     inSpace: {
       spaceId: '25606d2bb91c4638a84cc9109444d666',

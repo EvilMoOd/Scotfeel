@@ -57,10 +57,10 @@ export async function selectSingleChat(
 
 // 群聊的聊天记录查询，lastId是上一次查询的最小的id
 export async function selectGroupChat(
-  lastId: string,
+  lastId: number,
   sessionId: string,
   belongToId: string
-): Promise<void> {
+): Promise<ChatRecord[]> {
   return await selectSql(`
 		select c.id,c.userId,c.content,c.contentType,c.createTime,g.avatar,g.nickname,g.remarkName as memberRemarkName,f.remarkName as friendRemarkName
 			from chatRecord c

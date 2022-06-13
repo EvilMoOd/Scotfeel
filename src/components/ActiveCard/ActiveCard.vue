@@ -1,6 +1,19 @@
 <script setup lang="ts">
   import { ref } from 'vue';
+  import type { MomentInfo } from '../../server/api/moment';
 
+  import day from 'dayjs';
+  import relativeTime from 'dayjs/plugin/relativeTime';
+  import 'dayjs/locale/zh-cn';
+
+  day.extend(relativeTime);
+  day.locale('zh-cn');
+
+  const props = defineProps<{
+    moment: MomentInfo;
+    index: number;
+    changeLikeStatus: (index: number) => void;
+  }>();
   const pageIndex = ref(0);
   const changePage = (e: any) => {
     pageIndex.value = e.detail.current;
@@ -11,18 +24,19 @@
   <!-- 朋友动态卡片 -->
   <view class="post">
     <view class="user">
-      <image src="@/assets/images/head.png" class="head" />
-      <text class="text">小妮</text>
+      <image :src="props.moment.posterInfo[0].avatar" class="head" />
+      <text class="text">
+        {{ props.moment.friendRemark[0] || props.moment.posterInfo[0].nickname }}
+      </text>
     </view>
-    <view><text>盼望着，春天的脚步接近了</text></view>
-    <view class="image-container">
-      <view class="pageindex">{{ pageIndex + 1 }}/2</view>
+    <view>
+      <text>{{ props.moment.content }}</text>
+    </view>
+    <view v-if="props.moment.photos.length > 0" class="image-container">
+      <view class="pageindex">{{ pageIndex + 1 }}/{{ props.moment.photos.length }}</view>
       <swiper class="picture" @change="changePage">
         <swiper-item>
           <image src="@/assets/images/img1.png" class="post-img" mode="aspectFill" />
-        </swiper-item>
-        <swiper-item>
-          <image src="@/assets/images/img2.jpg" class="post-img" mode="aspectFill" />
         </swiper-item>
       </swiper>
     </view>
@@ -30,13 +44,19 @@
     <view class="post-state">
       <view>
         <uni-icons type="chat" size="3vh" color="#117986"></uni-icons>
-        评论
+        评论{{ props.moment.commentedCount }}
       </view>
-      <view>
-        <uni-icons type="heart" size="3vh" color="#117986"></uni-icons>
-        点赞
+      <view @tap="changeLikeStatus(props.index)">
+        <uni-icons
+          v-if="props.moment.likeStatus === 0"
+          type="heart"
+          size="3vh"
+          color="#117986"
+        ></uni-icons>
+        <uni-icons v-else type="heart-filled" color="#117986" size="3vh" />
+        点赞{{ props.moment.likedCount }}
       </view>
-      <view class="time">30分钟前</view>
+      <view class="time">{{ day().from(day(props.moment.createTime)) }}</view>
     </view>
   </view>
 </template>

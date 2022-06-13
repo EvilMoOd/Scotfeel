@@ -90,7 +90,7 @@ export const reqUpdateVerify = async (groupId: string, noticeFlag: 0 | 1): Promi
 export const reqChangeMemberRole = async (
   groupId: string,
   memberId: string,
-  role: 1 | 2 | 3
+  role: 1 | 2 | 0
 ): Promise<null> =>
   await request<null>({
     url: `/groupChat/update/memberRole`,

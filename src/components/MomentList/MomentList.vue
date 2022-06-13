@@ -4,7 +4,7 @@
   // 朋友动态栏
   const momentList = useMomentListStore();
   function goAllMoment() {
-    uni.redirectTo({ url: '/pages/main/moment/moment' });
+    uni.redirectTo({ url: '/pages/main/moment/moment?all=1' });
   }
   function goMoment(params: string) {
     uni.redirectTo({ url: `/pages/main/moment/moment?friendId=${params}` });

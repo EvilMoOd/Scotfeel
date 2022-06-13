@@ -76,7 +76,6 @@
       userStore.userInfo?.mainId as string
     );
     chat.chatRecord = chatRecord.reverse();
-    console.log(chat.chatRecord);
     scroll.value += 1000;
   }
   // 发送消息

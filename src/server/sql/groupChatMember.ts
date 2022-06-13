@@ -44,7 +44,7 @@ export async function selectAllMemberInfo(
   belongToId: string
 ): Promise<GroupMember[]> {
   return await selectSql(`
-	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
+	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,g.isExited,f.remarkName as friendRemarkName
 		from groupChatMember g
 		left join friend f on (g.memberId = f.friendId and f.belongToId = "${belongToId}")
 		where g.groupId = "${groupId}" and g.isExited = 0 and g.belongToId = "${belongToId}"
@@ -99,7 +99,7 @@ export function updateGMRemarkName(
 }
 // 更新成员角色
 export function updateGMRole(
-  role: string,
+  role: 0 | 1 | 2,
   groupId: string,
   memberId: string,
   belongToId: string

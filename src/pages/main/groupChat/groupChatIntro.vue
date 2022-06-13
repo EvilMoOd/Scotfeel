@@ -2,13 +2,19 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
   import {
+    reqChangeMemberRole,
     reqChangeRemark,
-    reqDismissGroupChat,
+    reqRemoveGroupMember,
     reqSetGroupNoNotify,
     reqUpdateVerify,
   } from '../../../server/api/groupChat';
   import type { GroupMember } from '../../../server/api/user';
-  import { selectAllMemberInfo } from '../../../server/sql/groupChatMember';
+  import {
+    selectAllMemberInfo,
+    updateGMRemarkName,
+    updateGMRole,
+    updateIsExited,
+  } from '../../../server/sql/groupChatMember';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
   import { useUserStore } from '../../../store/modules/userStore';
 
@@ -22,7 +28,10 @@
   onLoad(async (params: any) => {
     sessionId = params.sessionId;
     groupStore.getGroupInfo(sessionId);
-    group.groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
+    const groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
+    console.log(groupMember);
+    group.groupMember = groupMember.filter((item) => item.isExited === 0);
+    console.log(group.groupMember);
   });
 
   // 展示功能块
@@ -68,10 +77,16 @@
     await reqChangeRemark(e, sessionId);
     show.isShowChangeRemark = false;
     Input.remark = '';
+    updateGMRemarkName(
+      e,
+      sessionId,
+      userStore.userInfo?.mainId as string,
+      userStore.userInfo?.mainId as string
+    );
   };
   // 解散群聊
   const dismissGroup = async () => {
-    await reqDismissGroupChat(sessionId);
+    await groupStore.groupBreakOut(sessionId);
     uni.navigateBack({
       delta: 2,
     });
@@ -88,6 +103,19 @@
   // 进群审核开关
   async function changeVerify() {
     await reqUpdateVerify(sessionId, switches.verify ? 1 : 0);
+  }
+  // 更新成员角色
+  async function setManager(memberId: string) {
+    await reqChangeMemberRole(sessionId, memberId, 1);
+    updateGMRole(1, sessionId, memberId, userStore.userInfo?.mainId as string);
+  }
+  async function cancelManager(memberId: string) {
+    await reqChangeMemberRole(sessionId, memberId, 2);
+    updateGMRole(2, sessionId, memberId, userStore.userInfo?.mainId as string);
+  }
+  async function kickOut(memberId: string) {
+    await reqRemoveGroupMember(memberId, sessionId);
+    updateIsExited(1, sessionId, memberId, userStore.userInfo?.mainId as string);
   }
 </script>
 
@@ -136,17 +164,49 @@
     </view>
     <hr />
     <view class="list3">
-      <view v-for="item in group.groupMember" :key="item.groupId" class="item">
-        <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
-        <text>{{ item.nickname }}</text>
-        <view v-if="item.role === 0" style="float: right; color: #3ea8c2; margin-top: 10rpx">
-          群主
-        </view>
-        <view v-else-if="item.role === 1" style="float: right; color: #3ea8c2; margin-top: 10rpx">
-          管理员
-        </view>
-        <view v-else style="float: right; color: #aaa; margin-top: 10rpx">成员</view>
-      </view>
+      <uni-swipe-action>
+        <uni-swipe-action-item v-for="item in group.groupMember" :key="item.groupId">
+          <view class="item">
+            <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
+            <text>{{ item.nickname }}</text>
+            <view v-if="item.role === 0" style="float: right; color: #3ea8c2; margin-top: 10rpx">
+              群主
+            </view>
+            <view
+              v-else-if="item.role === 1"
+              style="float: right; color: #3ea8c2; margin-top: 10rpx"
+            >
+              管理员
+            </view>
+            <view v-else style="float: right; color: #aaa; margin-top: 10rpx">成员</view>
+          </view>
+          <template #right>
+            <view
+              v-if="item.role === 2"
+              class="slot-button"
+              style="background-color: #06b6d4"
+              @tap="setManager(item.memberId)"
+            >
+              <text class="slot-button-text">设为管理</text>
+            </view>
+            <view
+              v-else-if="item.role === 1"
+              class="slot-button"
+              style="background-color: #06b6d4"
+              @tap="cancelManager(item.memberId)"
+            >
+              <text class="slot-button-text">取消管理</text>
+            </view>
+            <view
+              class="slot-button"
+              style="background-color: #ff5a5f"
+              @tap="kickOut(item.memberId)"
+            >
+              <text class="slot-button-text">踢出</text>
+            </view>
+          </template>
+        </uni-swipe-action-item>
+      </uni-swipe-action>
     </view>
   </view>
   <GradientWindow
@@ -270,6 +330,21 @@
           vertical-align: middle;
           margin-right: 20rpx;
         }
+      }
+      .button-text {
+        font-size: 15px;
+      }
+
+      .slot-button {
+        /* #ifndef APP-NVUE */
+        display: flex;
+        height: 100%;
+        /* #endif */
+        flex: 1;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        padding: 0 20px;
       }
     }
   }

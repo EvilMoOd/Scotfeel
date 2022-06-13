@@ -66,21 +66,9 @@
         <uni-icons type="chat" size="3vh" color="#117986" />
         {{ props.commentedCount }}
       </view>
-      <view>
-        <uni-icons
-          v-if="props.likeStatus === 0"
-          type="heart"
-          size="3vh"
-          color="#117986"
-          @tap="changeLikeStatus(props.index)"
-        />
-        <uni-icons
-          v-else
-          type="heart-filled"
-          color="#117986"
-          size="3vh"
-          @tap="changeLikeStatus(props.index)"
-        />
+      <view @tap="changeLikeStatus(props.index)">
+        <uni-icons v-if="props.likeStatus === 0" type="heart" size="3vh" color="#117986" />
+        <uni-icons v-else type="heart-filled" color="#117986" size="3vh" />
         {{ props.likedCount }}
       </view>
       <view>

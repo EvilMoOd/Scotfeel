@@ -26,15 +26,17 @@
 <template>
   <!-- 聊天信息条 -->
   <view class="chat" @tap="goChat(props.list.type, props.list.sessionId)">
-    <image :src="props.list.avatar" class="user-avatar" />
+    <image :src="props.list.avatar || props.list.groupChatAvatar" class="user-avatar" />
 
     <view class="chat-place">
       <view>
-        <text class="nickname">{{ props.list.nickname }}</text>
+        <text class="nickname">{{ props.list.nickname || props.list.groupChatNickname }}</text>
         <text class="time">{{ day().from(day(props.list.updateTime)) }}</text>
       </view>
       <text class="content">
-        <text v-if="props.list.type === 2" style="color: blue">{{ props.list.chatorName }}：</text>
+        <text v-if="props.list.type === 2 && props.list.chatorId !== ''" style="color: blue">
+          {{ props.list.chatorName }}：
+        </text>
         <text v-if="props.list.contentType === 0">{{ props.list.content }}</text>
         <text v-else>[图片]</text>
       </text>

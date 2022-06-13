@@ -1,6 +1,10 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
-import { reqChangeGroupChatNickname, reqUpdateGroupChatAvatar } from '../../server/api/groupChat';
+import {
+  reqChangeGroupChatNickname,
+  reqDismissGroupChat,
+  reqUpdateGroupChatAvatar,
+} from '../../server/api/groupChat';
 import type { GroupChat, GroupMember } from '../../server/api/user';
 import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
@@ -202,7 +206,8 @@ export const useGroupChatStore = defineStore('groupChatStore', {
       updateSpaceAvatar(avatar, groupId, user.userInfo?.mainId as string);
     },
     // 群解散
-    groupBreakOut(groupId: string) {
+    async groupBreakOut(groupId: string) {
+      await reqDismissGroupChat(groupId);
       const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
       this.groupInfo[index].isDismissed = 1;
       updateIsDismissed(1, groupId, user.userInfo?.mainId as string);

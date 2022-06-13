@@ -3,6 +3,7 @@ import { useUserStore } from './userStore';
 import { insertSession, selectAllSession, updateSession } from '../../server/sql/sessionList';
 import { useFriendStore } from './friendStore';
 import { selectOneMemberInfo } from '../../server/sql/groupChatMember';
+import { useGroupChatStore } from './groupStore';
 
 export interface SessionList {
   sessionListInfo: SessionListInfo[];
@@ -19,6 +20,8 @@ export interface SessionListInfo {
   chatorId?: string; // 如果是群聊的话，这是最新一条消息发送者的id
   avatar: string;
   nickname: string;
+  groupChatAvatar: string;
+  groupChatNickname: string;
 }
 export const useSessionListStore = defineStore('sessionListStore', {
   state: (): SessionList => ({
@@ -41,6 +44,9 @@ export const useSessionListStore = defineStore('sessionListStore', {
       // 查找朋友信息
       const friendStore = useFriendStore();
       const friendInfo = friendStore.friendsInfo.find((item) => item.friendId === sessionId);
+      // 查找群聊信息
+      const groupStore = useGroupChatStore();
+      const groupInfo = groupStore.groupInfo.find((item) => item.groupId === sessionId);
       const sessionIndex = this.sessionListInfo.findIndex((item) => item.sessionId === sessionId);
       let chatorName = '';
       if (type === 2) {
@@ -64,8 +70,8 @@ export const useSessionListStore = defineStore('sessionListStore', {
           updateTime: date,
           type,
           chatorId,
-          avatar: friendInfo?.avatar as string,
-          nickname: friendInfo?.nickname as string,
+          avatar: friendInfo?.avatar ?? (groupInfo?.avatar as string),
+          nickname: friendInfo?.nickname ?? (groupInfo?.nickname as string),
         });
         insertSession(
           sessionId,
@@ -111,8 +117,8 @@ export const useSessionListStore = defineStore('sessionListStore', {
             updateTime: date,
             type,
             chatorId,
-            avatar: friendInfo?.avatar as string,
-            nickname: friendInfo?.nickname as string,
+            avatar: friendInfo?.avatar ?? (groupInfo?.avatar as string),
+            nickname: friendInfo?.nickname ?? (groupInfo?.nickname as string),
           });
           updateSession(
             chatorName,

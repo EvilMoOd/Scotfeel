@@ -21,3 +21,8 @@ $uni-bg-color: #f7f7f7;
 @mixin mask {
   filter: blur(3px);
 }
+@mixin flexbox{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

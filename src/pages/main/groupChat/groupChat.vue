@@ -2,7 +2,8 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
   import type { ChatRecord } from '../../../server/sql/chatRecord';
-  import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
+  import { selectGroupChat, insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
+
   import { personMsg, _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
   import type { GroupChat } from '../../../server/api/user';
@@ -10,6 +11,7 @@
   import { debounce } from 'lodash-es';
   import { useUserStore } from '../../../store/modules/userStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
+  import { selectAllMemberInfo } from '../../../server/sql/groupChatMember';
 
   export interface Chat {
     chatRecord: ChatRecord[];
@@ -20,6 +22,7 @@
   const groupStore = useGroupChatStore();
   const sessionListStore = useSessionListStore();
   let sessionId: string;
+  let groupMemberIds: string[] = [];
   // 输入信息
   const msg = ref('');
 
@@ -69,8 +72,10 @@
   async function init(groupInfo: any) {
     chat.groupInfo = groupInfo;
     // TODO lastid需要修改
-    const record = await selectSingleChat(10000, sessionId, userStore.userInfo?.mainId as string);
-    chat.chatRecord = record as ChatRecord[];
+    const record = await selectGroupChat(10000, sessionId, userStore.userInfo?.mainId as string);
+    chat.chatRecord = record.reverse();
+    const groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
+    groupMemberIds = groupMember.map((item) => item.memberId);
     scroll.value += 1000;
   }
   // 发送消息
@@ -89,9 +94,10 @@
     _sendMessage(
       JSON.stringify({
         toId: sessionId,
+        groupMemberIds,
         content: e.detail.value,
         contentType: 0,
-        messageType: 3,
+        messageType: 4,
         time: Date.now(),
         sequenceId: createUUID(),
       })

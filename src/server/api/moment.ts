@@ -36,22 +36,29 @@ export interface Comment {
   createTime: number;
 }
 
+export interface RepostedMomentPosterSpaceInfo {
+  _id: string;
+  nickname: string;
+  avatar: string;
+  private_flag: 0 | 1;
+}
+
 export interface MomentInfo {
   _id: string;
   posterInfo: PosterInfo[];
   friendRemark: FriendRemark[];
   content: string;
-  interactFlag: number;
+  interactFlag: 0 | 1;
   likedCount: number;
-  likeStatus: number;
+  likeStatus: 0 | 1;
   commentedCount: number;
   photos: string[];
   comments: Comment[];
   createTime: number;
   repostedMomentId?: any;
   repostedMomentSpaceId?: any;
-  repostedMomentPosterUserInfo: any[];
-  repostedMomentPosterSpaceInfo: any[];
+  repostedMomentPosterUserInfo: CommenterInfo[];
+  repostedMomentPosterSpaceInfo: RepostedMomentPosterSpaceInfo[];
   repostedMomentPosterType: number;
   isReposted: number;
   repostedMomentInfo: any[];
