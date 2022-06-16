@@ -45,7 +45,7 @@
       belongToId: '79',
       nickname: '田敏',
       avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-      role: 1,
+      role: 4,
     },
     spaceMoment: [],
   });

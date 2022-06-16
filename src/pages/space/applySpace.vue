@@ -1,11 +1,14 @@
 <script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
   import { reqApplyJoinSpace } from '../../server/api/space';
   import { useUserStore } from '../../store/modules/userStore';
-  import { getParam } from '../../util/url';
 
   const userStore = useUserStore();
-  const spaceId = getParam('spaceId');
+  let spaceId: string;
+  onLoad((params: any) => {
+    spaceId = params.spaceId;
+  });
 
   const applyForm = reactive({
     content: '',
@@ -13,15 +16,21 @@
     studentFlag: false,
     studentNumber: '',
     graduateTime: -1,
-    photos: [],
+    photos: [] as string[],
   });
 
   async function enterInSpace() {
-    await reqApplyJoinSpace(spaceId, userStore.userInfo?.mainId, applyForm.content);
+    await reqApplyJoinSpace(
+      spaceId,
+      userStore.userInfo?.mainId as string,
+      applyForm.content,
+      0,
+      applyForm.applicantType ? 1 : 0
+    );
     uni.navigateTo({ url: '/pages/space/space' });
   }
-  function cc() {
-    console.log(applyForm.photos);
+  function chooseImg({ tempFilePaths }: { tempFilePaths: string[] }) {
+    applyForm.photos.push(...tempFilePaths);
   }
 </script>
 
@@ -70,7 +79,7 @@
         v-model="applyForm.photos"
         limit="1"
         title="请选择学生证明图片"
-        @select="cc"
+        @select="chooseImg"
       ></uni-file-picker>
     </view>
     <image

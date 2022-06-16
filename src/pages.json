@@ -41,6 +41,13 @@
 			}
 		},
 		{
+			"path": "pages/main/moment/createMoment",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/main/chat/chat",
 			"style": {
 				"navigationStyle": "custom",

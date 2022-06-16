@@ -18,8 +18,7 @@
       remarkName: undefined,
       account: 'SF_W0mWG6bK',
       avatar: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
-      backgroundImage:
-        'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
+      backgroundImage: 'http://obs.scotfeel.com/0d82c86036e94549a04060b250bb7391.jpeg',
       signature: '喜欢写代码',
     },
     pageType: 0, // 页面类型，1为本人，2为朋友，3为陌生人
@@ -32,7 +31,7 @@
       personInfo.personPage.nickname = userStore.userInfo.nickname;
       personInfo.personPage.account = userStore.userInfo.account;
       personInfo.personPage.avatar = userStore.userInfo.avatar;
-      personInfo.personPage.backgroundImage = userStore.userInfo.backgroundImage;
+      personInfo.personPage.backgroundImage = `url(${userStore.userInfo.backgroundImage})`;
       personInfo.personPage.signature = userStore.userInfo.signature;
     } else if (friendStore.getFriendInfo(sessionId)) {
       personInfo.pageType = 2;
@@ -40,11 +39,13 @@
       personInfo.personPage.nickname = friendStore.friendPage.nickname;
       personInfo.personPage.account = friendStore.friendPage.account;
       personInfo.personPage.avatar = friendStore.friendPage.avatar;
-      personInfo.personPage.backgroundImage = friendStore.friendPage.backgroundImage;
+      personInfo.personPage.backgroundImage = `url(${friendStore.friendPage.backgroundImage})`;
       personInfo.personPage.signature = friendStore.friendPage.signature;
     } else {
       personInfo.pageType = 3;
       personInfo.personPage = await reqPersonMessage(sessionId);
+      const backgroundImg = personInfo.personPage.backgroundImage;
+      personInfo.personPage.backgroundImage = `url(${backgroundImg})`;
       console.log(personInfo);
     }
   });
@@ -87,7 +88,9 @@
   }
   function changeMyNickname(e: string) {
     userStore.changeNickname(e);
+    personInfo.personPage.nickname = e;
     show.showChangeMyNickname = false;
+    show.showMask = false;
     myInfo.nickname = '';
   }
   // 修改我的个性签名
@@ -98,7 +101,9 @@
   }
   function changeMySignature(e: string) {
     userStore.changeSignature(e);
+    personInfo.personPage.signature = e;
     show.showChangeMySignature = false;
+    show.showMask = false;
     myInfo.signature = '';
   }
   //

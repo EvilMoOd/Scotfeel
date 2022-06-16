@@ -310,7 +310,8 @@ export const reqApplyJoinSpace = async (
   spaceId: string,
   applicantId: string,
   content: string,
-  spaceApplicantType: number,
+  spaceApplicantType: 0 | 1,
+  studentFlag: 0 | 1,
   photo?: string,
   studentNumber?: string,
   graduateTime?: number
@@ -318,7 +319,16 @@ export const reqApplyJoinSpace = async (
   await request<null>({
     url: `/spaceApply/memberApplyToSpace`,
     method: 'POST',
-    data: { spaceId, applicantId, content, spaceApplicantType, photo, studentNumber, graduateTime },
+    data: {
+      spaceId,
+      applicantId,
+      content,
+      spaceApplicantType,
+      photo,
+      studentNumber,
+      graduateTime,
+      studentFlag,
+    },
   });
 // 处理加入空间申请
 export const reqDealApply = async (messageId: string, status: 0 | 1 | 2): Promise<null> =>

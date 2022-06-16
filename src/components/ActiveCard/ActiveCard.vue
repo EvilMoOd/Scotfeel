@@ -35,8 +35,8 @@
     <view v-if="props.moment.photos.length > 0" class="image-container">
       <view class="pageindex">{{ pageIndex + 1 }}/{{ props.moment.photos.length }}</view>
       <swiper class="picture" @change="changePage">
-        <swiper-item>
-          <image src="@/assets/images/img1.png" class="post-img" mode="aspectFill" />
+        <swiper-item v-for="(photo, i) in props.moment.photos" :key="i">
+          <image :src="photo" class="post-img" mode="aspectFill" />
         </swiper-item>
       </swiper>
     </view>

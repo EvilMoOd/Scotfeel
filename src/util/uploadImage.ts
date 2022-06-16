@@ -1,25 +1,35 @@
-import { reqImgData } from '../server/api/user';
-import { OBS_URL } from '../server/http';
-import { createUUID } from '../server/utils/uuid';
+import type { ImgData } from '../server/api/user';
 
-export const uploadImage = async (fn: (imgUrl: string) => Promise<void>): Promise<void> => {
+interface UploadFileSuccessCallbackResult {
+  /**
+   * 开发者服务器返回的数据
+   */
+  data: string;
+  /**
+   * 开发者服务器返回的 HTTP 状态码
+   */
+  statusCode: number;
+}
+
+export const uploadImage = (
+  imgData: ImgData,
+  success: (result: UploadFileSuccessCallbackResult) => void,
+  count = 1,
+  crop?: { width: number; height: number }
+): void => {
   uni.chooseImage({
-    count: 1,
-    crop: {
-      width: 48,
-      height: 48,
-    },
+    count,
+    crop,
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    success: async (chooseImageRes): Promise<void> => {
-      const imgId = createUUID();
-      const imgData = await reqImgData();
+    success: async (chooseImageRes) => {
+      console.log(imgData);
       const tempFilePaths = chooseImageRes.tempFilePaths;
       uni.uploadFile({
-        url: OBS_URL,
+        url: 'https://scotfeel.image.obs.cn-south-1.myhuaweicloud.com',
         filePath: tempFilePaths[0],
         name: 'file',
         formData: {
-          key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
+          key: `${imgData.imageId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
           AccessKeyId: imgData.accessKeyId, // 获取ak
           'x-obs-acl': 'public-read', // 设置为公共读
           policy: imgData.policy,
@@ -28,7 +38,7 @@ export const uploadImage = async (fn: (imgUrl: string) => Promise<void>): Promis
           signature: imgData.signature, // 获取后端生成的signature
         },
         timeout: 10000,
-        success: ({ data }: any) => {},
+        success,
         fail: () =>
           uni.showModal({
             title: '更改失败',

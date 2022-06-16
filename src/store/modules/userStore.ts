@@ -14,7 +14,7 @@ import { OBS_URL } from '../../server/http';
 import { deleteFriendTable } from '../../server/sql/friend';
 import { deleteGroupTable } from '../../server/sql/groupChat';
 import { deleteGroupMemberTable } from '../../server/sql/groupChatMember';
-import { createUUID } from '../../server/utils/uuid';
+import { uploadImage } from '../../util/uploadImage';
 import { useFriendStore } from './friendStore';
 import { useGroupChatStore } from './groupStore';
 
@@ -65,78 +65,40 @@ export const useUserStore = defineStore('user', {
       }
     },
     // 修改头像
-    changeAvatar() {
-      uni.chooseImage({
-        count: 1,
-        crop: {
+    async changeAvatar() {
+      const imgData = await reqImgData();
+      uploadImage(
+        imgData,
+        async () => {
+          const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
+          await reqChangeAvatar(imgUrl);
+          this.userInfo.avatar = imgUrl;
+        },
+        1,
+        {
           width: 48,
           height: 48,
-        },
-        success: async (chooseImageRes): Promise<void> => {
-          const imgId = createUUID();
-          const imgData = await reqImgData();
-          const tempFilePaths = chooseImageRes.tempFilePaths;
-          uni.uploadFile({
-            url: OBS_URL,
-            filePath: tempFilePaths[0],
-            name: 'file',
-            formData: {
-              key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
-              AccessKeyId: imgData.accessKeyId, // 获取ak
-              'x-obs-acl': 'public-read', // 设置为公共读
-              policy: imgData.policy,
-              'content-type': 'image/jpeg', // 文件类型
-              'x-obs-security-token': imgData.securitytoken,
-              signature: imgData.signature, // 获取后端生成的signature
-            },
-            timeout: 10000,
-            success: async ({ data }) => {
-              const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data}`;
-              await reqChangeAvatar(imgUrl);
-              this.userInfo.avatar = imgUrl;
-            },
-            fail: () =>
-              uni.showModal({
-                title: '更改失败',
-              }),
-          });
-        },
-      });
+        }
+      );
     },
     // 修改背景
-    changeBackgroundImg() {
-      uni.chooseImage({
-        count: 1,
-        success: async (chooseImageRes) => {
-          const imgId = createUUID();
-          const imgData = await reqImgData();
-          const tempFilePaths = chooseImageRes.tempFilePaths;
-          uni.uploadFile({
-            url: OBS_URL,
-            filePath: tempFilePaths[0],
-            name: 'file',
-            formData: {
-              key: `user/${imgId}.jpeg`, // 地址和文件名,照片名字需以"user/"开头
-              AccessKeyId: imgData.accessKeyId, // 获取ak
-              'x-obs-acl': 'public-read', // 设置为公共读
-              policy: imgData.policy,
-              'content-type': 'image/jpeg', // 文件类型
-              'x-obs-security-token': imgData.securitytoken,
-              signature: imgData.signature, // 获取后端生成的signature
-            },
-            timeout: 10000,
-            success: async ({ data }) => {
-              const imgUrl = `http://obs.scotfeel.com/${imgId}.jpeg?versionId=${data}`;
-              await reqChangeBackground(imgUrl);
-              this.userInfo.backgroundImage = imgUrl;
-            },
-            fail: () =>
-              uni.showModal({
-                title: '更改失败',
-              }),
-          });
+    async changeBackgroundImg() {
+      const imgData = await reqImgData();
+      uploadImage(
+        imgData,
+        async () => {
+          const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
+          console.log(imgUrl);
+          await reqChangeBackground(imgUrl);
+          console.log('成功');
+          this.userInfo.backgroundImage = imgUrl;
         },
-      });
+        1,
+        {
+          width: 375,
+          height: 152,
+        }
+      );
     },
     // 修改个性签名
     async changeSignature(signature: string) {

@@ -103,7 +103,7 @@ export const reqChangeAvatar = async (avatar: string): Promise<null> =>
   await request<null>({
     url: `/user/update/avatar`,
     method: 'POST',
-    data: { avatar },
+    data: { avator: avatar },
     type: 'application/x-www-form-urlencoded',
   });
 // 修改昵称
@@ -115,11 +115,11 @@ export const reqChangeNickname = async (nickname: string): Promise<null> =>
     type: 'application/x-www-form-urlencoded',
   });
 // 修改背景
-export const reqChangeBackground = async (backgroundImg: string): Promise<null> =>
+export const reqChangeBackground = async (backgroundImage: string): Promise<null> =>
   await request<null>({
     url: `/user/update/backgroundImage`,
     method: 'POST',
-    data: { backgroundImg },
+    data: { backgroundImage },
     type: 'application/x-www-form-urlencoded',
   });
 // 修改个性签名
@@ -177,6 +177,7 @@ export interface ImgData {
   securitytoken: string;
   signature: string;
   policy: string;
+  imageId: string;
 }
 export const reqImgData = async (): Promise<ImgData> =>
   await request<ImgData>({

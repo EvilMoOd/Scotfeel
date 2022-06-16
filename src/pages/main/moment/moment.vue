@@ -1,10 +1,12 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { useMomentStore } from '../../../store/modules/momentStore';
+  import { ref } from 'vue';
+  import { useMomentStore, noMore } from '../../../store/modules/momentStore';
 
   const momentStore = useMomentStore();
   onLoad((params) => {
     momentStore.init(params);
+    console.log(momentStore.momentInfo);
   });
   // 点赞
   async function changeLikeStatus(index: number) {
@@ -12,16 +14,29 @@
       ? momentStore.cancelLike(index)
       : momentStore.like(index);
   }
+  // 前往发布动态页
+  function goSendMoment() {
+    uni.navigateTo({ url: '/pages/main/moment/createMoment' });
+  }
+  // 加载新动态
+  const loading = ref('more');
+  async function getNewMoment() {
+    loading.value = 'loading';
+    await momentStore.getNewMoment();
+    noMore.on('noMore', (e: any) => {
+      loading.value = e;
+    });
+  }
 </script>
 
 <template>
   <view class="header">
     <Home />
     <text class="title">朋友动态</text>
-    <uni-icons type="camera" color="#fff" size="30" class="send-moment" @tap="" />
+    <uni-icons type="camera" color="#fff" size="30" class="send-moment" @tap="goSendMoment" />
   </view>
   <MomentList style="background-color: #f2f2f2" />
-  <scroll-view scroll-y class="main">
+  <scroll-view scroll-y class="main" lower-threshold="0" @scrolltolower="getNewMoment">
     <view class="posts">
       <ActiveCard
         v-for="(item, index) in momentStore.momentInfo"
@@ -30,6 +45,7 @@
         :index="index"
         :change-like-status="changeLikeStatus"
       />
+      <uni-load-more icon-type="circle" :status="loading" />
     </view>
     <view></view>
   </scroll-view>

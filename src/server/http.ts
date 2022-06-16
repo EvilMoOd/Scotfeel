@@ -68,6 +68,8 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
           uni.navigateBack({});
         } else if (code === QUERRY_ERROR_CODE) {
           reject(message);
+        } else {
+          reject(message);
         }
       },
       fail(err) {
