@@ -2,6 +2,7 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { onBeforeUnmount, reactive, ref } from 'vue';
   import { reqAddFriend } from '../../../server/api/friend';
+  import PopMessage from '../../../components/PopMessage/PopMessage.vue';
 
   const apply = reactive({
     content: '',
@@ -12,27 +13,21 @@
     apply.appliedUserId = params.appliedUserId;
   });
   // 添加好友
-  const pop = ref(null);
-  const popMsg = reactive({
-    message: '',
-    type: '',
-  });
+  type PopMessageType = InstanceType<typeof PopMessage>;
+  const success = ref<PopMessageType>();
+  const fail = ref<PopMessageType>();
   let timer: any;
   async function addFriend() {
     try {
       await reqAddFriend(apply.content, apply.appliedUserId);
-      popMsg.message = '添加好友成功';
-      popMsg.type = 'success';
-      pop.value.open();
+      success.value.popUp();
       timer = setTimeout(() => {
         uni.navigateBack({
           delta: 1,
         });
       }, 3000);
     } catch (err) {
-      popMsg.message = '添加好友失败';
-      popMsg.type = 'error';
-      pop.value.open();
+      fail.value.popUp();
     }
   }
   onBeforeUnmount(() => {
@@ -55,13 +50,8 @@
       @tap="addFriend"
     />
   </view>
-  <uni-popup ref="pop" type="message">
-    <uni-popup-message
-      :type="popMsg.type"
-      :message="popMsg.message"
-      :duration="2000"
-    ></uni-popup-message>
-  </uni-popup>
+  <PopMessage ref="success" success>添加好友成功</PopMessage>
+  <PopMessage ref="fail">添加好友失败</PopMessage>
 </template>
 
 <style lang="scss" scoped>

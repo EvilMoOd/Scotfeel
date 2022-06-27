@@ -22,11 +22,8 @@
     return InfoArr;
   });
   // 创建群聊
-  const pop = ref(null);
-  const popMsg = reactive({
-    message: '',
-    type: '',
-  });
+  const success = ref(null);
+  const fail = ref(null);
   let timer: any;
   async function done() {
     try {
@@ -38,18 +35,14 @@
         },
         ...createInfo.value,
       ]);
-      popMsg.message = '创建群聊成功';
-      popMsg.type = 'success';
-      pop.value.open();
+      success.value.popUp();
       timer = setTimeout(() => {
         uni.navigateBack({
           delta: 1,
         });
       }, 3000);
     } catch (err) {
-      popMsg.message = '创建群聊失败';
-      popMsg.type = 'error';
-      pop.value.open();
+      fail.value.popUp();
     }
   }
 
@@ -88,13 +81,8 @@
       </view>
     </view>
   </scroll-view>
-  <uni-popup ref="pop" type="message">
-    <uni-popup-message
-      :type="popMsg.type"
-      :message="popMsg.message"
-      :duration="2000"
-    ></uni-popup-message>
-  </uni-popup>
+  <PopMessage ref="success" success>群聊创建成功</PopMessage>
+  <PopMessage ref="fail">群聊创建失败</PopMessage>
 </template>
 
 <style lang="scss" scoped>

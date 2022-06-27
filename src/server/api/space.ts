@@ -22,8 +22,7 @@ export interface SetSpace {
   longitude: number;
   latitude: number;
   groupId?: any;
-  adminId: string;
-  friendId: string;
+  friendId?: string;
 }
 export const reqSetSpace = async (spaceMessage: SetSpace): Promise<null> =>
   await request<null>({

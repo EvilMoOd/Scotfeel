@@ -1,7 +1,13 @@
 import mitt from 'mitt';
 import { defineStore } from 'pinia';
 import type { MomentInfo } from '../../server/api/moment';
-import { reqAddLike, reqCancelLike, reqAllFriendsMoment, reqMoment } from '../../server/api/moment';
+import {
+  reqDeleteMoment,
+  reqAddLike,
+  reqCancelLike,
+  reqAllFriendsMoment,
+  reqMoment,
+} from '../../server/api/moment';
 
 export interface Moment {
   momentInfo: MomentInfo[];
@@ -51,6 +57,10 @@ export const useMomentStore = defineStore('moment', {
     async cancelLike(index: number) {
       await reqCancelLike(this.momentInfo[index]._id);
       this.momentInfo[index].likeStatus = 0;
+    },
+    async deleteMoment(momentId: number, index: number) {
+      await reqDeleteMoment(momentId);
+      this.momentInfo.splice(index, 1);
     },
   },
   getters: {},

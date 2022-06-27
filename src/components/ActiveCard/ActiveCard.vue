@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import { ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import type { MomentInfo } from '../../server/api/moment';
 
   import day from 'dayjs';
   import relativeTime from 'dayjs/plugin/relativeTime';
   import 'dayjs/locale/zh-cn';
+  import { useMomentStore } from '../../store/modules/momentStore';
 
   day.extend(relativeTime);
   day.locale('zh-cn');
@@ -13,21 +14,45 @@
     moment: MomentInfo;
     index: number;
     changeLikeStatus: (index: number) => void;
+    success: () => void;
+    fail: () => void;
   }>();
   const pageIndex = ref(0);
   const changePage = (e: any) => {
     pageIndex.value = e.detail.current;
   };
+  // 删除动态
+  const momentStore = useMomentStore();
+  const show = reactive({
+    showDeleteMoment: false,
+  });
+
+  async function deleteMoment() {
+    try {
+      await momentStore.deleteMoment(props.moment._id, props.index);
+      show.showDeleteMoment = false;
+      props.success();
+    } catch (err) {
+      props.fail();
+    }
+  }
 </script>
 
 <template>
   <!-- 朋友动态卡片 -->
   <view class="post">
     <view class="user">
-      <image :src="props.moment.posterInfo[0].avatar" class="head" />
+      <image :src="props.moment.posterInfo[0].avatar" class="avatar" />
       <text class="text">
         {{ props.moment.friendRemark[0] || props.moment.posterInfo[0].nickname }}
       </text>
+      <uni-icons
+        type="closeempty"
+        color="#aaa"
+        size="20"
+        style="float: right"
+        @tap="show.showDeleteMoment = true"
+      />
     </view>
     <view>
       <text>{{ props.moment.content }}</text>
@@ -59,11 +84,16 @@
       <view class="time">{{ day().from(day(props.moment.createTime)) }}</view>
     </view>
   </view>
+  <PopBottom :pop-show="show.showDeleteMoment">
+    <view style="color: red; margin: 50rpx 0; text-align: center" @tap="deleteMoment">
+      确定删除动态？（该操作不可逆）
+    </view>
+  </PopBottom>
 </template>
 
 <style lang="scss" scoped>
   .post {
-    height: 730rpx;
+    // height: 730rpx;
     width: 678rpx;
     padding: 60rpx 36rpx;
     border-radius: 15rpx;
@@ -75,7 +105,7 @@
       font-size: 28rpx;
       margin-bottom: 10rpx;
 
-      .head {
+      .avatar {
         height: 66rpx;
         width: 66rpx;
         border-radius: 50%;

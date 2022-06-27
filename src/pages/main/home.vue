@@ -36,7 +36,6 @@
   function goSubscribe() {
     uni.navigateTo({ url: '/pages/subscribe/subscribeAndRecommend' });
   }
-
   async function deleteTable() {
     const f = await selectAllFriends(userStore.userInfo?.mainId as string);
     console.log(f);

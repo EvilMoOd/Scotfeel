@@ -39,7 +39,7 @@
         },
         fail: () =>
           uni.showModal({
-            title: '发送失败，请检查网络',
+            title: '图片上传失败，请检查网络',
           }),
       });
     }
@@ -72,6 +72,7 @@
     />
     <textarea
       id=""
+      v-model="moment.content"
       name=""
       cols="50"
       rows="10"
