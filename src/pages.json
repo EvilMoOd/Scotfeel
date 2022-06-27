@@ -118,6 +118,13 @@
 			}
 		},
 		{
+			"path": "pages/main/menu/createSpace2",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/main/menu/setting",
 			"style": {
 				"navigationStyle": "custom",

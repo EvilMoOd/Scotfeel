@@ -120,18 +120,17 @@
   }
   // 修改备注
   const remark = ref('');
-  const message = ref(null);
+  const success = ref(null);
+  const fail = ref(null);
   async function changeRemark() {
     try {
-      await friendStore.changeRemark(remark.value, personInfo.userId);
-      message.value.open();
+      await friendStore.changeRemark(remark.value, personInfo.personPage.userId);
+      success.value.popUp();
       hiddenAll();
       personInfo.personPage.remarkName = remark.value;
       remark.value = '';
     } catch (err) {
-      uni.showModal({
-        title: '修改失败，请检查网络',
-      });
+      fail.value.popUp();
     }
   }
   // 删除朋友
@@ -212,9 +211,8 @@
       </template>
     </TopTab>
   </view>
-  <uni-popup ref="message" type="message">
-    <uni-popup-message type="success" message="备注修改成功" :duration="2000"></uni-popup-message>
-  </uni-popup>
+  <PopMessage ref="success" success>备注修改成功</PopMessage>
+  <PopMessage ref="fail">备注修改失败</PopMessage>
 
   <!-- 个人功能弹窗 -->
   <GradientWindow

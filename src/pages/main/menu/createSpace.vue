@@ -1,28 +1,24 @@
 <script setup lang="ts">
   import { computed, reactive } from 'vue';
-  import { reqSetSpace } from '../../../server/api/space';
   import type { FriendInfo } from '../../../server/api/user';
   import { useFriendStore } from '../../../store/modules/friendStore';
 
   const friendStore = useFriendStore();
 
   const chooseFriends = reactive<FriendInfo[]>([]);
-  const createInfo = computed(() => {
+  const userId = computed(() => {
     const InfoArr: any[] = [];
     chooseFriends.forEach((element) => {
-      const info = {
-        memberId: element.friendId,
-        memberNickname: element.nickname,
-        memberAvatar: element.avatar,
-      };
-      InfoArr.push(info);
+      InfoArr.push(element.friendId);
     });
     return InfoArr;
   });
   async function done() {
-    console.log(createInfo.value);
-    const data = await reqSetSpace(createInfo.value);
-    console.log(data);
+    if (userId.value.length !== 0) {
+      uni.navigateTo({ url: `/pages/main/menu/createSpace2?userId=${userId.value}` });
+    } else {
+      // 弹窗
+    }
   }
 </script>
 

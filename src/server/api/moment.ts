@@ -117,8 +117,9 @@ export const reqAddComment = async (comment: PublishComment): Promise<null> =>
 export const reqDeleteMoment = async (momentId: number): Promise<null> =>
   await request<null>({
     url: `/moment/delete/moment`,
-    method: 'GET',
+    method: 'POST',
     data: { momentId },
+    type: 'application/x-www-form-urlencoded',
   });
 // 点赞
 export const reqAddLike = async (Like: { momentId: number; posterId: string }): Promise<null> =>
@@ -131,13 +132,7 @@ export const reqAddLike = async (Like: { momentId: number; posterId: string }): 
 export const reqCancelLike = async (momentId: number): Promise<null> =>
   await request<null>({
     url: `/moment/cancel/like`,
-    method: 'GET',
+    method: 'POST',
     data: { momentId },
-  });
-// 获取一个动态的点赞信息
-export const reqLike = async (momentId: number): Promise<null> =>
-  await request<null>({
-    url: `/moment/get/likes`,
-    method: 'GET',
-    data: { momentId },
+    type: 'application/x-www-form-urlencoded',
   });

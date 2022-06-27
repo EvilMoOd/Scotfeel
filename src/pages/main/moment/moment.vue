@@ -27,6 +27,16 @@
       loading.value = e;
     });
   }
+
+  const success = ref(null);
+  const fail = ref(null);
+
+  function successDelete() {
+    success.value.popUp();
+  }
+  function failDelete() {
+    fail.value.popUp();
+  }
 </script>
 
 <template>
@@ -44,11 +54,15 @@
         :moment="item"
         :index="index"
         :change-like-status="changeLikeStatus"
+        :success="successDelete"
+        :fail="failDelete"
       />
       <uni-load-more icon-type="circle" :status="loading" />
     </view>
     <view></view>
   </scroll-view>
+  <PopMessage ref="success" success>动态已删除</PopMessage>
+  <PopMessage ref="fail">动态删除失败</PopMessage>
 </template>
 
 <style lang="scss" scoped>
