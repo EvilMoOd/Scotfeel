@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
+  import type { SpaceMember, UserMember } from '../../server/api/space';
   import {
     reqChangeAvatar,
-    reqPrivateSetting,
     reqSetBackGroundImg,
     reqSetDefaultSpace,
     reqSetPrivate,
@@ -16,9 +16,8 @@
   import { reqImgData } from '../../server/api/user';
   import { OBS_URL } from '../../server/http';
   import { uploadImage } from '../../util/uploadImage';
-  import { getParam } from '../../util/url';
 
-  const spaceId = getParam('spaceId');
+  let spaceId: any;
   // 展示模块
   const show = reactive({
     maskShow: false,
@@ -35,14 +34,17 @@
     show.showPrivate = false;
   }
   // 空间基础信息
-  onLoad(async () => {
-    const data = await reqPrivateSetting();
-    spaceInfo.private = data.privateFlag === 1;
-    spaceInfo.verify = data.verifyFlag === 1;
-    spaceInfo.recommend = data.recommendFlag === 1;
-    spaceInfo.invite = data.inviteFlag === 1;
-    spaceInfo.userMember = await reqUserMember();
-    spaceInfo.spaceMember = await reqSpaceMember();
+  onLoad(async (params) => {
+    console.log(params);
+    spaceId = params.spaceId;
+    spaceInfo.private = params.privateFlag === '1';
+    spaceInfo.verify = params.verifyFlag === '1';
+    spaceInfo.recommend = params.recommendFlag === '1';
+    spaceInfo.invite = params.inviteFlag === '1';
+    const member = await reqUserMember(spaceId);
+    spaceInfo.userMember.push(...member);
+    const space = await reqSpaceMember(spaceId);
+    spaceInfo.spaceMember.push(...space);
   });
   const spaceInfo = reactive({
     spaceNickname: '',
@@ -53,21 +55,8 @@
     verify: false,
     invite: false,
     recommend: true,
-    userMember: [
-      {
-        userId: '31231131',
-        avatar: '',
-        nickName: '',
-        role: 3,
-      },
-    ],
-    spaceMember: [
-      {
-        spaceAccount: '55e3f26a10a649f386cc3960916ce251',
-        nickName: '动漫2',
-        avatar: '1',
-      },
-    ],
+    userMember: [] as UserMember[],
+    spaceMember: [] as SpaceMember[],
   });
   // 修改昵称
   async function changeNickname(e: string) {
@@ -188,7 +177,7 @@
             v-for="(item, index) in spaceInfo.spaceMember"
             :key="index"
             :img="item.avatar"
-            :nickname="item.nickName"
+            :nick-name="item.nickName"
           />
         </view>
       </template>

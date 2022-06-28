@@ -36,6 +36,7 @@
       props.fail();
     }
   }
+  console.log(props);
 </script>
 
 <template>
@@ -44,7 +45,11 @@
     <view class="user">
       <image :src="props.moment.posterInfo[0].avatar" class="avatar" />
       <text class="text">
-        {{ props.moment.friendRemark[0] || props.moment.posterInfo[0].nickname }}
+        {{
+          props.moment.friendRemark[0] === null
+            ? props.moment.friendRemark[0]
+            : props.moment.posterInfo[0].nickname
+        }}
       </text>
       <uni-icons
         type="closeempty"

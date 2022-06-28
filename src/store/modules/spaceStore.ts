@@ -1,28 +1,17 @@
 import { defineStore } from 'pinia';
+import type { SubscribedSpaceInfo } from '../../server/api/space';
+import { reqSubscribedSpace } from '../../server/api/space';
 
-export interface Space {
-  subscribeSpace: SubscribeSpace[];
-}
-export interface SubscribeSpace {
-  spaceId: string; // 空间id
-  belongToId: string; // 用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
-  nickname: string; // 空间昵称
-  avatar: string; // 空间头像
-  role: 0 | 1 | 2 | 3 | 4; // 角色：1：空间主，2：管理员，3：普通成员，4：订阅者
-}
+// const user = uni.getStorageSync('user');
 export const useSubscribeSpaceStore = defineStore('subscribeDSpace', {
-  state: (): Space => ({
-    subscribeSpace: [
-      {
-        spaceId: '2c513f023a514e2083c3294d24cc3aa6',
-        belongToId: '79',
-        nickname: '田敏',
-        avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-        role: 1,
-      },
-    ],
+  state: () => ({
+    subscribeSpace: [] as SubscribedSpaceInfo[],
   }),
   actions: {
+    async init(userId: string) {
+      const data = await reqSubscribedSpace(userId);
+      this.subscribeSpace.push(...data);
+    },
     getSpace(spaceId: string) {
       return this.subscribeSpace.find((item) => {
         return spaceId === item.spaceId;

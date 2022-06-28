@@ -10,12 +10,14 @@
   import { useFriendStore } from './store/modules/friendStore';
   import { useGroupChatStore } from './store/modules/groupStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
+  import { useSubscribeSpaceStore } from './store/modules/spaceStore';
   import { useUserStore } from './store/modules/userStore';
 
   const userStore = useUserStore();
   const sessionListStore = useSessionListStore();
   const friendStore = useFriendStore();
   const groupStore = useGroupChatStore();
+  const spaceStore = useSubscribeSpaceStore();
 
   onLaunch(() => {
     init();
@@ -44,10 +46,13 @@
       const { token } = await reqValidateToken();
       userStore.token = token;
       // 连接ws
-      connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
       sessionListStore.init(userStore.userInfo?.mainId as string);
       friendStore.init(userStore.userInfo?.mainId as string);
       groupStore.init(userStore.userInfo?.mainId as string);
+      spaceStore.init(userStore.userInfo?.mainId as string);
+      setTimeout(function () {
+        connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
+      }, 1000);
     }
   }
 </script>

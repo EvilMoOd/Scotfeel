@@ -12,6 +12,7 @@
   const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
   const userStore = useUserStore();
+  console.log(userStore.token);
   console.log(userStore.userInfo);
 
   const isShow = ref(false);

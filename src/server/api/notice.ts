@@ -24,7 +24,7 @@ export interface ApplyNotice {
 }
 export const reqApplyNotice = async (offset: number): Promise<ApplyNotice[]> =>
   await request<ApplyNotice[]>({
-    url: `/notice/get/applications`,
+    url: `/portal/notice/get/applications`,
     method: 'GET',
     data: { offset },
   });
@@ -50,7 +50,7 @@ export interface CommentNotice {
 }
 export const reqCommentsNotice = async (lastCommentTime: string): Promise<CommentNotice[]> =>
   await request<CommentNotice[]>({
-    url: `/notice/get/comments`,
+    url: `/portal/notice/get/comments`,
     method: 'GET',
     data: { lastCommentTime },
   });
@@ -70,7 +70,7 @@ export interface LikeNotice {
 }
 export const reqLikeNotice = async (lastLikeTimestring: string): Promise<LikeNotice[]> =>
   await request<LikeNotice[]>({
-    url: `/notice/get/likes`,
+    url: `/portal/notice/get/likes`,
     method: 'GET',
     data: { lastLikeTimestring },
   });
@@ -85,7 +85,7 @@ export interface SubscribeNotice {
 }
 export const reqSubscribeNotice = async (offset: string): Promise<SubscribeNotice[]> =>
   await request<SubscribeNotice[]>({
-    url: `/notice/get/subscriptions`,
+    url: `/portal/notice/get/subscriptions`,
     method: 'GET',
     data: { offset },
   });

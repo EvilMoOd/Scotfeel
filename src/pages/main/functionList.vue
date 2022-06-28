@@ -64,11 +64,13 @@
     </view>
     <!-- 订阅空间 -->
     <scroll-view scroll-y class="space-hidden" :class="{ 'space-show': spaceShow }">
-      <view v-for="space in spaceStore.subscribeSpace" :key="space.spaceId" class="space-place">
+      <view class="space-place">
         <SpaceIdCard
+          v-for="space in spaceStore.subscribeSpace"
+          :key="space.spaceId"
           :img="space.avatar"
           :space-id="space.spaceId"
-          :nickname="space.nickname"
+          :nick-name="space.nickName"
           :role="space.role"
         />
       </view>

@@ -1,10 +1,9 @@
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue';
-  import type { SubscribeSpace } from '../../store/modules/spaceStore';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
   import { onLoad } from '@dcloudio/uni-app';
-  import type { SpaceInfo, SpaceMoment } from '../../server/api/space';
+  import type { SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
   import {
     reqCancelSubscribeSpace,
     reqSubscribeSpace,
@@ -18,13 +17,7 @@
   const spaceStore = useSubscribeSpaceStore();
   let spaceId: string;
 
-  interface Space {
-    spaceInfo: SpaceInfo;
-    inSpace?: SubscribeSpace;
-    spaceMoment: SpaceMoment[];
-  }
-
-  const space = reactive<Space>({
+  const space = reactive({
     spaceInfo: {
       mainId: '25606d2bb91c4638a84cc9109444d666',
       nickname: '号级级特候',
@@ -42,12 +35,11 @@
     },
     inSpace: {
       spaceId: '25606d2bb91c4638a84cc9109444d666',
-      belongToId: '79',
-      nickname: '田敏',
+      nickName: '田敏',
       avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
       role: 4,
-    },
-    spaceMoment: [],
+    } as SubscribedSpaceInfo,
+    spaceMoment: [] as SpaceMoment[],
   });
   const imgUrl = computed(() => {
     return `url(${space.spaceInfo.backgroundImage})`;
@@ -55,8 +47,8 @@
   onLoad(async (params: any) => {
     spaceId = params.spaceId;
     space.spaceInfo = await reqSpaceInfo(spaceId);
-    space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId);
-    space.spaceMoment = await reqASpaceMoment('4477e07c14a248779eecc989815de238', 1652471824095);
+    space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId) as SubscribedSpaceInfo;
+    space.spaceMoment = await reqASpaceMoment(space.spaceInfo.mainId, 1652471824095);
   });
 
   const isShow = ref(false);
@@ -71,7 +63,13 @@
     uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
   }
   function goSpaceDetail() {
-    uni.navigateTo({ url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}` });
+    uni.navigateTo({
+      url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}&privateFlag=${space.spaceInfo.privateFlag}&verifyFlag=${space.spaceInfo.verifyFlag}&inviteFlag=${space.spaceInfo.inviteFlag}&recommendFlag=${space.spaceInfo.recommendFlag}`,
+    });
+  }
+  // 前往发布动态
+  function goCreateSpaceMoment() {
+    uni.navigateTo({ url: `/pages/space/createSpaceMoment?spaceId=${space.spaceInfo.mainId}` });
   }
   // 点赞
   async function changeLikeStatus(index: number) {
@@ -81,7 +79,7 @@
     } else {
       await reqAddLike(
         space.spaceMoment[index]._id,
-        space.spaceMoment[index].posterInfo[0]._id,
+        space.spaceMoment[index].posterUserInfo[0]._id,
         space.inSpace ? 1 : 0
       );
       space.spaceMoment[index].likeStatus = 1;
@@ -102,7 +100,13 @@
     <scroll-view scroll-y class="space-body" :class="{ mask: isShow }">
       <view class="header">
         <Back class="back" />
-        <uni-icons type="camera" color="#fff" size="4vh" class="publicActive" />
+        <uni-icons
+          type="camera"
+          color="#fff"
+          size="4vh"
+          class="publicActive"
+          @tap="goCreateSpaceMoment"
+        />
         <uni-icons type="bars" color="#fff" size="4vh" class="more" @tap="showMember" />
         <view class="space-msg">
           <Avatar :img-src="space.spaceInfo.avatar" :type="3" @tap="goSpaceDetail" />
@@ -118,7 +122,9 @@
           v-if="space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3"
           class="inSpace"
           @tap="cancelSubscribe"
-        ></view>
+        >
+          已加入
+        </view>
         <view v-else class="join" @click="joinSpace">加入</view>
       </view>
       <view class="main">
@@ -131,16 +137,8 @@
             v-for="(item, index) in space.spaceMoment"
             :key="item._id"
             :index="index"
-            :poster-info="item.posterInfo[0]"
-            :content="item.content"
-            :like-count="item.likedCount"
-            :like-status="item.likeStatus"
-            :commented-count="item.commentedCount"
-            :photos="item.photos"
+            :space-moment="space.spaceMoment[index]"
             :change-like-status="changeLikeStatus"
-            :liked-count="item.likedCount"
-            :comments="item.comments"
-            :create-time="item.createTime"
           />
         </view>
       </view>

@@ -2,8 +2,8 @@
   // 空间名片卡片
   const props = defineProps<{
     img: string;
-    spaceId?: string;
-    nickname: string;
+    spaceId: string;
+    nickName: string;
     role?: 1 | 2 | 3 | 4;
   }>();
 
@@ -18,7 +18,7 @@
   <view class="space-item" @tap="goSpace">
     <image :src="props.img" class="space-img" />
     <br />
-    <text>{{ props.nickname }}</text>
+    <text>{{ props.nickName }}</text>
     <view v-if="props.role" class="identify">
       {{
         props.role === 1

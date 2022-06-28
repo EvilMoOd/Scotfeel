@@ -146,6 +146,13 @@
 			}
 		},
 		{
+			"path": "pages/space/createSpaceMoment",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
+		},
+		{
 			"path": "pages/space/spaceDetail",
 			"style": {
 				"navigationStyle": "custom",

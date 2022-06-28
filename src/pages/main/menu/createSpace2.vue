@@ -1,10 +1,9 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive, ref } from 'vue';
-  import { reqChangeAvatar, reqSetSpace } from '../../../server/api/space';
+  import { reqSetSpace } from '../../../server/api/space';
   import { reqImgData } from '../../../server/api/user';
   import { OBS_URL } from '../../../server/http';
-  import { uploadImage } from '../../../util/uploadImage';
 
   const spaceInfo = reactive({
     spaceName: '',
@@ -50,19 +49,20 @@
       success: async () => {
         const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
         spaceInfo.spaceAvatar = imgUrl;
+        try {
+          console.log(spaceInfo);
+          await reqSetSpace(spaceInfo);
+          success.value.popUp();
+          console.log('创建成功');
+        } catch (err) {
+          fail.value.popUp();
+        }
       },
       fail: () =>
         uni.showModal({
           title: '图片上传失败，请检查网络',
         }),
     });
-    try {
-      console.log(spaceInfo);
-      await reqSetSpace(spaceInfo);
-      success.value.popUp();
-    } catch (err) {
-      fail.value.popUp();
-    }
   }
 </script>
 
@@ -76,8 +76,8 @@
     <uni-easyinput v-model="spaceInfo.spaceName" type="text" placeholder="请输入空间名称" />
     <uni-file-picker limit="1" title="空间头像" @select="chooseImg"></uni-file-picker>
   </view>
-  <PopMessage ref="success" success>群聊创建成功</PopMessage>
-  <PopMessage ref="fail">群聊创建失败</PopMessage>
+  <PopMessage ref="success" success>空间创建成功</PopMessage>
+  <PopMessage ref="fail">空间创建失败</PopMessage>
 </template>
 
 <style lang="scss" scoped>

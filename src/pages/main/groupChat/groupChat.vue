@@ -2,8 +2,7 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
   import type { ChatRecord } from '../../../server/sql/chatRecord';
-  import { selectGroupChat, insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
-
+  import { selectGroupChat, insertRecord } from '../../../server/sql/chatRecord';
   import { personMsg, _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
   import type { GroupChat } from '../../../server/api/user';

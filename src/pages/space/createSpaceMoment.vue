@@ -1,15 +1,23 @@
 <script setup lang="ts">
+  import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
-  import { reqCreateMoment } from '../../../server/api/moment';
-  import { reqImgData } from '../../../server/api/user';
-  import { OBS_URL } from '../../../server/http';
+  import { reqCreateMoment } from '../../server/api/space';
+  import { reqImgData } from '../../server/api/user';
+  import { OBS_URL } from '../../server/http';
+  import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
 
+  let space: any;
   const moment = reactive({
     content: '',
-    interactFlag: 1 as 0 | 1,
     photos: [] as string[],
     isReposted: true,
+    spaceId: '',
   });
+  onLoad((params) => {
+    moment.spaceId = params.spaceId as string;
+    space = spaceStore.subscribeSpace.find((item) => moment.spaceId === item.spaceId);
+  });
+  const spaceStore = useSubscribeSpaceStore();
 
   function chooseImg({ tempFilePaths }: { tempFilePaths: string[] }) {
     moment.photos.push(...tempFilePaths);
@@ -46,15 +54,18 @@
     setTimeout(async function () {
       // body
       console.log(photos);
-      // TODO 转发
-      await reqCreateMoment({
-        content: moment.content,
-        interactFlag: moment.interactFlag,
-        photos,
-        isReposted: 0,
-      });
-      console.log('成功');
-      uni.navigateBack({ delta: 1 });
+      try {
+        // TODO 转发
+        await reqCreateMoment({
+          content: moment.content,
+          posterType: 0,
+          photos,
+          isReposted: 0,
+          spaceId: moment.spaceId,
+        });
+        console.log('成功');
+        uni.navigateBack({ delta: 1 });
+      } catch (err) {}
     }, 1000);
   }
   function back() {
@@ -68,11 +79,7 @@
     <text @tap="sendMoment">发送</text>
   </view>
   <view class="main">
-    <Avatar
-      img-src="https://cdn.pixabay.com/photo/2016/12/23/12/40/night-1927265_960_720.jpg"
-      :type="1"
-      class="avatar"
-    />
+    <Avatar :img-src="space?.avatar" :type="1" class="avatar" />
     <textarea
       id=""
       v-model="moment.content"

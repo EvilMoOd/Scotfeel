@@ -69,14 +69,14 @@ export const reqMoment = async (
   lastMomentTime: number
 ): Promise<MomentInfo[]> =>
   await request<MomentInfo[]>({
-    url: `/moment/get/moments`,
+    url: `/portal/moment/get/moments`,
     method: 'GET',
     data: { momentOwnerId, lastMomentTime },
   });
 // 获取所有朋友的动态
 export const reqAllFriendsMoment = async (lastMomentId: number): Promise<MomentInfo[]> =>
   await request<MomentInfo[]>({
-    url: `/moment/get/allMoments`,
+    url: `/portal/moment/get/allMoments`,
     method: 'GET',
     data: { lastMomentId },
   });
@@ -93,7 +93,7 @@ export interface CreateMoment {
 }
 export const reqCreateMoment = async (moment: CreateMoment): Promise<null> =>
   await request<null>({
-    url: `/moment/create/moment`,
+    url: `/portal/moment/create/moment`,
     method: 'POST',
     data: { ...moment },
   });
@@ -109,14 +109,14 @@ export interface PublishComment {
 }
 export const reqAddComment = async (comment: PublishComment): Promise<null> =>
   await request<null>({
-    url: `/moment/add/comment`,
+    url: `/portal/moment/add/comment`,
     method: 'POST',
     data: { ...comment },
   });
 // 删除动态
 export const reqDeleteMoment = async (momentId: number): Promise<null> =>
   await request<null>({
-    url: `/moment/delete/moment`,
+    url: `/portal/moment/delete/moment`,
     method: 'POST',
     data: { momentId },
     type: 'application/x-www-form-urlencoded',
@@ -124,14 +124,14 @@ export const reqDeleteMoment = async (momentId: number): Promise<null> =>
 // 点赞
 export const reqAddLike = async (Like: { momentId: number; posterId: string }): Promise<null> =>
   await request<null>({
-    url: `/moment/add/like`,
+    url: `/portal/moment/add/like`,
     method: 'POST',
     data: { ...Like },
   });
 // 取消点赞
 export const reqCancelLike = async (momentId: number): Promise<null> =>
   await request<null>({
-    url: `/moment/cancel/like`,
+    url: `/portal/moment/cancel/like`,
     method: 'POST',
     data: { momentId },
     type: 'application/x-www-form-urlencoded',

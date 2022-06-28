@@ -5,7 +5,7 @@ import { request } from '../http';
 export type AuthCode = number;
 export const reqAuthCode = async (phone: string): Promise<AuthCode> =>
   await request<AuthCode>({
-    url: `/authCode`,
+    url: `/portal/authCode`,
     method: 'POST',
     data: { phone },
     type: 'application/x-www-form-urlencoded',
@@ -74,7 +74,7 @@ export interface User {
 }
 export const reqUserLogin = async (phone: string, authCode: string): Promise<User> =>
   await request<User>({
-    url: `/login`,
+    url: `/portal/login`,
     method: 'POST',
     data: { phone, authCode },
     type: 'application/x-www-form-urlencoded',
@@ -82,26 +82,26 @@ export const reqUserLogin = async (phone: string, authCode: string): Promise<Use
 // 退出登录
 export const reqUserLogout = async (): Promise<null> =>
   await request<null>({
-    url: `/user/logout`,
+    url: `/portal/user/logout`,
     method: 'GET',
   });
 // 注销账户
 export const reqUserDestroy = async (): Promise<null> =>
   await request<null>({
-    url: `/cancelAccount`,
+    url: `/portal/cancelAccount`,
     method: 'GET',
   });
 // 校验token
 export const reqValidateToken = async (): Promise<{ token: string }> =>
   await request<{ token: string }>({
-    url: `/validateToken`,
+    url: `/portal/validateToken`,
     method: 'GET',
   });
 // 个人资料
 // 修改头像
 export const reqChangeAvatar = async (avatar: string): Promise<null> =>
   await request<null>({
-    url: `/user/update/avatar`,
+    url: `/portal/user/update/avatar`,
     method: 'POST',
     data: { avator: avatar },
     type: 'application/x-www-form-urlencoded',
@@ -109,7 +109,7 @@ export const reqChangeAvatar = async (avatar: string): Promise<null> =>
 // 修改昵称
 export const reqChangeNickname = async (nickname: string): Promise<null> =>
   await request<null>({
-    url: `/user/update/nickname`,
+    url: `/portal/user/update/nickname`,
     method: 'POST',
     data: { nickname },
     type: 'application/x-www-form-urlencoded',
@@ -117,7 +117,7 @@ export const reqChangeNickname = async (nickname: string): Promise<null> =>
 // 修改背景
 export const reqChangeBackground = async (backgroundImage: string): Promise<null> =>
   await request<null>({
-    url: `/user/update/backgroundImage`,
+    url: `/portal/user/update/backgroundImage`,
     method: 'POST',
     data: { backgroundImage },
     type: 'application/x-www-form-urlencoded',
@@ -125,7 +125,7 @@ export const reqChangeBackground = async (backgroundImage: string): Promise<null
 // 修改个性签名
 export const reqChangeSignal = async (signature: string): Promise<null> =>
   await request<null>({
-    url: `/user/update/signature`,
+    url: `/portal/user/update/signature`,
     method: 'POST',
     data: { signature },
     type: 'application/x-www-form-urlencoded',
@@ -133,7 +133,7 @@ export const reqChangeSignal = async (signature: string): Promise<null> =>
 // 修改@id
 export const reqChangeId = async (id: string): Promise<null> =>
   await request<null>({
-    url: `/user/update/account`,
+    url: `/portal/user/update/account`,
     method: 'POST',
     data: { id },
     type: 'application/x-www-form-urlencoded',
@@ -150,7 +150,7 @@ export interface PersonMessage {
 }
 export const reqPersonMessage = async (mainId: string): Promise<PersonMessage> =>
   await request<PersonMessage>({
-    url: `/user/home`,
+    url: `/portal/user/home`,
     method: 'GET',
     data: { mainId },
   });
@@ -167,7 +167,7 @@ export interface PersonInfo {
 }
 export const reqSearchUser = async (searchContent: string): Promise<PersonInfo> =>
   await request<PersonInfo>({
-    url: `/user/search`,
+    url: `/portal/user/search`,
     method: 'GET',
     data: { searchContent },
   });
@@ -181,6 +181,6 @@ export interface ImgData {
 }
 export const reqImgData = async (): Promise<ImgData> =>
   await request<ImgData>({
-    url: `/OBS/get/formData`,
+    url: `/portal/OBS/get/formData`,
     method: 'GET',
   });
