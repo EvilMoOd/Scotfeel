@@ -23,7 +23,7 @@ export const uploadImage = (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     success: async (chooseImageRes) => {
       console.log(imgData);
-      const tempFilePaths = chooseImageRes.tempFilePaths;
+      const { tempFilePaths } = chooseImageRes;
       uni.uploadFile({
         url: 'https://scotfeel.image.obs.cn-south-1.myhuaweicloud.com',
         filePath: tempFilePaths[0],

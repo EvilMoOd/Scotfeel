@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { defineStore } from 'pinia';
 import {
@@ -52,7 +53,6 @@ export const useGroupChatStore = defineStore('groupChatStore', {
     },
     loginInit(groupChat: GroupChat[], belongToId: string, groupChatMember: GroupMember[]) {
       this.groupInfo = groupChat;
-      console.log(this.groupInfo);
       // 所有群聊信心载入数据库
       for (const g of groupChat) {
         insertGroup(

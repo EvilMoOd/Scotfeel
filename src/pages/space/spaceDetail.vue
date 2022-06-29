@@ -1,8 +1,10 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import type { SpaceMember, UserMember } from '../../server/api/space';
   import {
+    reqDeleteMember,
+    reqUpdateRole,
     reqChangeAvatar,
     reqSetBackGroundImg,
     reqSetDefaultSpace,
@@ -13,11 +15,15 @@
     reqUpdateNickname,
     reqUserMember,
   } from '../../server/api/space';
+
   import { reqImgData } from '../../server/api/user';
   import { OBS_URL } from '../../server/http';
   import { uploadImage } from '../../util/uploadImage';
 
-  let spaceId: any;
+  let spaceId: string;
+  const success = ref(null);
+  const fail = ref(null);
+  const message = ref('');
   // 展示模块
   const show = reactive({
     maskShow: false,
@@ -25,6 +31,7 @@
     showChangeNickname: false,
     showChangeIntroduction: false,
     showPrivate: false,
+    showEditMember: -1,
   });
   function hiddenAll() {
     show.maskShow = false;
@@ -34,18 +41,6 @@
     show.showPrivate = false;
   }
   // 空间基础信息
-  onLoad(async (params) => {
-    console.log(params);
-    spaceId = params.spaceId;
-    spaceInfo.private = params.privateFlag === '1';
-    spaceInfo.verify = params.verifyFlag === '1';
-    spaceInfo.recommend = params.recommendFlag === '1';
-    spaceInfo.invite = params.inviteFlag === '1';
-    const member = await reqUserMember(spaceId);
-    spaceInfo.userMember.push(...member);
-    const space = await reqSpaceMember(spaceId);
-    spaceInfo.spaceMember.push(...space);
-  });
   const spaceInfo = reactive({
     spaceNickname: '',
     spaceIntroduction: '',
@@ -58,6 +53,18 @@
     userMember: [] as UserMember[],
     spaceMember: [] as SpaceMember[],
   });
+  onLoad(async (params) => {
+    spaceId = params.spaceId as string;
+    spaceInfo.private = params.privateFlag === '1';
+    spaceInfo.verify = params.verifyFlag === '1';
+    spaceInfo.recommend = params.recommendFlag === '1';
+    spaceInfo.invite = params.inviteFlag === '1';
+    const member = await reqUserMember(spaceId);
+    spaceInfo.userMember.push(...member);
+    const space = await reqSpaceMember(spaceId);
+    spaceInfo.spaceMember.push(...space);
+  });
+
   // 修改昵称
   async function changeNickname(e: string) {
     await reqUpdateNickname(e, spaceId);
@@ -111,10 +118,50 @@
       spaceInfo.recommend ? 1 : 0
     );
   }
+  // 空间角色
+  async function roleSpaceMaster() {
+    try {
+      await reqUpdateRole(spaceInfo.userMember[show.showEditMember].userId, 1, spaceId);
+      message.value = '空间主设定成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '空间主设定失败';
+      fail.value.popUp();
+    }
+  }
+  async function roleSpaceManager() {
+    try {
+      await reqUpdateRole(spaceInfo.userMember[show.showEditMember].userId, 2, spaceId);
+      message.value = '管理员设定成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '管理员设定失败';
+      fail.value.popUp();
+    }
+  }
+  // 移除成员
+  async function deleteMember() {
+    try {
+      await reqDeleteMember(spaceInfo.userMember[show.showEditMember].userId, 1, spaceId);
+      message.value = '移除成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '移除失败';
+      fail.value.popUp();
+    }
+  }
 </script>
 
 <template>
-  <view class="page" :class="show.maskShow ? 'mask' : ''">
+  <view
+    class="page"
+    :class="show.maskShow ? 'mask' : ''"
+    @tap="
+      () => {
+        show.showEditMember = -1;
+      }
+    "
+  >
     <view class="header">
       <Back />
       <uni-icons
@@ -159,15 +206,42 @@
       </view>
     </view>
     <hr />
-    <TopTab tab1="用户成员" tab2="空间成员" height="540rpx">
+    <TopTab
+      tab1="用户成员"
+      tab2="空间成员"
+      height="540rpx"
+      font-color="#000"
+      line-color="#117986"
+      bold="space-around"
+      left="75px"
+      right="260px"
+      line-width="54px"
+    >
       <template #s1>
         <scroll-view scroll-y class="member-list">
-          <view v-for="item in spaceInfo.userMember" :key="item.userId" class="item">
+          <view
+            v-for="(item, index) in spaceInfo.userMember"
+            :key="item.userId"
+            class="item"
+            @longpress="
+              () => {
+                show.showEditMember = index;
+              }
+            "
+          >
             <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
             <text>{{ item.nickName }}</text>
             <view style="float: right; color: #3ea8c2; margin-top: 10rpx">
               {{ item.role === 1 ? '空间主' : item.role === 2 ? '管理员' : '成员' }}
             </view>
+            <GradientWindow
+              :show="show.showEditMember === index"
+              style="text-align: center; top: -20rpx; left: 400rpx"
+            >
+              <view @tap="roleSpaceMaster">设为空间主</view>
+              <view @tap="roleSpaceManager">设为管理员</view>
+              <view style="color: #d9001b" @tap="deleteMember">移除</view>
+            </GradientWindow>
           </view>
         </scroll-view>
       </template>
@@ -176,7 +250,8 @@
           <SpaceIdCard
             v-for="(item, index) in spaceInfo.spaceMember"
             :key="index"
-            :img="item.avatar"
+            :avatar="item.avatar"
+            :space-id="item.spaceId"
             :nick-name="item.nickName"
           />
         </view>
@@ -331,6 +406,19 @@
       </view>
     </view>
   </PopBottom>
+  <PopWindow :pop-show="show.showChangeIntroduction">
+    <uni-easyinput
+      v-model="spaceInfo.userMember"
+      type="text"
+      placeholder="请输入在空间中的备注"
+      trim
+      maxlength="10"
+      :styles="{ borderColor: '#fff' }"
+      @confirm="changeIntroduction"
+    />
+  </PopWindow>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
   <Mask :show="show.maskShow" class="mask" :hidden="hiddenAll" />
 </template>
 
@@ -408,6 +496,7 @@
       height: 600rpx;
       .item {
         margin: 30rpx 0;
+        position: relative;
 
         .avatar-user {
           width: 66rpx;

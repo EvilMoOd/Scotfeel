@@ -25,13 +25,11 @@
     groupMember: [],
   });
   let sessionId: string;
-  onLoad(async (params: any) => {
-    sessionId = params.sessionId;
+  onLoad(async (params) => {
+    sessionId = params.sessionId as string;
     groupStore.getGroupInfo(sessionId);
     const groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
-    console.log(groupMember);
     group.groupMember = groupMember.filter((item) => item.isExited === 0);
-    console.log(group.groupMember);
   });
 
   // 展示功能块
@@ -198,6 +196,7 @@
               <text class="slot-button-text">取消管理</text>
             </view>
             <view
+              v-if="item.role !== 0 && item.memberId !== userStore.userInfo?.mainId"
               class="slot-button"
               style="background-color: #ff5a5f"
               @tap="kickOut(item.memberId)"
@@ -336,15 +335,14 @@
       }
 
       .slot-button {
-        /* #ifndef APP-NVUE */
         display: flex;
         height: 100%;
-        /* #endif */
         flex: 1;
         flex-direction: row;
         justify-content: center;
         align-items: center;
         padding: 0 20px;
+        color: #fff;
       }
     }
   }

@@ -1,9 +1,8 @@
 <script setup lang="ts">
   import { reactive, ref } from 'vue';
-  import type { MomentInfo } from '../../server/api/moment';
-
   import day from 'dayjs';
   import relativeTime from 'dayjs/plugin/relativeTime';
+  import type { MomentInfo } from '../../server/api/moment';
   import 'dayjs/locale/zh-cn';
   import { useMomentStore } from '../../store/modules/momentStore';
 
@@ -29,6 +28,7 @@
 
   async function deleteMoment() {
     try {
+      // eslint-disable-next-line no-underscore-dangle
       await momentStore.deleteMoment(props.moment._id, props.index);
       show.showDeleteMoment = false;
       props.success();
@@ -36,7 +36,6 @@
       props.fail();
     }
   }
-  console.log(props);
 </script>
 
 <template>

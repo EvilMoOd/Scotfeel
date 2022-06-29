@@ -1,4 +1,5 @@
 import { request } from '../http';
+
 export interface Location {
   lat: number;
   lon: number;
@@ -25,7 +26,7 @@ export const reqApplyNotice = async (
   lat: number,
   lon: number
 ): Promise<SearchSpace[]> =>
-  await request<SearchSpace[]>({
+  request<SearchSpace[]>({
     url: `/search/space`,
     method: 'GET',
     data: { keyword, pageNum, lat, lon },

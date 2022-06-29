@@ -6,9 +6,11 @@
   import type { PersonMessage } from '../../../server/api/user';
   import { reqPersonMessage } from '../../../server/api/user';
   import { useUserStore } from '../../../store/modules/userStore';
+  import { useSubscribeSpaceStore } from '../../../store/modules/spaceStore';
 
   const userStore = useUserStore();
   const friendStore = useFriendStore();
+  const spaceStore = useSubscribeSpaceStore();
   // 加载个人页信息
   let sessionId: string;
   const personInfo = reactive<{ personPage: PersonMessage; pageType: 0 | 1 | 2 | 3 }>({
@@ -23,8 +25,8 @@
     },
     pageType: 0, // 页面类型，1为本人，2为朋友，3为陌生人
   });
-  onLoad(async (params: any) => {
-    sessionId = params.sessionId;
+  onLoad(async (params) => {
+    sessionId = params.sessionId as string;
     if (sessionId === userStore.userInfo?.mainId) {
       personInfo.pageType = 1;
       personInfo.personPage.userId = userStore.userInfo.mainId;
@@ -46,7 +48,6 @@
       personInfo.personPage = await reqPersonMessage(sessionId);
       const backgroundImg = personInfo.personPage.backgroundImage;
       personInfo.personPage.backgroundImage = `url(${backgroundImg})`;
-      console.log(personInfo);
     }
   });
 
@@ -200,10 +201,26 @@
       </view>
     </view>
     <view class="introduction">{{ personInfo.personPage.signature }}</view>
-    <TopTab tab1="订阅空间" tab2="动态" height="350px">
+    <TopTab
+      tab1="订阅空间"
+      tab2="动态"
+      height="350px"
+      font-color="#000"
+      line-color="#117986"
+      bold="space-around"
+      left="75px"
+      right="260px"
+      line-width="54px"
+    >
       <template #s1>
         <view class="my-space">
-          <SpaceIdCard img="/src/assets/images/head.png" />
+          <SpaceIdCard
+            v-for="item in spaceStore.subscribeSpace"
+            :key="item.spaceId"
+            :avatar="item.avatar"
+            :nick-name="item.nickName"
+            :space-id="item.spaceId"
+          />
         </view>
       </template>
       <template #s2>

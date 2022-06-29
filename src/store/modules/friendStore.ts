@@ -13,6 +13,7 @@ import {
   updateSignature,
   updateSpaceId,
 } from '../../server/sql/friend';
+
 export interface Friend {
   friendsInfo: FriendInfo[];
   friendPage: FriendInfo;
@@ -43,6 +44,7 @@ export const useFriendStore = defineStore('friend', {
     // 登录初始化
     loginInit(friends: FriendInfo[], belongToId: string) {
       this.friendsInfo = friends;
+      // eslint-disable-next-line no-restricted-syntax
       for (const f of friends) {
         insertFriend(
           f.friendId,
@@ -88,39 +90,38 @@ export const useFriendStore = defineStore('friend', {
       await updateRemarkName(remark, friendId, user.userInfo.mainId);
     },
     async deleteFriend(friendId: string) {
-      const data = await reqDeleteFriend(friendId);
-      console.log(data);
+      await reqDeleteFriend(friendId);
       const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo.splice(index, 1);
       await updateIsDeletedByFriend(1, friendId, user.userInfo.mainId);
     },
     async updateFriendAvatar(friendId: string, avatar: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].avatar = avatar;
       await updateAvatar(avatar, friendId, belongToId);
     },
     async updateFriendNickname(friendId: string, nickname: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].nickname = nickname;
       await updateNickname(nickname, friendId, belongToId);
     },
     async updateFriendAccount(friendId: string, account: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].account = account;
       await updateAccount(account, friendId, belongToId);
     },
     async updateFriendBackgroundImg(friendId: string, backgroundImage: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].backgroundImage = backgroundImage;
       await updateBackgroundImage(backgroundImage, friendId, belongToId);
     },
     async updateFriendSignature(friendId: string, signature: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].signature = signature;
       await updateSignature(signature, friendId, belongToId);
     },
     async updateFriendSpaceId(friendId: string, spaceId: string, belongToId: string) {
-      const index = this.friendsInfo.findIndex((item) => (item.friendId = friendId));
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].spaceId = spaceId;
       await updateSpaceId(spaceId, friendId, belongToId);
     },

@@ -1,18 +1,22 @@
 import type { SessionListInfo } from '../../store/modules/sessionListStore';
-import { executeSql, selectSql } from './baseSql';
+import { executeSql, openDB, selectSql } from './baseSql';
 
 // 新建会话表
-export function createSessionListTable(): void {
+export function createSessionListTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
+  if (!plus.sqlite.isOpenDatabase(config)) {
+    // 2.如果没打开先打开
+    openDB(config);
+  }
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
       'create table if not exists sessionList("sessionId" VARCHAR(40),	"chatorName" VARCHAR(40),	"chatorId" VARCHAR(40),"content" VARCHAR(2000) , "contentType" INT(11),' +
       '"type" INT(11),"unReadCount" INT(11),"updateTime" BIGINT(13),"belongToId" VARCHAR(40))',
-    success: function () {
+    success() {
       console.log('会话表初始化成功');
     },
-    fail: function (e) {
-      console.log('executeSql failed: ' + JSON.stringify(e));
+    fail(e) {
+      console.log(`executeSql failed: ${JSON.stringify(e)}`);
     },
   });
 }
@@ -36,7 +40,7 @@ export function insertSession(
 
 // 查出会话列表
 export async function selectAllSession(belongToId: string): Promise<SessionListInfo[]> {
-  return await selectSql(`
+  return selectSql(`
   select s.*,g.nickname as groupChatNickname,g.avatar as groupChatAvatar,f.nickname as nickname,f.avatar as avatar,f.remarkName as remarkName
     from sessionList s
     left join groupChat g on (g.groupId = s.sessionId and g.belongToId = "${belongToId}")
@@ -51,7 +55,7 @@ export async function selectOneSession(
   sessionId: string,
   belongToId: string
 ): Promise<SessionListInfo> {
-  return await selectSql(`
+  return selectSql(`
 			select *
 					from sessionList
 					where sessionId = "${sessionId}" and belongToId = "${belongToId}"
@@ -97,7 +101,7 @@ export function deleteSessionTable(): void {
 
 // 查询所有记录
 export async function selectAllSession2(): Promise<SessionListInfo[]> {
-  return await selectSql(`
+  return selectSql(`
 			select * from sessionList
 	`);
 }

@@ -37,7 +37,6 @@ export const useUserStore = defineStore('user', {
       this.token = token;
       const friendStore = useFriendStore();
       const groupStore = useGroupChatStore();
-      console.log(userInfo?.mainId);
       friendStore.loginInit(friend, userInfo?.mainId as string);
       groupStore.loginInit(groupChat, userInfo?.mainId as string, groupChatMember);
     },
@@ -88,9 +87,7 @@ export const useUserStore = defineStore('user', {
         imgData,
         async () => {
           const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
-          console.log(imgUrl);
           await reqChangeBackground(imgUrl);
-          console.log('成功');
           this.userInfo.backgroundImage = imgUrl;
         },
         1,

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-  import type { SessionListInfo } from '../../store/modules/sessionListStore';
-  import { useSessionListStore } from '../../store/modules/sessionListStore';
   import day from 'dayjs';
   import relativeTime from 'dayjs/plugin/relativeTime';
+  import type { SessionListInfo } from '../../store/modules/sessionListStore';
+  import { useSessionListStore } from '../../store/modules/sessionListStore';
   import 'dayjs/locale/zh-cn';
 
   day.extend(relativeTime);
@@ -17,6 +17,7 @@
     // 未读数量置0
     const index = sessionStore.sessionListInfo.findIndex((item) => item.sessionId === params);
     sessionStore.sessionListInfo[index].unReadCount = 0;
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     type === 1
       ? uni.navigateTo({ url: `/pages/main/chat/chat?sessionId=${params}` })
       : uni.navigateTo({ url: `/pages/main/groupChat/groupChat?sessionId=${params}` });

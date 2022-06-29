@@ -20,8 +20,8 @@ export interface SessionListInfo {
   chatorId?: string; // 如果是群聊的话，这是最新一条消息发送者的id
   avatar: string;
   nickname: string;
-  groupChatAvatar: string;
-  groupChatNickname: string;
+  groupChatAvatar?: string;
+  groupChatNickname?: string;
 }
 export const useSessionListStore = defineStore('sessionListStore', {
   state: (): SessionList => ({

@@ -27,6 +27,7 @@ export const useMomentStore = defineStore('moment', {
             : this.momentInfo[this.momentInfo.length - 1]._id
         );
         const newMomentInfo = [];
+        // eslint-disable-next-line no-restricted-syntax
         for (const newMoment of data) {
           if (this.momentInfo.find((item) => item._id === newMoment._id) == null) {
             newMomentInfo.push(newMoment);

@@ -9,14 +9,14 @@
     appliedUserId: '',
   });
 
-  onLoad((params: any) => {
-    apply.appliedUserId = params.appliedUserId;
+  onLoad((params) => {
+    apply.appliedUserId = params.appliedUserId as string;
   });
   // 添加好友
   type PopMessageType = InstanceType<typeof PopMessage>;
   const success = ref<PopMessageType>();
   const fail = ref<PopMessageType>();
-  let timer: any;
+  let timer: number;
   async function addFriend() {
     try {
       await reqAddFriend(apply.content, apply.appliedUserId);

@@ -68,7 +68,7 @@
         <SpaceIdCard
           v-for="space in spaceStore.subscribeSpace"
           :key="space.spaceId"
-          :img="space.avatar"
+          :avatar="space.avatar"
           :space-id="space.spaceId"
           :nick-name="space.nickName"
           :role="space.role"

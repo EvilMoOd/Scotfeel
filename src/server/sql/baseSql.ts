@@ -1,3 +1,33 @@
+// 打开数据库
+export function openDB(
+  config = {
+    name: 'scotfeel',
+    path: '_doc/chat.db',
+  }
+): void {
+  plus.sqlite.openDatabase({
+    ...config,
+    success() {
+      console.log('数据库打开');
+    },
+    fail(e) {
+      console.log(`openDatabase failed: ${JSON.stringify(e)}`);
+    },
+  });
+}
+
+// 关闭数据库
+export function closeDB(): void {
+  plus.sqlite.closeDatabase({
+    name: 'scotfeel',
+    success() {
+      console.log('closeDatabase success!');
+    },
+    fail(e) {
+      console.log(`closeDatabase failed: ${JSON.stringify(e)}`);
+    },
+  });
+}
 // 查
 export async function selectSql(
   sql: string,
@@ -6,7 +36,7 @@ export async function selectSql(
     path: '_doc/chat.db',
   }
 ): Promise<any> {
-  return await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     // 1.判断是否打开数据库
     if (!plus.sqlite.isOpenDatabase(config)) {
       // 2.如果没打开先打开
@@ -40,42 +70,11 @@ export function executeSql(
   plus.sqlite.executeSql({
     name: config.name,
     sql,
-    success: function () {
+    success() {
       console.log('操作成功');
     },
-    fail: function (e) {
+    fail(e) {
       console.log(e);
-    },
-  });
-}
-
-// 打开数据库
-export function openDB(
-  config = {
-    name: 'scotfeel',
-    path: '_doc/chat.db',
-  }
-): void {
-  plus.sqlite.openDatabase({
-    ...config,
-    success: function () {
-      console.log('数据库打开');
-    },
-    fail: function (e) {
-      console.log('openDatabase failed: ' + JSON.stringify(e));
-    },
-  });
-}
-
-// 关闭数据库
-export function closeDB(): void {
-  plus.sqlite.closeDatabase({
-    name: 'scotfeel',
-    success: function () {
-      console.log('closeDatabase success!');
-    },
-    fail: function (e) {
-      console.log('closeDatabase failed: ' + JSON.stringify(e));
     },
   });
 }

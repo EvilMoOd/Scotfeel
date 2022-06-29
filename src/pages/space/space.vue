@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { computed, reactive, ref } from 'vue';
+  import { onLoad } from '@dcloudio/uni-app';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
-  import { onLoad } from '@dcloudio/uni-app';
   import type { SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
   import {
     reqCancelSubscribeSpace,
@@ -49,6 +49,7 @@
     space.spaceInfo = await reqSpaceInfo(spaceId);
     space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId) as SubscribedSpaceInfo;
     space.spaceMoment = await reqASpaceMoment(space.spaceInfo.mainId, 1652471824095);
+    console.log(space.spaceMoment);
   });
 
   const isShow = ref(false);

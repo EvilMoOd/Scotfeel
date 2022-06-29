@@ -23,7 +23,7 @@ export interface ApplyNotice {
   applicantSpaceNickname?: string;
 }
 export const reqApplyNotice = async (offset: number): Promise<ApplyNotice[]> =>
-  await request<ApplyNotice[]>({
+  request<ApplyNotice[]>({
     url: `/portal/notice/get/applications`,
     method: 'GET',
     data: { offset },
@@ -49,7 +49,7 @@ export interface CommentNotice {
   createTime: string;
 }
 export const reqCommentsNotice = async (lastCommentTime: string): Promise<CommentNotice[]> =>
-  await request<CommentNotice[]>({
+  request<CommentNotice[]>({
     url: `/portal/notice/get/comments`,
     method: 'GET',
     data: { lastCommentTime },
@@ -69,7 +69,7 @@ export interface LikeNotice {
   createTime: string;
 }
 export const reqLikeNotice = async (lastLikeTimestring: string): Promise<LikeNotice[]> =>
-  await request<LikeNotice[]>({
+  request<LikeNotice[]>({
     url: `/portal/notice/get/likes`,
     method: 'GET',
     data: { lastLikeTimestring },
@@ -84,7 +84,7 @@ export interface SubscribeNotice {
   createTime: string;
 }
 export const reqSubscribeNotice = async (offset: string): Promise<SubscribeNotice[]> =>
-  await request<SubscribeNotice[]>({
+  request<SubscribeNotice[]>({
     url: `/portal/notice/get/subscriptions`,
     method: 'GET',
     data: { offset },

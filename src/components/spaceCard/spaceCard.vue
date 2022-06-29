@@ -7,7 +7,7 @@
 
   day.extend(relativeTime);
   day.locale('zh-cn');
-  const props = defineProps<{
+  defineProps<{
     index: number;
     changeLikeStatus: (index: number) => void;
     spaceMoment: SpaceMoment;
@@ -17,7 +17,6 @@
   const changePage = (e: any) => {
     pageIndex.value = e.detail.current;
   };
-  console.log(props);
 </script>
 
 <template>
@@ -26,8 +25,8 @@
     <view v-if="spaceMoment.posterUserInfo.length > 0" class="user">
       <image :src="spaceMoment.posterUserInfo[0].avatar" class="avatar" />
       <view>
-        <text v-if="spaceMoment.posterUserRemarkName.length > 0" class="username">
-          {{ spaceMoment.posterUserRemarkName[0].remarkName }}
+        <text v-if="spaceMoment.posterUserRemarkName" class="username">
+          {{ spaceMoment.posterUserRemarkName[0] }}
         </text>
         <text v-else class="username">
           {{ spaceMoment.posterUserInfo[0].nickname }}

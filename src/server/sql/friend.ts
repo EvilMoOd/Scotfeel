@@ -1,25 +1,29 @@
 import type { FriendInfo } from '../api/user';
-import { executeSql, selectSql } from './baseSql';
+import { executeSql, openDB, selectSql } from './baseSql';
 
 // 新建朋友表
-export function createFriendTable(): void {
+export function createFriendTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
+  if (!plus.sqlite.isOpenDatabase(config)) {
+    // 2.如果没打开先打开
+    openDB(config);
+  }
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
       'create table if not exists friend("friendId" VARCHAR(40),"nickname" VARCHAR(80),"remarkName" VARCHAR(80),"avatar" VARCHAR(40),"spaceId" VARCHAR(40),' +
       '"isDeletedByFriend" INT(11),"account" VARCHAR(40),"backgroundImage" VARCHAR(40),"noticeFlag" INT(11),"belongToId" VARCHAR(40),"signature" VARCHAR(80))',
-    success: function () {
+    success() {
       console.log('朋友表初始化成功');
     },
-    fail: function (e) {
-      console.log('executeSql failed: ' + JSON.stringify(e));
+    fail(e) {
+      console.log(`executeSql failed: ${JSON.stringify(e)}`);
     },
   });
 }
 
 // 初始化仓库，查询朋友表所有信息
 export async function selectAllFriends(belongToId: string): Promise<FriendInfo[]> {
-  return await selectSql(`
+  return selectSql(`
 			select * from friend where belongToId = "${belongToId}"
 	`);
 }
@@ -44,7 +48,7 @@ export function insertFriend(
 }
 
 // 删除记录
-export function _delete(friendId: string, belongToId: string): void {
+export function deleteRecord(friendId: string, belongToId: string): void {
   return executeSql(`
 		delete from friend where friendId = "${friendId}" and belongToId = "${belongToId}"
 	`);

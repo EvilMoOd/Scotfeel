@@ -9,21 +9,21 @@ export interface CreateInfo {
 }
 // 创建群聊
 export const reqCreateGroupChat = async (createInfo: CreateInfo[]): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/create/group`,
     method: 'POST',
     data: createInfo,
   });
 // 申请加入群聊
 export const reqApplyJoinInGroupChat = async (groupId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/apply`,
     method: 'GET',
     data: { groupId },
   });
 // 处理加入群聊信息 审核状态 ：0：未审核，1：同意，2：拒绝
 export const reqDealJoinMessage = async (applyId: string, status: 0 | 1 | 2): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/handle/groupApply`,
     method: 'POST',
     data: { applyId, status },
@@ -31,7 +31,7 @@ export const reqDealJoinMessage = async (applyId: string, status: 0 | 1 | 2): Pr
   });
 // 更新群聊头像
 export const reqUpdateGroupChatAvatar = async (avatar: string, groupId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/update/avatar`,
     method: 'GET',
     data: { avatar, groupId },
@@ -41,7 +41,7 @@ export const reqChangeGroupChatNickname = async (
   nickname: string,
   groupId: string
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/update/nickname`,
     method: 'POST',
     data: { nickname, groupId },
@@ -49,7 +49,7 @@ export const reqChangeGroupChatNickname = async (
   });
 // 更新在群里的备注
 export const reqChangeRemark = async (remark: string, groupId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/update/remark`,
     method: 'POST',
     data: { remark, groupId },
@@ -57,7 +57,7 @@ export const reqChangeRemark = async (remark: string, groupId: string): Promise<
   });
 // 移除成员
 export const reqRemoveGroupMember = async (memberId: string, groupId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/delete/member`,
     method: 'POST',
     data: { memberId, groupId },
@@ -65,14 +65,14 @@ export const reqRemoveGroupMember = async (memberId: string, groupId: string): P
   });
 // 解散群聊
 export const reqDismissGroupChat = async (groupId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/dismiss/group`,
     method: 'GET',
     data: { groupId },
   });
 // 设置群聊免打扰
 export const reqSetGroupNoNotify = async (groupId: string, noticeFlag: 0 | 1): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/mute/notice`,
     method: 'POST',
     data: { groupId, noticeFlag },
@@ -80,7 +80,7 @@ export const reqSetGroupNoNotify = async (groupId: string, noticeFlag: 0 | 1): P
   });
 // 更新群聊审核
 export const reqUpdateVerify = async (groupId: string, noticeFlag: 0 | 1): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/update/varify`,
     method: 'POST',
     data: { groupId, noticeFlag },
@@ -92,7 +92,7 @@ export const reqChangeMemberRole = async (
   memberId: string,
   role: 1 | 2 | 0
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/groupChat/update/memberRole`,
     method: 'POST',
     data: { groupId, memberId, role },

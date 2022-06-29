@@ -1,7 +1,7 @@
 <script setup lang="ts">
   // 空间名片卡片
   const props = defineProps<{
-    img: string;
+    avatar: string;
     spaceId: string;
     nickName: string;
     role?: 1 | 2 | 3 | 4;
@@ -16,19 +16,11 @@
 <template>
   <!-- 空间小名片 -->
   <view class="space-item" @tap="goSpace">
-    <image :src="props.img" class="space-img" />
+    <image :src="avatar" class="space-img" />
     <br />
-    <text>{{ props.nickName }}</text>
-    <view v-if="props.role" class="identify">
-      {{
-        props.role === 1
-          ? '空间主'
-          : props.role === 2
-          ? '管理员'
-          : props.role === 3
-          ? '成员'
-          : '订阅者'
-      }}
+    <text>{{ nickName }}</text>
+    <view v-if="role" class="identify">
+      {{ role === 1 ? '空间主' : role === 2 ? '管理员' : role === 3 ? '成员' : '订阅者' }}
     </view>
   </view>
 </template>

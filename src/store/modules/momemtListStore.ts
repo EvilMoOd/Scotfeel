@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+
 export interface MomentList {
   momentListInfo: MomentListInfo[];
   momentList: string[];

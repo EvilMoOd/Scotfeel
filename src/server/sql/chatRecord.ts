@@ -19,11 +19,11 @@ export function createChatRecordTable(config = { name: 'scotfeel', path: '_doc/c
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql: 'create table if not exists chatRecord( "id" INTEGER PRIMARY KEY AUTOINCREMENT,"sessionId"	VARCHAR(40),"userId" VARCHAR(40),"content" VARCHAR(2000),"contentType" INT(11),"createTime" DATE,"belongToId" VARCHAR(40))',
-    success: function () {
+    success() {
       console.log('聊天记录表初始化成功');
     },
-    fail: function (e) {
-      console.log('executeSql failed: ' + JSON.stringify(e));
+    fail(e) {
+      console.log(`executeSql failed: ${JSON.stringify(e)}`);
     },
   });
 }
@@ -47,7 +47,7 @@ export async function selectSingleChat(
   sessionId: string,
   belongToId: string
 ): Promise<ChatRecord[]> {
-  return await selectSql(`
+  return selectSql(`
 	select id,userId,content,contentType,createTime from chatRecord 
 		where sessionId = "${sessionId}" and belongToId = "${belongToId}" and id < "${lastId}"
 	order by id desc
@@ -61,7 +61,7 @@ export async function selectGroupChat(
   sessionId: string,
   belongToId: string
 ): Promise<ChatRecord[]> {
-  return await selectSql(`
+  return selectSql(`
 		select c.id,c.userId,c.content,c.contentType,c.createTime,g.avatar,g.nickname,g.remarkName as memberRemarkName,f.remarkName as friendRemarkName
 			from chatRecord c
 			left join groupChatMember g on (g.groupId = "${sessionId}" and g.belongToId = "${belongToId}" and g.memberId = c.userId)
@@ -81,7 +81,7 @@ export function deleteChatTable(): void {
 
 // 查询所有记录
 export async function selectAllRecord(belongToId: string): Promise<ChatRecord[]> {
-  return await selectSql(`
+  return selectSql(`
 			select * from chatRecord where belongToId = "${belongToId}"
 	`);
 }

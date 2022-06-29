@@ -6,6 +6,12 @@
     tab1: string;
     tab2: string;
     height: string;
+    fontColor: string; // 字体颜色
+    lineColor: string; // 线条颜色
+    bold: string; // 宽度 space-evenly || space-around
+    left: string; // 条左右
+    right: string;
+    lineWidth: string;
   }>();
 
   const active = ref(true);
@@ -31,12 +37,12 @@
     <hr class="line" :class="[active ? 'left' : 'right']" />
     <swiper :current="currentTab" :style="{ height }" @change="log">
       <swiper-item>
-        <scroll-view scroll-y>
+        <scroll-view scroll-y :style="{ height }">
           <slot name="s1"></slot>
         </scroll-view>
       </swiper-item>
       <swiper-item>
-        <scroll-view scroll-y>
+        <scroll-view scroll-y :style="{ height }">
           <slot name="s2"></slot>
         </scroll-view>
       </swiper-item>
@@ -49,21 +55,24 @@
     margin-top: 20rpx;
     .tab-name {
       display: flex;
-      justify-content: space-around;
+      justify-content: v-bind('bold');
+      color: v-bind('fontColor');
+      font-weight: bold;
     }
     .line {
       height: 10rpx;
-      width: 112rpx;
+      width: v-bind('lineWidth');
       margin-top: 20rpx;
-      background-color: $color-sf;
+      border: none;
+      background-color: v-bind('lineColor');
     }
     .left {
       transition: transform 0.5s;
-      transform: translate(130rpx);
+      transform: translate(v-bind('left'));
     }
     .right {
       transition: transform 0.5s;
-      transform: translate(500rpx);
+      transform: translate(v-bind('right'));
     }
   }
 </style>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
+  import { debounce } from 'lodash-es';
   import { useFriendStore } from '../../../store/modules/friendStore';
   import type { ChatRecord } from '../../../server/sql/chatRecord';
   import { insertRecord, selectSingleChat } from '../../../server/sql/chatRecord';
@@ -8,7 +9,6 @@
   import { createUUID } from '../../../server/utils/uuid';
   import type { FriendInfo } from '../../../server/api/user';
   import { useSessionListStore } from '../../../store/modules/sessionListStore';
-  import { debounce } from 'lodash-es';
   import { useUserStore } from '../../../store/modules/userStore';
 
   export interface Chat {
@@ -45,9 +45,22 @@
       signature: '',
     },
   });
-  onLoad((params: any) => {
+
+  // 初始化
+  async function init(friendInfo: any) {
+    chat.friendInfo = friendInfo;
+    // TODO lastid需要修改
+    const chatRecord = await selectSingleChat(
+      10000,
+      sessionId,
+      userStore.userInfo?.mainId as string
+    );
+    chat.chatRecord = chatRecord.reverse();
+    scroll.value += 1000;
+  }
+  onLoad((params) => {
     // 初始化sessionId
-    sessionId = params.sessionId;
+    sessionId = params.sessionId as string;
     // 初始化朋友信息
     const friendInfo = friendStore.friendsInfo.find((item) => item.friendId === sessionId);
     init(friendInfo);
@@ -66,22 +79,10 @@
       }
     });
   });
-  // 初始化
-  async function init(friendInfo: any) {
-    chat.friendInfo = friendInfo;
-    // TODO lastid需要修改
-    const chatRecord = await selectSingleChat(
-      10000,
-      sessionId,
-      userStore.userInfo?.mainId as string
-    );
-    chat.chatRecord = chatRecord.reverse();
-    scroll.value += 1000;
-  }
   // 发送消息
   function submitMessage(e: any) {
     const newMsg: ChatRecord = {
-      sessionId: sessionId,
+      sessionId,
       userId: userStore.userInfo?.mainId as string,
       belongToId: userStore.userInfo?.mainId as string,
       content: e.detail.value,
@@ -112,7 +113,9 @@
     debounce(() => {
       sessionListStore.newMessage(sessionId, e.detail.value, 0, Date.now(), 1);
     }, 1000)();
-    nextTick(() => (scroll.value += 10000));
+    nextTick(() => {
+      scroll.value += 10000;
+    });
   }
 </script>
 

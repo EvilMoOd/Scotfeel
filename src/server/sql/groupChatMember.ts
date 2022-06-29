@@ -1,18 +1,22 @@
 import type { GroupMember } from '../api/user';
-import { executeSql, selectSql } from './baseSql';
+import { executeSql, openDB, selectSql } from './baseSql';
 
 // 创建群成员表
-export function createGroupMemberTable(): void {
+export function createGroupMemberTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
+  if (!plus.sqlite.isOpenDatabase(config)) {
+    // 2.如果没打开先打开
+    openDB(config);
+  }
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
       'create table if not exists groupChatMember("groupId" VARCHAR(40),	"memberId" VARCHAR(40),"nickname" VARCHAR(40) ,' +
       '"avatar" VARCHAR(40),"remarkName" VARCHAR(40),"role" INT(11),"isExited" INT(11),"belongToId" VARCHAR(40))',
-    success: function () {
+    success() {
       console.log('群成员表初始化成功');
     },
-    fail: function (e) {
-      console.log('executeSql failed: ' + JSON.stringify(e));
+    fail(e) {
+      console.log(`executeSql failed: ${JSON.stringify(e)}`);
     },
   });
 }
@@ -33,7 +37,7 @@ export function insertGroupMember(
 }
 
 // 删除记录
-export function _delete(groupId: string, memberId: string, belongToId: string): void {
+export function deleteMember(groupId: string, memberId: string, belongToId: string): void {
   return executeSql(`
 				delete from groupChatMember where groupId = "${groupId}" and memberId = "${memberId}" and belongToId = "${belongToId}"
 			`);
@@ -43,7 +47,7 @@ export async function selectAllMemberInfo(
   groupId: string,
   belongToId: string
 ): Promise<GroupMember[]> {
-  return await selectSql(`
+  return selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,g.isExited,f.remarkName as friendRemarkName
 		from groupChatMember g
 		left join friend f on (g.memberId = f.friendId and f.belongToId = "${belongToId}")
@@ -57,7 +61,7 @@ export async function selectOneMemberInfo(
   memberId: string,
   belongToId: string
 ): Promise<GroupMember> {
-  return await selectSql(`
+  return selectSql(`
 	select g.memberId,g.nickname,g.avatar,g.remarkName,g.role,f.remarkName as friendRemarkName
 		from groupChatMember g
 		left join friend f on (g.memberId = f.friendId and f.belongToId = "${belongToId}")

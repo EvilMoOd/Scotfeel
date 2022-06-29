@@ -8,7 +8,7 @@ export const reqSetPrivate = async (
   isInvite: 1 | 0,
   isRecommend: 1 | 0
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/editPermissions`,
     method: 'POST',
     data: { spaceId, isPrivate, isVerify, isInvite, isRecommend },
@@ -21,18 +21,18 @@ export interface SetSpace {
   spaceAvatar: string;
   longitude: number;
   latitude: number;
-  groupId?: any;
+  groupId?: string;
   friendId?: string;
 }
 export const reqSetSpace = async (spaceMessage: SetSpace): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/createNewSpace`,
     method: 'POST',
     data: { ...spaceMessage },
   });
 // 空间是否展示在个人主页
 export const reqShowInPersonPage = async (showFlag: 1 | 0, spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/isShow`,
     method: 'POST',
     data: { showFlag, spaceId },
@@ -40,7 +40,7 @@ export const reqShowInPersonPage = async (showFlag: 1 | 0, spaceId: string): Pro
   });
 // 设置为默认空间
 export const reqSetDefaultSpace = async (spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/setDefaultSpace`,
     method: 'POST',
     data: { spaceId },
@@ -48,7 +48,7 @@ export const reqSetDefaultSpace = async (spaceId: string): Promise<null> =>
   });
 // 更新昵称
 export const reqUpdateNickname = async (nickName: string, spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/updateNickName`,
     method: 'POST',
     data: { nickName, spaceId },
@@ -56,7 +56,7 @@ export const reqUpdateNickname = async (nickName: string, spaceId: string): Prom
   });
 // 更改介绍
 export const reqUpdateIntroduction = async (introduction: string, spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/updateIntroduction`,
     method: 'POST',
     data: { introduction, spaceId },
@@ -64,7 +64,7 @@ export const reqUpdateIntroduction = async (introduction: string, spaceId: strin
   });
 // 更改空间头像
 export const reqChangeAvatar = async (avatar: string, spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/updateAvatar`,
     method: 'POST',
     data: { avatar, spaceId },
@@ -72,7 +72,7 @@ export const reqChangeAvatar = async (avatar: string, spaceId: string): Promise<
   });
 // 设置空间背景
 export const reqSetBackGroundImg = async (backGroundImg: string, spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/setBackGround`,
     method: 'POST',
     data: { backGroundImg, spaceId },
@@ -84,7 +84,7 @@ export const reqIdentify = async (
   newAccount: string,
   content: string
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/identify`,
     method: 'POST',
     data: { spaceId, newAccount, content },
@@ -98,19 +98,19 @@ export interface UserMember {
   role: number;
 }
 export const reqUserMember = async (spaceId: string): Promise<UserMember[]> =>
-  await request<UserMember[]>({
+  request<UserMember[]>({
     url: `/space/space/getUserMember`,
     method: 'GET',
     data: { spaceId },
   });
 // 获取空间的空间成员
 export interface SpaceMember {
-  spaceAccount: string;
+  spaceId: string;
   nickName: string;
   avatar: string;
 }
 export const reqSpaceMember = async (spaceId: string): Promise<SpaceMember[]> =>
-  await request<SpaceMember[]>({
+  request<SpaceMember[]>({
     url: `/space/space/getSpaceMember`,
     method: 'GET',
     data: { spaceId },
@@ -132,14 +132,18 @@ export interface SpaceInfo {
   recommendFlag: 0 | 1; // 是否允许系统推荐给其它用户，0：否，1：是
 }
 export const reqSpaceInfo = async (spaceId: string): Promise<SpaceInfo> =>
-  await request<SpaceInfo>({
+  request<SpaceInfo>({
     url: `/space/space/getInfo`,
     method: 'GET',
     data: { spaceId },
   });
 // 更新成员角色
-export const reqUpdateRole = async (userId: string, role: string, spaceId: string): Promise<null> =>
-  await request<null>({
+export const reqUpdateRole = async (
+  userId: string,
+  role: 1 | 2 | 3,
+  spaceId: string
+): Promise<null> =>
+  request<null>({
     url: `/space/space/updateMemberRole`,
     method: 'POST',
     data: { userId, role, spaceId },
@@ -148,17 +152,17 @@ export const reqUpdateRole = async (userId: string, role: string, spaceId: strin
 // 移除成员
 export const reqDeleteMember = async (
   memberId: string,
-  memberType: string,
+  memberType: 1 | 2,
   spaceId: string
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/deleteMember`,
     method: 'POST',
     data: { memberId, memberType, spaceId },
     type: 'application/x-www-form-urlencoded',
   });
 export const reqUpdateRemark = async (spaceId: string, remarkName: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/space/updateUserMemberRemarkName`,
     method: 'POST',
     data: { remarkName, spaceId },
@@ -172,7 +176,7 @@ export interface SubscribedSpaceInfo {
 }
 // 获取订阅空间信息
 export const reqSubscribedSpace = async (userId: string): Promise<SubscribedSpaceInfo[]> =>
-  await request<SubscribedSpaceInfo[]>({
+  request<SubscribedSpaceInfo[]>({
     url: `/space/space/get/subscribedSpaces`,
     method: 'GET',
     data: { userId },
@@ -215,14 +219,14 @@ export const reqASpaceMoment = async (
   spaceId: string,
   lastMomentId: number
 ): Promise<SpaceMoment[]> =>
-  await request<SpaceMoment[]>({
+  request<SpaceMoment[]>({
     url: `/space/spaceMoment/get/oneSpaceMoments`,
     method: 'GET',
     data: { spaceId, lastMomentId },
   });
 // 获取所有订阅空间的动态
 export const reqAllSubscribeMoment = async (lastMomentId: number): Promise<SpaceMoment[]> =>
-  await request<SpaceMoment[]>({
+  request<SpaceMoment[]>({
     url: `/space/spaceMoment/get/allSubscribedSpaceMoments`,
     method: 'GET',
     data: { lastMomentId },
@@ -240,14 +244,14 @@ export interface Moment {
   spaceId: string;
 }
 export const reqCreateMoment = async (moment: Moment): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/create/moment`,
     method: 'POST',
     data: { ...moment },
   });
 // 添加评论
 export const reqAddComment = async (): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/add/comment`,
     method: 'POST',
   });
@@ -257,33 +261,33 @@ export const reqAddLike = async (
   posterId: string,
   spaceMemberFlag: 0 | 1
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/add/like`,
     method: 'POST',
     data: { momentId, posterId, spaceMemberFlag },
   });
 // 删除评论
 export const reqDeleteMoment = async (): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/delete/moment`,
     method: 'GET',
   });
 // 取消点赞
 export const reqCancelLike = async (momentId: number): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/cancel/like`,
     method: 'GET',
     data: { momentId },
   });
 // 获取一个动态的点赞信息
 export const reqLike = async (): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/get/likes`,
     method: 'GET',
   });
 // 获取一条动态的评论信息
 export const reqComments = async (): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceMoment/get/comments`,
     method: 'GET',
   });
@@ -298,7 +302,7 @@ export const reqApplyJoinSpace = async (
   studentNumber?: string,
   graduateTime?: number
 ): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceApply/memberApplyToSpace`,
     method: 'POST',
     data: {
@@ -314,7 +318,7 @@ export const reqApplyJoinSpace = async (
   });
 // 处理加入空间申请
 export const reqDealApply = async (messageId: string, status: 0 | 1 | 2): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceApply/verify`,
     method: 'POST',
     data: { messageId, status },
@@ -322,7 +326,7 @@ export const reqDealApply = async (messageId: string, status: 0 | 1 | 2): Promis
   });
 // 用户订阅空间
 export const reqSubscribeSpace = async (spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceApply/subscribe`,
     method: 'POST',
     data: { spaceId },
@@ -330,7 +334,7 @@ export const reqSubscribeSpace = async (spaceId: string): Promise<null> =>
   });
 // 取消订阅空间
 export const reqCancelSubscribeSpace = async (spaceId: string): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/space/spaceApply/unsubscribe`,
     method: 'POST',
     data: { spaceId },

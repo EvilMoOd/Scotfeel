@@ -1,25 +1,29 @@
 import type { GroupChat } from '../api/user';
-import { executeSql, selectSql } from './baseSql';
+import { executeSql, openDB, selectSql } from './baseSql';
 
 // 新建群聊表
-export function createGroupChatTable(): void {
+export function createGroupChatTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
+  if (!plus.sqlite.isOpenDatabase(config)) {
+    // 2.如果没打开先打开
+    openDB(config);
+  }
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
       'create table if not exists groupChat("groupId" VARCHAR(40),	"nickname" VARCHAR(40),	"avatar" VARCHAR(40) , "memberCount" INT(11),"spaceId" VARCHAR(40),' +
       '"spaceNickname" VARCHAR(40),"spaceAvatar" VARCHAR(40),"noticeFlag" INT(11),"isDismissed" INT(11),"belongToId" VARCHAR(40))',
-    success: function () {
+    success() {
       console.log('群聊表初始化成功');
     },
-    fail: function (e) {
-      console.log('executeSql failed: ' + JSON.stringify(e));
+    fail(e) {
+      console.log(`executeSql failed: ${JSON.stringify(e)}`);
     },
   });
 }
 
 // 初始化仓库，查找所有群聊
 export async function selectAllGroupChat(belongToId: string): Promise<GroupChat[]> {
-  return await selectSql(`
+  return selectSql(`
 	select * from groupChat where belongToId = "${belongToId}"
 			`);
 }
@@ -43,7 +47,7 @@ export function insertGroup(
 }
 
 // 删除记录
-export function _delete(groupId: string, belongToId: string): void {
+export function deleteGRecord(groupId: string, belongToId: string): void {
   return executeSql(`
 				delete from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);
@@ -51,7 +55,7 @@ export function _delete(groupId: string, belongToId: string): void {
 
 // 群聊基本信息
 export async function selectInfo(groupId: string, belongToId: string): Promise<void> {
-  return await selectSql(`
+  return selectSql(`
 					select * from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}" 
 			`);
 }

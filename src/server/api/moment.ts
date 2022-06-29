@@ -1,4 +1,5 @@
 import { request } from '../http';
+
 export interface PosterInfo {
   _id: string;
   nickname: string;
@@ -68,14 +69,14 @@ export const reqMoment = async (
   momentOwnerId: string,
   lastMomentTime: number
 ): Promise<MomentInfo[]> =>
-  await request<MomentInfo[]>({
+  request<MomentInfo[]>({
     url: `/portal/moment/get/moments`,
     method: 'GET',
     data: { momentOwnerId, lastMomentTime },
   });
 // 获取所有朋友的动态
 export const reqAllFriendsMoment = async (lastMomentId: number): Promise<MomentInfo[]> =>
-  await request<MomentInfo[]>({
+  request<MomentInfo[]>({
     url: `/portal/moment/get/allMoments`,
     method: 'GET',
     data: { lastMomentId },
@@ -92,7 +93,7 @@ export interface CreateMoment {
   isReposted: number; // 是否为转发的动态,0:否，1：是
 }
 export const reqCreateMoment = async (moment: CreateMoment): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/moment/create/moment`,
     method: 'POST',
     data: { ...moment },
@@ -108,14 +109,14 @@ export interface PublishComment {
   commentType: number;
 }
 export const reqAddComment = async (comment: PublishComment): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/moment/add/comment`,
     method: 'POST',
     data: { ...comment },
   });
 // 删除动态
 export const reqDeleteMoment = async (momentId: number): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/moment/delete/moment`,
     method: 'POST',
     data: { momentId },
@@ -123,14 +124,14 @@ export const reqDeleteMoment = async (momentId: number): Promise<null> =>
   });
 // 点赞
 export const reqAddLike = async (Like: { momentId: number; posterId: string }): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/moment/add/like`,
     method: 'POST',
     data: { ...Like },
   });
 // 取消点赞
 export const reqCancelLike = async (momentId: number): Promise<null> =>
-  await request<null>({
+  request<null>({
     url: `/portal/moment/cancel/like`,
     method: 'POST',
     data: { momentId },
