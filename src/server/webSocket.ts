@@ -1,11 +1,13 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import mitt from 'mitt';
+import { debounce } from 'lodash-es';
 import { useFriendStore } from '../store/modules/friendStore';
 import { useMomentListStore } from '../store/modules/momemtListStore';
 import { useNoticeStore } from '../store/modules/noticeStore';
 import { useSessionListStore } from '../store/modules/sessionListStore';
 import { useUserStore } from '../store/modules/userStore';
-import { debounce } from 'lodash-es';
 import { insertRecord } from './sql/chatRecord';
 import { createUUID } from './utils/uuid';
 import { useGroupChatStore } from '../store/modules/groupStore';
@@ -36,19 +38,19 @@ export function connectWebSocket(url: string, token: string): void {
     console.log('连接connectSocket');
     // 需带上token，验证用户合法性以及用户id和连接进行绑定
     socketTask = uni.connectSocket({
-      url: url,
+      url,
       complete: () => {},
     });
     // 监听连接成功
-    socketTask.onOpen(() => _onOpen(token));
+    socketTask.onOpen(() => _onOpen());
     // 监听接收信息
-    socketTask.onMessage((data: String | ArrayBuffer) => _onMessage(data));
+    socketTask.onMessage((data: string | ArrayBuffer) => _onMessage(data));
     // 监听断开
     socketTask.onClose(() => _onClose());
     // 监听错误
     socketTask.onError(() => _onError());
   }
-  function _onOpen(token: string): void {
+  function _onOpen(): void {
     // 用户上线
     console.log('websocket连接成功');
     // 发送信息告诉服务器将离线消息发送过来
@@ -163,42 +165,42 @@ export function connectWebSocket(url: string, token: string): void {
       // TODO 会话列表移除新好友，好友store移除新好友信息
     } else if (messageType === 13) {
       // 13、更新好友头像
-      void friendStore.updateFriendAvatar(
+      friendStore.updateFriendAvatar(
         content.friendId,
         content.avatar,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 14) {
       // 14、更新朋友昵称
-      void friendStore.updateFriendNickname(
+      friendStore.updateFriendNickname(
         content.friendId,
         content.nickname,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 15) {
       // 15、更新朋友account
-      void friendStore.updateFriendAccount(
+      friendStore.updateFriendAccount(
         content.friendId,
         content.account,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 16) {
       // 16、更新朋友背景照片
-      void friendStore.updateFriendBackgroundImg(
+      friendStore.updateFriendBackgroundImg(
         content.friendId,
         content.backgroundImage,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 17) {
       // 17、更新朋友个性签名
-      void friendStore.updateFriendSignature(
+      friendStore.updateFriendSignature(
         content.friendId,
         content.signature,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 18) {
       // 18、更新我和朋友所绑定的空间ID
-      void friendStore.updateFriendSpaceId(
+      friendStore.updateFriendSpaceId(
         content.friendId,
         content.spaceId,
         user.userInfo?.mainId as string

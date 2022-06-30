@@ -19,15 +19,6 @@
   const groupStore = useGroupChatStore();
   const spaceStore = useSubscribeSpaceStore();
 
-  onLaunch(() => {
-    init();
-  });
-  onShow(() => {
-    console.log('App切换至前台');
-  });
-  onHide(() => {
-    console.log('App切换至后台');
-  });
   async function init() {
     // 初始化数据库
     createFriendTable();
@@ -50,11 +41,20 @@
       friendStore.init(userStore.userInfo?.mainId as string);
       groupStore.init(userStore.userInfo?.mainId as string);
       spaceStore.init(userStore.userInfo?.mainId as string);
-      setTimeout(function () {
+      setTimeout(() => {
         connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
       }, 1000);
     }
   }
+  onLaunch(() => {
+    init();
+  });
+  onShow(() => {
+    console.log('App切换至前台');
+  });
+  onHide(() => {
+    console.log('App切换至后台');
+  });
 </script>
 <style>
   ::-webkit-scrollbar {
