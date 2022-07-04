@@ -96,6 +96,7 @@ export interface UserMember {
   avatar: string;
   nickName: string;
   role: number;
+  remarkName: string;
 }
 export const reqUserMember = async (spaceId: string): Promise<UserMember[]> =>
   request<UserMember[]>({
@@ -161,7 +162,8 @@ export const reqDeleteMember = async (
     data: { memberId, memberType, spaceId },
     type: 'application/x-www-form-urlencoded',
   });
-export const reqUpdateRemark = async (spaceId: string, remarkName: string): Promise<null> =>
+// 更新成员备注
+export const reqUpdateRemark = async (remarkName: string, spaceId: string): Promise<null> =>
   request<null>({
     url: `/space/space/updateUserMemberRemarkName`,
     method: 'POST',
@@ -249,11 +251,12 @@ export const reqCreateMoment = async (moment: Moment): Promise<null> =>
     method: 'POST',
     data: { ...moment },
   });
-// 添加评论
-export const reqAddComment = async (): Promise<null> =>
+// 删除动态
+export const reqDeleteMoment = async (momentId: string, spaceId: string): Promise<null> =>
   request<null>({
-    url: `/space/spaceMoment/add/comment`,
-    method: 'POST',
+    url: `/spaceMoment/delete/moment`,
+    method: 'GET',
+    data: { momentId, spaceId },
   });
 // 点赞
 export const reqAddLike = async (
@@ -266,12 +269,6 @@ export const reqAddLike = async (
     method: 'POST',
     data: { momentId, posterId, spaceMemberFlag },
   });
-// 删除评论
-export const reqDeleteMoment = async (): Promise<null> =>
-  request<null>({
-    url: `/space/spaceMoment/delete/moment`,
-    method: 'GET',
-  });
 // 取消点赞
 export const reqCancelLike = async (momentId: number): Promise<null> =>
   request<null>({
@@ -279,18 +276,72 @@ export const reqCancelLike = async (momentId: number): Promise<null> =>
     method: 'GET',
     data: { momentId },
   });
-// 获取一个动态的点赞信息
-export const reqLike = async (): Promise<null> =>
+export interface AddComment {
+  commentedUserId: string; // 被评论者ID
+  commentType: number; // 评论类型，0：对动态直接评论，1：回复评论
+  content: string; // 评论内容
+  momentId: number; // 评论所在的动态ID
+  secondCommentIndex: string; // 如果是对评论进行评论，则需要传入这条评论所在一级评论的哪个索引
+  spaceMemberFlag: number; // 是否为该动态所发布在空间的成员，0：否，1：是
+}
+// 添加评论
+export const reqAddComment = async (comment: AddComment): Promise<null> =>
   request<null>({
-    url: `/space/spaceMoment/get/likes`,
-    method: 'GET',
+    url: `/space/spaceMoment/add/comment`,
+    method: 'POST',
+    data: { ...comment },
   });
-// 获取一条动态的评论信息
-export const reqComments = async (): Promise<null> =>
-  request<null>({
-    url: `/space/spaceMoment/get/comments`,
+export interface CommentedUserInfo {
+  _id: string;
+  nickname: string;
+  avatar: string;
+}
+
+export interface CommenterInfo {
+  _id: string;
+  nickname: string;
+  avatar: string;
+}
+
+export interface CommenterRemarkName {
+  remarkName?: string;
+}
+
+export interface Comments {
+  spaceMemberFlag: number;
+  content: string;
+  commentedUserInfo: CommentedUserInfo[];
+  commentedUserRemarkName: string[];
+  commenterInfo: CommenterInfo[];
+  commenterRemarkName: CommenterRemarkName[];
+  secondCommentIndex: string;
+  createTime: number;
+}
+// 获取一级评论
+export const reqGetOneLevelComment = async (
+  momentId: number,
+  spaceId: string,
+  offset: number
+): Promise<Comments> =>
+  request<Comments>({
+    url: `/spaceMoment/get/comments`,
     method: 'GET',
+    data: { momentId, spaceId, offset },
   });
+// 获取二级评论
+export const reqGetSecondLevelComment = async (
+  momentId: number,
+  spaceId: string,
+  offset: number,
+  secondCommentIndex: string
+): Promise<Comments> =>
+  request<Comments>({
+    url: `/spaceMoment/get/comments`,
+    method: 'GET',
+    data: { momentId, spaceId, offset, secondCommentIndex },
+  });
+
+// 空间订阅加入
 // 申请加入空间
 export const reqApplyJoinSpace = async (
   spaceId: string,

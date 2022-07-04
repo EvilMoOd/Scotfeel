@@ -71,11 +71,11 @@ export const reqDismissGroupChat = async (groupId: string): Promise<null> =>
     data: { groupId },
   });
 // 设置群聊免打扰
-export const reqSetGroupNoNotify = async (groupId: string, noticeFlag: 0 | 1): Promise<null> =>
+export const reqSetGroupNoNotify = async (groupId: string, verifyFlag: 0 | 1): Promise<null> =>
   request<null>({
     url: `/portal/groupChat/mute/notice`,
     method: 'POST',
-    data: { groupId, noticeFlag },
+    data: { groupId, verifyFlag },
     type: 'application/x-www-form-urlencoded',
   });
 // 更新群聊审核

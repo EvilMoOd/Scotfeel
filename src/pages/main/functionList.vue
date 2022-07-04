@@ -55,7 +55,7 @@
           <view class="name">{{ userStore.userInfo?.nickname }}</view>
           <view class="idCard">{{ userStore.userInfo?.account }}</view>
         </view>
-        <view class="iconfont icon-erweima" :style="{ color: '#fff' }"></view>
+        <uni-icons type="scan" class="icon-erweima" color="#fff" size="24" />
       </view>
       <view class="space" @tap="openSpace">
         订阅空间

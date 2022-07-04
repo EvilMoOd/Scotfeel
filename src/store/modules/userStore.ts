@@ -21,6 +21,7 @@ import { useGroupChatStore } from './groupStore';
 // 从本地仓库捞数据
 const user: User = uni.getStorageSync('user');
 
+// eslint-disable-next-line import/prefer-default-export
 export const useUserStore = defineStore('user', {
   state: () => ({
     userInfo: user.userInfo,

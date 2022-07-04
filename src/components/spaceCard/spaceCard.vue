@@ -9,8 +9,9 @@
   day.locale('zh-cn');
   defineProps<{
     index: number;
-    changeLikeStatus: (index: number) => void;
     spaceMoment: SpaceMoment;
+    changeLikeStatus: (index: number) => void;
+    showComment: () => void;
   }>();
 
   const pageIndex = ref(0);
@@ -25,8 +26,8 @@
     <view v-if="spaceMoment.posterUserInfo.length > 0" class="user">
       <image :src="spaceMoment.posterUserInfo[0].avatar" class="avatar" />
       <view>
-        <text v-if="spaceMoment.posterUserRemarkName" class="username">
-          {{ spaceMoment.posterUserRemarkName[0] }}
+        <text v-if="spaceMoment.posterUserRemarkName[0]" class="username">
+          {{ spaceMoment.posterUserRemarkName[0].remarkName }}
         </text>
         <text v-else class="username">
           {{ spaceMoment.posterUserInfo[0].nickname }}
@@ -59,17 +60,17 @@
 
     <view class="post-state">
       <view>
-        <uni-icons type="chat" size="3vh" color="#117986" />
-        {{ spaceMoment.commentedCount }}
+        <uni-icons type="chat" size="3vh" color="#117986" @tap="showComment(index)" />
+        {{ spaceMoment.commentedCount }}评论
       </view>
       <view @tap="changeLikeStatus(index)">
         <uni-icons v-if="spaceMoment.likeStatus === 0" type="heart" size="3vh" color="#117986" />
         <uni-icons v-else type="heart-filled" color="#117986" size="3vh" />
-        {{ spaceMoment.likedCount }}
+        {{ spaceMoment.likedCount }}点赞
       </view>
       <view>
         <uni-icons type="redo" color="#117986" size="3vh" />
-        {{ spaceMoment.repostedCount }}
+        {{ spaceMoment.repostedCount }}转发
       </view>
     </view>
   </view>

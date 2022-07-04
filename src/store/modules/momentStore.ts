@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import mitt from 'mitt';
 import { defineStore } from 'pinia';
 import type { MomentInfo } from '../../server/api/moment';

@@ -4,6 +4,10 @@
 ```
 
 ```js
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
+
 try {
     //接口请求
       message.value = '...成功';

@@ -172,6 +172,13 @@
 				"navigationStyle": "custom",
 				"scrollIndicator": "none"
 			}
+		},
+		{
+			"path": "pages/subscribe/searchSpace",
+			"style": {
+				"navigationStyle": "custom",
+				"scrollIndicator": "none"
+			}
 		}
 	],
 	"globalStyle": {

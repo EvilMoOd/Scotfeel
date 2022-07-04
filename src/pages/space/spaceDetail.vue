@@ -3,6 +3,7 @@
   import { reactive, ref } from 'vue';
   import type { SpaceMember, UserMember } from '../../server/api/space';
   import {
+    reqUpdateRemark,
     reqDeleteMember,
     reqUpdateRole,
     reqChangeAvatar,
@@ -32,6 +33,7 @@
     showChangeIntroduction: false,
     showPrivate: false,
     showEditMember: -1,
+    showChangeRemark: false,
   });
   function hiddenAll() {
     show.maskShow = false;
@@ -39,9 +41,11 @@
     show.showChangeNickname = false;
     show.showChangeIntroduction = false;
     show.showPrivate = false;
+    show.showChangeRemark = false;
   }
   // 空间基础信息
   const spaceInfo = reactive({
+    avatar: '',
     spaceNickname: '',
     spaceIntroduction: '',
     displayOnPage: true,
@@ -50,11 +54,14 @@
     verify: false,
     invite: false,
     recommend: true,
+    myRemarkName: '',
     userMember: [] as UserMember[],
     spaceMember: [] as SpaceMember[],
   });
   onLoad(async (params) => {
     spaceId = params.spaceId as string;
+    spaceInfo.avatar = params.avatar as string;
+    spaceInfo.spaceNickname = params.nickname as string;
     spaceInfo.private = params.privateFlag === '1';
     spaceInfo.verify = params.verifyFlag === '1';
     spaceInfo.recommend = params.recommendFlag === '1';
@@ -68,8 +75,8 @@
   // 修改昵称
   async function changeNickname(e: string) {
     await reqUpdateNickname(e, spaceId);
-    spaceInfo.spaceNickname = '';
   }
+  // 修改空间介绍
   async function changeIntroduction(e: string) {
     await reqUpdateIntroduction(e, spaceId);
     spaceInfo.spaceIntroduction = '';
@@ -150,6 +157,11 @@
       fail.value.popUp();
     }
   }
+  // 设置个人在空间里的备注
+  async function changeRemark(e: string) {
+    await reqUpdateRemark(e, spaceId);
+    spaceInfo.myRemarkName = '';
+  }
 </script>
 
 <template>
@@ -176,12 +188,21 @@
           }
         "
       />
-      <image src="@/assets/images/head.png" class="avatar" />
-      <view>AMCC肌肉车俱乐部</view>
+      <image :src="spaceInfo.avatar" class="avatar" />
+      <view>{{ spaceInfo.spaceNickname }}</view>
     </view>
     <view class="list">
       <view class="item">
-        <text>设置群里的昵称</text>
+        <text
+          @tap="
+            () => {
+              show.showChangeRemark = true;
+              show.maskShow = true;
+            }
+          "
+        >
+          设置群里的昵称
+        </text>
       </view>
     </view>
     <view class="br"></view>
@@ -194,15 +215,6 @@
           style="display: inline-block; vertical-align: middle"
         />
         <text style="margin-left: 36rpx">邀请朋友</text>
-      </view>
-      <view class="list2">
-        <uni-icons
-          type="image"
-          color="#3EA8C2"
-          size="24"
-          style="display: inline-block; vertical-align: middle"
-        />
-        <text style="margin-left: 36rpx">创建空间</text>
       </view>
     </view>
     <hr />
@@ -230,7 +242,7 @@
             "
           >
             <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
-            <text>{{ item.nickName }}</text>
+            <text>{{ item.remarkName ? item.remarkName : item.nickName }}</text>
             <view style="float: right; color: #3ea8c2; margin-top: 10rpx">
               {{ item.role === 1 ? '空间主' : item.role === 2 ? '管理员' : '成员' }}
             </view>
@@ -406,15 +418,15 @@
       </view>
     </view>
   </PopBottom>
-  <PopWindow :pop-show="show.showChangeIntroduction">
+  <PopWindow :pop-show="show.showChangeRemark">
     <uni-easyinput
-      v-model="spaceInfo.userMember"
+      v-model="spaceInfo.myRemarkName"
       type="text"
       placeholder="请输入在空间中的备注"
       trim
       maxlength="10"
       :styles="{ borderColor: '#fff' }"
-      @confirm="changeIntroduction"
+      @confirm="changeRemark"
     />
   </PopWindow>
   <PopMessage ref="success" success>{{ message }}</PopMessage>

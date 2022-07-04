@@ -12,6 +12,7 @@
 
 <style lang="scss" scoped>
   .pop-container {
+    max-height: 80vh;
     position: fixed;
     z-index: 20;
     box-sizing: border-box;

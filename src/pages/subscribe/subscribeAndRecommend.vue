@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  /* eslint-disable no-underscore-dangle */
   import { onMounted, reactive } from 'vue';
   import type { SpaceMoment } from '../../server/api/space';
   import { reqAddLike, reqAllSubscribeMoment, reqCancelLike } from '../../server/api/space';
@@ -9,9 +10,7 @@
   const moment = reactive<SpaceMoment[]>([]);
   onMounted(async () => {
     const data = await reqAllSubscribeMoment(1652471824095);
-    console.log(...data);
     moment.push(...data);
-    console.log(moment);
   });
   // 点赞
   async function changeLikeStatus(index: number) {
@@ -27,15 +26,21 @@
       moment[index].likeStatus = 1;
     }
   }
-  function c() {
-    console.log(moment);
+  function goSearchSpace() {
+    uni.navigateTo({ url: '/pages/subscribe/searchSpace' });
   }
 </script>
 
 <template>
   <view class="header">
     <Back class="back" />
-    <uni-icons type="search" size="4vh" class="icon-search" color="#fff" @tap="c"></uni-icons>
+    <uni-icons
+      type="search"
+      size="4vh"
+      class="icon-search"
+      color="#fff"
+      @tap="goSearchSpace"
+    ></uni-icons>
   </view>
   <TopTab
     tab1="订阅"

@@ -1,10 +1,12 @@
 <script setup lang="ts">
+  /* eslint-disable no-underscore-dangle */
   import { computed, reactive, ref } from 'vue';
   import { onLoad } from '@dcloudio/uni-app';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
-  import type { SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
+  import type { Comments, SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
   import {
+    reqGetOneLevelComment,
     reqCancelSubscribeSpace,
     reqSubscribeSpace,
     reqCancelLike,
@@ -16,7 +18,7 @@
   // 判断该空间是否为用户订阅的空间
   const spaceStore = useSubscribeSpaceStore();
   let spaceId: string;
-
+  // 空间信息
   const space = reactive({
     spaceInfo: {
       mainId: '25606d2bb91c4638a84cc9109444d666',
@@ -44,34 +46,36 @@
   const imgUrl = computed(() => {
     return `url(${space.spaceInfo.backgroundImage})`;
   });
-  onLoad(async (params: any) => {
-    spaceId = params.spaceId;
+  onLoad(async (params) => {
+    spaceId = params.spaceId as string;
     space.spaceInfo = await reqSpaceInfo(spaceId);
     space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId) as SubscribedSpaceInfo;
     space.spaceMoment = await reqASpaceMoment(space.spaceInfo.mainId, 1652471824095);
-    console.log(space.spaceMoment);
   });
 
-  const isShow = ref(false);
-  function showMember() {
-    isShow.value = !isShow.value;
+  // 功能区
+  // 订阅空间
+  async function subscribe() {
+    await reqSubscribeSpace(spaceId);
   }
-  function hiddenMemberList() {
-    isShow.value = !isShow.value;
+  // 取消订阅
+  async function cancelSubscribe() {
+    await reqCancelSubscribeSpace(spaceId);
   }
-
+  // 加入空间
   function joinSpace() {
     uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
   }
   function goSpaceDetail() {
     uni.navigateTo({
-      url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}&privateFlag=${space.spaceInfo.privateFlag}&verifyFlag=${space.spaceInfo.verifyFlag}&inviteFlag=${space.spaceInfo.inviteFlag}&recommendFlag=${space.spaceInfo.recommendFlag}`,
+      url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}&privateFlag=${space.spaceInfo.privateFlag}&verifyFlag=${space.spaceInfo.verifyFlag}&inviteFlag=${space.spaceInfo.inviteFlag}&recommendFlag=${space.spaceInfo.recommendFlag}&nickname=${space.spaceInfo.nickname}&avatar=${space.spaceInfo.avatar}`,
     });
   }
-  // 前往发布动态
+  // 前往发布动态页
   function goCreateSpaceMoment() {
     uni.navigateTo({ url: `/pages/space/createSpaceMoment?spaceId=${space.spaceInfo.mainId}` });
   }
+  // 动态区
   // 点赞
   async function changeLikeStatus(index: number) {
     if (space.spaceMoment[index].likeStatus === 1) {
@@ -86,19 +90,65 @@
       space.spaceMoment[index].likeStatus = 1;
     }
   }
-  // 订阅空间
-  async function subscribe() {
-    await reqSubscribeSpace(spaceId);
+  // 评论
+  const momentId = ref<number>();
+  const commentInfo = reactive<Comments[]>([
+    {
+      spaceMemberFlag: 1,
+      content:
+        'b8SzITadipisicingipsumelitnisicillumsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
+      commentedUserInfo: [
+        {
+          _id: '0d94b112969e4c0abfbd94464795a9a2',
+          nickname: '用户02',
+          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+        },
+      ],
+      commentedUserRemarkName: [],
+      commenterInfo: [
+        {
+          _id: '0d94b112969e4c0abfbd94464795a9a2',
+          nickname: '用户02',
+          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+        },
+      ],
+      commenterRemarkName: [
+        {
+          remarkName: '232fds',
+        },
+      ],
+      secondCommentIndex: 'adipisicingipsumelitnisicillum',
+      createTime: 1653908215942,
+    },
+  ]);
+
+  // 展示区
+  const show = reactive({
+    showMask: false,
+    showComment: false,
+    showMember: false,
+  });
+  function showMember() {
+    show.showMember = true;
+    show.showMask = true;
   }
-  // 取消订阅
-  async function cancelSubscribe() {
-    await reqCancelSubscribeSpace(spaceId);
+  async function showComment(index: number) {
+    show.showComment = true;
+    show.showMask = true;
+    // TODO offset
+    momentId.value = space.spaceMoment[index]._id;
+    await reqGetOneLevelComment(momentId.value, spaceId, 0);
+  }
+  function hiddenAll() {
+    show.showMask = false;
+    show.showMember = false;
+    show.showComment = false;
   }
 </script>
 
 <template>
   <view class="page">
-    <scroll-view scroll-y class="space-body" :class="{ mask: isShow }">
+    <scroll-view scroll-y class="space-body" :class="{ mask: show.showMask }">
       <view class="header">
         <Back class="back" />
         <uni-icons
@@ -140,12 +190,25 @@
             :index="index"
             :space-moment="space.spaceMoment[index]"
             :change-like-status="changeLikeStatus"
+            :show-comment="showComment"
           />
         </view>
       </view>
     </scroll-view>
   </view>
-  <PopBottom :pop-show="isShow">
+  <!-- 评论区 -->
+  <PopBottom :pop-show="show.showComment">
+    <scroll-view scroll-y style="height: 80vh">
+      <Comment
+        v-for="(item, index) in commentInfo"
+        :key="index"
+        :one-comment="item"
+        :moment-id="momentId"
+        :space-id="spaceId"
+      />
+    </scroll-view>
+  </PopBottom>
+  <PopBottom :pop-show="show.showMember">
     <scroll-view scroll-y class="member-list">
       <view class="member-item">
         <Avatar img-src="/src/assets/images/img3.png" :type="1" />
@@ -169,7 +232,7 @@
       </view>
     </scroll-view>
   </PopBottom>
-  <Mask :show="isShow" :hidden="hiddenMemberList" />
+  <Mask :show="show.showMask" :hidden="hiddenAll" />
 </template>
 
 <style lang="scss" scoped>

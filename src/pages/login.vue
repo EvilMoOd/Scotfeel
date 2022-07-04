@@ -5,6 +5,9 @@
   import { useUserStore } from '../store/modules/userStore';
 
   const userStore = useUserStore();
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   // 修改手机号地区类型
   const type = ref(0);
   const phoneTypes = reactive(['+86']);
@@ -22,36 +25,48 @@
   async function login() {
     const phonePattern = /^1[3456789]\d{9}$/;
     if (!phonePattern.test(user.phone)) {
-      uni.showModal({ title: '请输入正确手机号' });
+      message.value = '请输入正确手机号';
+      fail.value.popUp();
     } else if (user.agreeAccord !== true) {
-      uni.showModal({ title: '请同意相关协议' });
+      message.value = '请同意相关协议';
+      fail.value.popUp();
     } else {
       try {
         await userStore.userLogin(user.phone, user.authCode);
         uni.redirectTo({ url: '/pages/main/home' });
         connectWebSocket(`wss://www.scotfeel.com/wss/`, userStore.token as string);
       } catch (error: any) {
-        uni.showModal({ title: error });
+        message.value = error;
+        fail.value.popUp();
       }
     }
   }
   // 获取验证码
+  const time = ref(60);
   const disabled = ref(false);
   async function getAuthCode() {
     const AuthPattern = /^1[3456789]\d{9}$/;
     if (AuthPattern.test(user.phone)) {
       try {
         await reqAuthCode(user.phone);
+        message.value = '验证码已发送至手机';
+        success.value.popUp();
+        setInterval(() => {
+          time.value -= 1;
+        }, 1000);
         // 设置发送成功后禁用时间为60s
         disabled.value = true;
         setTimeout(() => {
+          time.value = 60;
           disabled.value = false;
         }, 60000);
       } catch (error: any) {
-        uni.showModal({ title: error });
+        message.value = error;
+        fail.value.popUp();
       }
     } else {
-      uni.showModal({ title: '手机号格式有误' });
+      message.value = '手机号格式有误';
+      fail.value.popUp();
     }
   }
   // 同意协议
@@ -90,7 +105,8 @@
       :disabled="disabled"
       @tap="getAuthCode"
     >
-      <text class="code-text">获取验证码</text>
+      <text v-if="!disabled" class="code-text">获取验证码</text>
+      <text v-else class="code-text">冷却{{ time }}s</text>
     </button>
   </view>
   <!-- 登录 -->
@@ -108,6 +124,8 @@
       <text class="nav">隐私协议</text>
     </navigator>
   </view>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>
