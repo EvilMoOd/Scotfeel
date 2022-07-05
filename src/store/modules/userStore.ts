@@ -14,7 +14,7 @@ import { OBS_URL } from '../../server/http';
 import { deleteFriendTable } from '../../server/sql/friend';
 import { deleteGroupTable } from '../../server/sql/groupChat';
 import { deleteGroupMemberTable } from '../../server/sql/groupChatMember';
-import { uploadImage } from '../../util/uploadImage';
+import { imgMitt, uploadImage } from '../../util/uploadImage';
 import { useFriendStore } from './friendStore';
 import { useGroupChatStore } from './groupStore';
 
@@ -52,17 +52,8 @@ export const useUserStore = defineStore('user', {
     },
     // 修改昵称
     async changeNickname(nickname: string) {
-      try {
-        await reqChangeNickname(nickname);
-        this.userInfo.nickname = nickname;
-        uni.showModal({
-          title: '修改成功',
-        });
-      } catch (err) {
-        uni.showModal({
-          title: '修改失败，请检查网络',
-        });
-      }
+      await reqChangeNickname(nickname);
+      this.userInfo.nickname = nickname;
     },
     // 修改头像
     async changeAvatar() {
@@ -73,6 +64,7 @@ export const useUserStore = defineStore('user', {
           const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
           await reqChangeAvatar(imgUrl);
           this.userInfo.avatar = imgUrl;
+          imgMitt.emit('myAvatar');
         },
         1,
         {
@@ -90,6 +82,7 @@ export const useUserStore = defineStore('user', {
           const imgUrl = `${OBS_URL}/${imgData.imageId}.jpeg`;
           await reqChangeBackground(imgUrl);
           this.userInfo.backgroundImage = imgUrl;
+          imgMitt.emit('myBackground');
         },
         1,
         {
@@ -100,17 +93,8 @@ export const useUserStore = defineStore('user', {
     },
     // 修改个性签名
     async changeSignature(signature: string) {
-      try {
-        await reqChangeSignal(signature);
-        this.userInfo.signature = signature;
-        uni.showModal({
-          title: '修改成功',
-        });
-      } catch (err) {
-        uni.showModal({
-          title: '修改失败，请检查网络',
-        });
-      }
+      await reqChangeSignal(signature);
+      this.userInfo.signature = signature;
     },
   },
   getters: {

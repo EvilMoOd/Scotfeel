@@ -9,11 +9,13 @@
   import { connectWebSocket } from './server/webSocket';
   import { useFriendStore } from './store/modules/friendStore';
   import { useGroupChatStore } from './store/modules/groupStore';
+  import { useNoticeStore } from './store/modules/noticeStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
   import { useSubscribeSpaceStore } from './store/modules/spaceStore';
   import { useUserStore } from './store/modules/userStore';
 
   const userStore = useUserStore();
+  const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
   const friendStore = useFriendStore();
   const groupStore = useGroupChatStore();
@@ -26,10 +28,15 @@
     createGroupMemberTable();
     createSessionListTable();
     createChatRecordTable();
-    // 初始化用户信息
+    // 持久化用户库
     userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
     });
+    // 持久化消息库
+    noticeStore.$subscribe((mutation, state) => {
+      uni.setStorageSync('notice', state);
+    });
+    // 初始化用户信息
     if (!userStore.token) {
       uni.redirectTo({ url: '/pages/login' });
     } else {

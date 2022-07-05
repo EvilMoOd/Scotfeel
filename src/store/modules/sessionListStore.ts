@@ -5,9 +5,6 @@ import { useFriendStore } from './friendStore';
 import { selectOneMemberInfo } from '../../server/sql/groupChatMember';
 import { useGroupChatStore } from './groupStore';
 
-export interface SessionList {
-  sessionListInfo: SessionListInfo[];
-}
 export interface SessionListInfo {
   sessionId: string; // 用户或群聊的id
   contentType: 1 | 0; // 最后一次聊天内容的类型，0：文本，1：照片
@@ -24,8 +21,8 @@ export interface SessionListInfo {
   groupChatNickname?: string;
 }
 export const useSessionListStore = defineStore('sessionListStore', {
-  state: (): SessionList => ({
-    sessionListInfo: [],
+  state: () => ({
+    sessionListInfo: [] as SessionListInfo[],
   }),
   actions: {
     async init(userId: string) {

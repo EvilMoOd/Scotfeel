@@ -7,10 +7,14 @@
   import { reqPersonMessage } from '../../../server/api/user';
   import { useUserStore } from '../../../store/modules/userStore';
   import { useSubscribeSpaceStore } from '../../../store/modules/spaceStore';
+  import { imgMitt } from '../../../util/uploadImage';
 
   const userStore = useUserStore();
   const friendStore = useFriendStore();
   const spaceStore = useSubscribeSpaceStore();
+  const message = ref('');
+  const success = ref(null);
+  const fail = ref(null);
   // 加载个人页信息
   let sessionId: string;
   const personInfo = reactive<{ personPage: PersonMessage; pageType: 0 | 1 | 2 | 3 }>({
@@ -87,12 +91,19 @@
     show.showMyConfig = false;
     show.showMask = true;
   }
-  function changeMyNickname(e: string) {
-    userStore.changeNickname(e);
-    personInfo.personPage.nickname = e;
-    show.showChangeMyNickname = false;
-    show.showMask = false;
-    myInfo.nickname = '';
+  async function changeMyNickname(e: string) {
+    try {
+      await userStore.changeNickname(e);
+      personInfo.personPage.nickname = e;
+      show.showChangeMyNickname = false;
+      show.showMask = false;
+      myInfo.nickname = '';
+      message.value = '昵称修改成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '昵称修改失败';
+      fail.value.popUp();
+    }
   }
   // 修改我的个性签名
   function ShowChangeMySignature() {
@@ -100,12 +111,45 @@
     show.showMyConfig = false;
     show.showMask = true;
   }
-  function changeMySignature(e: string) {
-    userStore.changeSignature(e);
-    personInfo.personPage.signature = e;
-    show.showChangeMySignature = false;
-    show.showMask = false;
-    myInfo.signature = '';
+  async function changeMySignature(e: string) {
+    try {
+      await userStore.changeSignature(e);
+      message.value = '个性签名修改成功';
+      success.value.popUp();
+      personInfo.personPage.signature = e;
+      show.showChangeMySignature = false;
+      show.showMask = false;
+      myInfo.signature = '';
+    } catch (err) {
+      message.value = '个性签名修改失败';
+      fail.value.popUp();
+    }
+  }
+  // 头像
+  async function changeMyAvatar() {
+    try {
+      await userStore.changeAvatar();
+      imgMitt.on('myAvatar', () => {
+        message.value = '头像修改成功';
+        success.value.popUp();
+      });
+    } catch (err) {
+      message.value = '头像修改失败';
+      fail.value.popUp();
+    }
+  }
+  // 背景
+  async function changeMyBackgroundImg() {
+    try {
+      await userStore.changeBackgroundImg();
+      imgMitt.on('myBackground', () => {
+        message.value = '背景修改成功';
+        success.value.popUp();
+      });
+    } catch (err) {
+      message.value = '背景修改失败';
+      fail.value.popUp();
+    }
   }
   //
   // 好友信息修改
@@ -121,16 +165,17 @@
   }
   // 修改备注
   const remark = ref('');
-  const success = ref(null);
-  const fail = ref(null);
+
   async function changeRemark() {
     try {
       await friendStore.changeRemark(remark.value, personInfo.personPage.userId);
+      message.value = '备注已修改';
       success.value.popUp();
-      hiddenAll();
+      message.value.hiddenAll();
       personInfo.personPage.remarkName = remark.value;
       remark.value = '';
     } catch (err) {
+      message.value = '备注修改失败';
       fail.value.popUp();
     }
   }
@@ -140,10 +185,17 @@
     show.showConfig = false;
     show.showMask = true;
   }
-  function deleteFriend() {
-    friendStore.deleteFriend(personInfo.personPage.userId);
-    show.showDeleteFriend = false;
-    show.showMask = false;
+  async function deleteFriend() {
+    try {
+      await friendStore.deleteFriend(personInfo.personPage.userId);
+      show.showDeleteFriend = false;
+      show.showMask = false;
+      message.value = '好友已删除';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '删除失败';
+      fail.value.popUp();
+    }
   }
   // 发送消息
   function sendMessage() {
@@ -238,8 +290,8 @@
   >
     <text @tap="ShowChangeMySignature">个性签名</text>
     <text @tap="showChangeMyNickname">修改昵称</text>
-    <text @tap="userStore.changeBackgroundImg">设置背景</text>
-    <text @tap="userStore.changeAvatar">设置头像</text>
+    <text @tap="changeMyBackgroundImg">设置背景</text>
+    <text @tap="changeMyAvatar">设置头像</text>
   </GradientWindow>
   <PopWindow :pop-show="show.showChangeMyNickname">
     <uni-easyinput
@@ -289,6 +341,8 @@
     </view>
   </PopBottom>
   <Mask :show="show.showMask" :hidden="hiddenAll" />
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>
