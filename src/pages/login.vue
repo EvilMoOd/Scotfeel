@@ -51,7 +51,7 @@
         await reqAuthCode(user.phone);
         message.value = '验证码已发送至手机';
         success.value.popUp();
-        setInterval(() => {
+        const timer = setInterval(() => {
           time.value -= 1;
         }, 1000);
         // 设置发送成功后禁用时间为60s
@@ -59,6 +59,7 @@
         setTimeout(() => {
           time.value = 60;
           disabled.value = false;
+          clearInterval(timer);
         }, 60000);
       } catch (error: any) {
         message.value = error;

@@ -35,18 +35,7 @@
       <text class="swiper-name" @tap="changeCurrent2">{{ props.tab2 }}</text>
     </view>
     <hr class="line" :class="[active ? 'left' : 'right']" />
-    <swiper :current="currentTab" :style="{ height }" @change="log">
-      <swiper-item>
-        <scroll-view scroll-y :style="{ height }">
-          <slot name="s1"></slot>
-        </scroll-view>
-      </swiper-item>
-      <swiper-item>
-        <scroll-view scroll-y :style="{ height }">
-          <slot name="s2"></slot>
-        </scroll-view>
-      </swiper-item>
-    </swiper>
+    c
   </view>
 </template>
 

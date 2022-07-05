@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable @typescript-eslint/no-floating-promises */
@@ -20,8 +21,8 @@ import {
 } from './sql/groupChatMember';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
-let sendHeartTime: any;
-let closeConnTime: any;
+let sendHeartTime: number;
+let closeConnTime: number;
 let socketTask: any;
 export const personMsg = mitt();
 
@@ -68,6 +69,7 @@ export function connectWebSocket(url: string, token: string): void {
   function _onMessage(res: any): void {
     const data = JSON.parse(res.data);
     const { content, messageType, sequenceId } = data;
+    console.log(content);
     // 回复ACK表示接受到信息
     if (messageType !== 1 && messageType !== 2) {
       _sendMessage(
@@ -88,8 +90,6 @@ export function connectWebSocket(url: string, token: string): void {
     } else if (messageType === 3) {
       // 3、一条个人消息
       personMsg.emit('msg', content);
-      console.log('收到消息');
-      console.log(content);
       insertRecord(
         content.fromId,
         content.fromId,
@@ -111,8 +111,6 @@ export function connectWebSocket(url: string, token: string): void {
     } else if (messageType === 4) {
       // 4、一条群聊消息
       personMsg.emit('gMsg', content);
-      console.log('收到消息');
-      console.log(content);
       insertRecord(
         content.groupId,
         content.fromId,
@@ -151,7 +149,6 @@ export function connectWebSocket(url: string, token: string): void {
       noticeStore.beApply();
     } else if (messageType === 11) {
       // 11、被同意添加好友
-      console.log('已成为好友');
       friendStore.agreeFriend(content.friend);
       sessionListStore.newMessage(
         content.friend.friendId,
@@ -283,7 +280,7 @@ export function connectWebSocket(url: string, token: string): void {
     } else if (messageType === 40) {
       // TODO 40、用户二维码更新
     } else if (messageType === 41) {
-      console.log(content);
+      // 41、创建群聊
       groupStore.newGroup(
         content.groupChatInfo,
         content.memberInfo,
@@ -347,12 +344,12 @@ export function connectWebSocket(url: string, token: string): void {
 export function _sendMessage(message: any): void {
   socketTask.send({
     data: message,
-    success() {
-      console.log(message);
-    },
-    fail() {
-      console.log(message);
-    },
+    // success() {
+    //   console.log(message);
+    // },
+    // fail() {
+    //   console.log(message);
+    // },
   });
 }
 // 退出登录关闭websocket

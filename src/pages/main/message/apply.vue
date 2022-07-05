@@ -1,25 +1,22 @@
 <script setup lang="ts">
-  import { onLoad } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import { ref } from 'vue';
   import { reqDealFriendApply } from '../../../server/api/friend';
-  import type { ApplyNotice } from '../../../server/api/notice';
-  import { reqApplyNotice } from '../../../server/api/notice';
+  import { useNoticeStore } from '../../../store/modules/noticeStore';
 
-  interface Apply {
-    applyInfo: ApplyNotice[];
-  }
-  const apply = reactive<Apply>({
-    applyInfo: [],
-  });
-  onLoad(async () => {
-    const data = await reqApplyNotice(apply.applyInfo.length);
-    apply.applyInfo.push(...data);
-  });
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
+  const noticeStore = useNoticeStore();
   // 处理好友申请
   async function dealApply(applyId: string, status: 0 | 1 | 2) {
-    console.log(applyId);
-    const data = await reqDealFriendApply(applyId, status);
-    console.log(data);
+    try {
+      await reqDealFriendApply(applyId, status);
+      message.value = '已添加好友';
+      success.value.popUp();
+    } catch (err) {
+      message.value = err as string;
+      fail.value.popUp();
+    }
   }
 </script>
 
@@ -40,7 +37,7 @@
     />
   </view>
   <view class="main">
-    <view v-for="(item, index) in apply.applyInfo" :key="index" class="apply-msg">
+    <view v-for="(item, index) in noticeStore.applyList" :key="index" class="apply-msg">
       <image :src="item.userAvatar" class="avatar" />
       <view class="apply">
         <view>
@@ -52,6 +49,8 @@
       </view>
     </view>
   </view>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

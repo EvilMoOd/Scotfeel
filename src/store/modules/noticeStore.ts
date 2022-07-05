@@ -1,49 +1,195 @@
 import { defineStore } from 'pinia';
 import type {
   ApplyNotice,
-  CommenterInfo,
+  CommentNotice,
+  ForwardNotice,
   LikeNotice,
   SubscribeNotice,
 } from '../../server/api/notice';
-import { reqApplyNotice } from '../../server/api/notice';
+import {
+  reqSubscribeNotice,
+  reqForwardNotice,
+  reqLikeNotice,
+  reqCommentsNotice,
+  reqApplyNotice,
+} from '../../server/api/notice';
 
-interface Notice {
-  applyMessage: number;
-  applyList: ApplyNotice[]; // 申请列表
-  commentMessage: number;
-  commentList: CommenterInfo[]; // 评论列表
-  likeMessage: number;
-  likeList: LikeNotice[]; // 点赞列表
-  subscribeMessage: number;
-  subscribeList: SubscribeNotice[]; // 订阅列表
-}
+const notice = uni.getStorageSync('notice');
 
 export const useNoticeStore = defineStore('notice', {
-  // TODO持久化存储
-  state: (): Notice => ({
-    applyMessage: 0,
-    applyList: [], // 申请列表
-    commentMessage: 0,
-    commentList: [], // 评论列表
-    likeMessage: 0,
-    likeList: [], // 点赞列表
-    subscribeMessage: 0,
-    subscribeList: [], // 订阅列表
+  state: () => ({
+    applyMessage: notice.applyMessage,
+    applyList: notice.applyList as ApplyNotice[], // 申请列表
+    commentMessage: notice.commentMessage,
+    commentList: [
+      {
+        momentId: 3,
+        momentType: 0,
+        content: 'gitGji',
+        commenterInfo: [
+          {
+            _id: '0d94b112969e4c0abfbd94464795a9a2',
+            nickname: '用户02',
+            avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+          },
+        ],
+        commenterFriendRemark: [],
+        userMomentInfo: [],
+        spaceMomentInfo: [],
+        commentType: 0,
+        createTime: 1653833113530,
+      },
+      {
+        momentId: 3,
+        momentType: 0,
+        content: 'gitGji',
+        commenterInfo: [
+          {
+            _id: '0d94b112969e4c0abfbd94464795a9a2',
+            nickname: '用户02',
+            avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+          },
+        ],
+        commenterFriendRemark: [],
+        userMomentInfo: [],
+        spaceMomentInfo: [],
+        commentType: 1,
+        createTime: 1653833141007,
+      },
+      {
+        momentId: 2,
+        momentType: 1,
+        content: 'b8SzIT',
+        commenterInfo: [
+          {
+            _id: '0d94b112969e4c0abfbd94464795a9a2',
+            nickname: '用户02',
+            avatar: '5111c3226aa49775fa6d0e6087d85359',
+          },
+        ],
+        commenterFriendRemark: [],
+        userMomentInfo: [],
+        spaceMomentInfo: [
+          {
+            content: 'EeYB',
+            photos: [
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+            ],
+          },
+        ],
+        commentType: 0,
+        createTime: 1653908167429,
+      },
+      {
+        momentId: 2,
+        momentType: 1,
+        content: 'b8SzIT',
+        commenterInfo: [
+          {
+            _id: '0d94b112969e4c0abfbd94464795a9a2',
+            nickname: '用户02',
+            avatar: '5111c3226aa49775fa6d0e6087d85359',
+          },
+        ],
+        commenterFriendRemark: [],
+        userMomentInfo: [],
+        spaceMomentInfo: [
+          {
+            content: 'EeYB',
+            photos: [
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+            ],
+          },
+        ],
+        commentType: 1,
+        createTime: 1653908215942,
+      },
+      {
+        momentId: 2,
+        momentType: 1,
+        content: 'b8SzIT',
+        commenterInfo: [
+          {
+            _id: '0d94b112969e4c0abfbd94464795a9a2',
+            nickname: '用户02',
+            avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+          },
+        ],
+        commenterFriendRemark: [],
+        userMomentInfo: [],
+        spaceMomentInfo: [
+          {
+            content: 'EeYB',
+            photos: [
+              'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+              'http://dummyimage.com/400x400',
+            ],
+          },
+        ],
+        commentType: 1,
+        createTime: 1653909600987,
+      },
+    ], // 评论列表
+    likeMessage: notice.likeMessage,
+    likeList: notice.likeList as LikeNotice[], // 点赞列表
+    forwardMessage: notice.forwardMessage,
+    forwardList: notice.forwardList as ForwardNotice[], // 转发列表
+    subscribeMessage: notice.subscribeMessage,
+    subscribeList: notice.subscribeList as SubscribeNotice[], // 订阅列表
   }),
   actions: {
-    beApply() {
-      this.applyMessage++;
+    // 被干嘛
+    async beApply() {
+      const data = await reqApplyNotice(this.applyList.length);
+      this.applyList.unshift(...data);
+      this.applyMessage += 1;
     },
-    beComment() {
-      this.commentMessage++;
+    async beComment() {
+      const data = await reqCommentsNotice(this.commentList[0].createTime);
+      this.commentList.unshift(...data);
+      this.commentMessage += 1;
     },
-    beLike() {
-      this.likeMessage++;
+    async beLike() {
+      const data = await reqLikeNotice(this.likeList[0].createTime);
+      this.likeList.unshift(...data);
+      this.likeMessage += 1;
     },
-    beSubscribe() {
-      this.subscribeMessage++;
+    async beForward() {
+      const data = await reqForwardNotice(this.forwardList[0].createTime);
+      this.forwardList.unshift(...data);
+      this.forwardMessage += 1;
     },
-    async getNoticeInfo() {
+    async beSubscribe() {
+      const data = await reqSubscribeNotice(0);
+      this.subscribeList.unshift(...data);
+      this.subscribeMessage += 1;
+    },
+    // 已读
+    messageRead() {
+      this.commentMessage = 0;
+      this.likeMessage = 0;
+      this.subscribeMessage = 0;
+      this.forwardMessage = 0;
+    },
+    applyRead() {
+      this.applyMessage = 0;
+    },
+    // 获取申请
+    async getApplyInfo() {
+      this.applyList = await reqApplyNotice(this.applyList.length);
+    },
+    async getMessageInfo() {
       this.applyList = await reqApplyNotice(this.applyList.length);
     },
   },

@@ -4,6 +4,8 @@
   import type { SessionListInfo } from '../../store/modules/sessionListStore';
   import { useSessionListStore } from '../../store/modules/sessionListStore';
   import 'dayjs/locale/zh-cn';
+  import { useUserStore } from '../../store/modules/userStore';
+  import { updateClearUnReadCount } from '../../server/sql/sessionList';
 
   day.extend(relativeTime);
   day.locale('zh-cn');
@@ -12,11 +14,13 @@
   }>();
 
   const sessionStore = useSessionListStore();
+  const userStore = useUserStore();
   // 前往聊天页详情
   function goChat(type: 1 | 2, params: string) {
     // 未读数量置0
     const index = sessionStore.sessionListInfo.findIndex((item) => item.sessionId === params);
     sessionStore.sessionListInfo[index].unReadCount = 0;
+    updateClearUnReadCount(params, userStore.userInfo?.mainId as string);
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     type === 1
       ? uni.navigateTo({ url: `/pages/main/chat/chat?sessionId=${params}` })

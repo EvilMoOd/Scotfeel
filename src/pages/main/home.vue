@@ -12,6 +12,10 @@
   const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
   const userStore = useUserStore();
+
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   console.log(userStore.token);
   console.log(userStore.userInfo);
 
@@ -47,6 +51,19 @@
     const group = await selectAllGroupChat(userStore.userInfo?.mainId as string);
     console.log(group);
     console.log(userStore.token);
+  }
+
+  // 退出登录
+  async function logout() {
+    try {
+      await userStore.userLogout();
+      message.value = '账号已退出';
+      success.value.popUp();
+      uni.redirectTo({ url: '/pages/login' });
+    } catch (err) {
+      message.value = '退出失败，请检查网络';
+      fail.value.popUp();
+    }
   }
 </script>
 
@@ -86,12 +103,14 @@
   </view>
 
   <!-- 个人中心 -->
-  <FunctionList :class="{ 'show-menu': isShow }" />
+  <FunctionList :class="{ 'show-menu': isShow }" :logout="logout" />
   <!-- 遮罩 -->
   <Mask :show="isShow" :hidden="displayPerson" />
   <view class="subscribe" @tap="goSubscribe">
     <uni-icons type="arrow-right" color="#fff" size="40" />
   </view>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

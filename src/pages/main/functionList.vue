@@ -6,6 +6,10 @@
   const userStore = useUserStore();
   const spaceStore = useSubscribeSpaceStore();
 
+  defineProps<{
+    logout: () => void;
+  }>();
+
   // 展示person
   const spaceShow = ref(false);
   // 打开订阅空间栏
@@ -37,12 +41,6 @@
   // 前往设置与隐私
   function goSetting() {
     uni.navigateTo({ url: '/pages/main/menu/setting' });
-  }
-
-  // 退出登录
-  function logout() {
-    userStore.userLogout();
-    uni.redirectTo({ url: '/pages/login' });
   }
 </script>
 

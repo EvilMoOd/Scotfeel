@@ -1,4 +1,7 @@
+import mitt from 'mitt';
 import type { ImgData } from '../server/api/user';
+
+export const imgMitt = mitt();
 
 interface UploadFileSuccessCallbackResult {
   /**

@@ -42,13 +42,13 @@ export interface CommentNotice {
   momentId: string;
   momentType: number;
   content: string;
-  commenterInfo: CommenterInfo;
+  commenterInfo: CommenterInfo[];
   userMomentInfo: UserMomentInfo[];
   spaceMomentInfo: any[];
-  commentType: number;
-  createTime: string;
+  commentType: 0 | 1;
+  createTime: number;
 }
-export const reqCommentsNotice = async (lastCommentTime: string): Promise<CommentNotice[]> =>
+export const reqCommentsNotice = async (lastCommentTime: number): Promise<CommentNotice[]> =>
   request<CommentNotice[]>({
     url: `/portal/notice/get/comments`,
     method: 'GET',
@@ -66,13 +66,36 @@ export interface LikeNotice {
   likerInfo: LikerInfo;
   userMomentInfo: UserMomentInfo[];
   spaceMomentInfo: any[];
-  createTime: string;
+  createTime: number;
 }
-export const reqLikeNotice = async (lastLikeTimestring: string): Promise<LikeNotice[]> =>
+export const reqLikeNotice = async (lastLikeTime: number): Promise<LikeNotice[]> =>
   request<LikeNotice[]>({
     url: `/portal/notice/get/likes`,
     method: 'GET',
-    data: { lastLikeTimestring },
+    data: { lastLikeTime },
+  });
+// 获取转发的通知信息
+export interface SpaceMomentInfo {
+  content: string;
+  photos: string[];
+}
+export interface LikerFriendRemark {
+  remarkName: string;
+}
+export interface ForwardNotice {
+  spaceMomentInfo: SpaceMomentInfo[];
+  likerInfo: LikerInfo[];
+  createTime: number;
+  userMomentInfo: UserMomentInfo[];
+  momentType: number;
+  momentId: number;
+  likerFriendRemark: LikerFriendRemark[];
+}
+export const reqForwardNotice = async (lastRepostTime: number): Promise<ForwardNotice[]> =>
+  request<ForwardNotice[]>({
+    url: `/portal/notice/get/reposts`,
+    method: 'GET',
+    data: { lastRepostTime },
   });
 // 获取订阅的通知信息
 export interface SubscribeNotice {
@@ -83,7 +106,7 @@ export interface SubscribeNotice {
   spaceNickname: string;
   createTime: string;
 }
-export const reqSubscribeNotice = async (offset: string): Promise<SubscribeNotice[]> =>
+export const reqSubscribeNotice = async (offset: number): Promise<SubscribeNotice[]> =>
   request<SubscribeNotice[]>({
     url: `/portal/notice/get/subscriptions`,
     method: 'GET',
