@@ -67,21 +67,38 @@ export const useFriendStore = defineStore('friend', {
       return friend;
     },
     agreeFriend(friendInfo: FriendInfo) {
-      this.friendsInfo.push(friendInfo);
-      console.log(this.friendsInfo);
-      insertFriend(
-        friendInfo.friendId,
-        friendInfo.nickname,
-        friendInfo.remarkName,
-        friendInfo.avatar,
-        friendInfo.spaceId,
-        friendInfo.isDeletedByFriend,
-        friendInfo.account,
-        friendInfo.backgroundImage,
-        friendInfo.signature,
-        friendInfo.noticeFlag,
-        user.userInfo.mainId
-      );
+      const index = this.friendsInfo.findIndex((item) => friendInfo.friendId === item.friendId);
+      if (index === -1) {
+        this.friendsInfo.push({
+          friendId: friendInfo.friendId,
+          nickname: friendInfo.nickname,
+          remarkName: friendInfo.remarkName,
+          avatar: friendInfo.avatar,
+          spaceId: friendInfo.spaceId,
+          isDeletedByFriend: 0,
+          account: friendInfo.account,
+          backgroundImage: friendInfo.backgroundImage,
+          signature: friendInfo.signature,
+          noticeFlag: friendInfo.noticeFlag,
+          belongToId: user.userInfo.mainId,
+        });
+        insertFriend(
+          friendInfo.friendId,
+          friendInfo.nickname,
+          friendInfo.remarkName,
+          friendInfo.avatar,
+          friendInfo.spaceId,
+          0,
+          friendInfo.account,
+          friendInfo.backgroundImage,
+          friendInfo.signature,
+          friendInfo.noticeFlag,
+          user.userInfo.mainId
+        );
+      } else {
+        this.friendsInfo[index].isDeletedByFriend = 0;
+        updateIsDeletedByFriend(0, this.friendsInfo[index].friendId, user.userInfo.mainId);
+      }
     },
     async changeRemark(remark: string, friendId: string) {
       await reqChangeFriendRemark(remark, friendId);
@@ -92,7 +109,7 @@ export const useFriendStore = defineStore('friend', {
     async deleteFriend(friendId: string) {
       await reqDeleteFriend(friendId);
       const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
-      this.friendsInfo.splice(index, 1);
+      this.friendsInfo[index].isDeletedByFriend = 1;
       await updateIsDeletedByFriend(1, friendId, user.userInfo.mainId);
     },
     async updateFriendAvatar(friendId: string, avatar: string, belongToId: string) {

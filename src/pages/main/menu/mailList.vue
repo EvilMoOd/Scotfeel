@@ -30,11 +30,13 @@
     </view>
     <view class="mail">
       <view v-for="friend in friendStore.friendsInfo" :key="friend.friendId">
-        <view class="list" @tap="goFriendDetail(friend.friendId)">
-          <view v-if="friend.isDeletedByFriend === 0">
-            <image :src="friend.avatar" class="avatar" />
-            <text class="nickname">{{ friend.nickname }}</text>
-          </view>
+        <view
+          v-if="friend.isDeletedByFriend === 0"
+          class="list"
+          @tap="goFriendDetail(friend.friendId)"
+        >
+          <image :src="friend.avatar" class="avatar" />
+          <text class="nickname">{{ friend.nickname }}</text>
         </view>
       </view>
     </view>

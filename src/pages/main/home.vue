@@ -77,8 +77,13 @@
         <uni-badge :text="noticeStore.totalMessage" size="small" class="msg-tip"></uni-badge>
       </view>
       <view class="new-apply" @tap="goApply">
-        <uni-icons type="person" color="#fff" size="4vh" />
-        <uni-badge :text="noticeStore.applyMessage" size="small" class="msg-tip2"></uni-badge>
+        <uni-icons type="person" color="#fff" size="4vh" @tap="noticeStore.applyRead" />
+        <uni-badge
+          :text="noticeStore.applyMessage"
+          size="small"
+          class="msg-tip2"
+          @tap="noticeStore.messageRead"
+        ></uni-badge>
       </view>
       <uni-icons
         type="search"

@@ -14,6 +14,7 @@ import { OBS_URL } from '../../server/http';
 import { deleteFriendTable } from '../../server/sql/friend';
 import { deleteGroupTable } from '../../server/sql/groupChat';
 import { deleteGroupMemberTable } from '../../server/sql/groupChatMember';
+import { logoutCloseWebsocket } from '../../server/webSocket';
 import { imgMitt, uploadImage } from '../../util/uploadImage';
 import { useFriendStore } from './friendStore';
 import { useGroupChatStore } from './groupStore';
@@ -46,6 +47,8 @@ export const useUserStore = defineStore('user', {
       await reqUserLogout();
       this.userInfo = undefined;
       this.token = undefined;
+      uni.removeStorageSync('notice');
+      logoutCloseWebsocket();
       deleteFriendTable();
       deleteGroupTable();
       deleteGroupMemberTable();

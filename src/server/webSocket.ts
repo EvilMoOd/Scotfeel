@@ -149,7 +149,7 @@ export function connectWebSocket(url: string, token: string): void {
       noticeStore.beApply();
     } else if (messageType === 11) {
       // 11、被同意添加好友
-      friendStore.agreeFriend(content.friend);
+      friendStore.agreeFriend(content);
       sessionListStore.newMessage(
         content.friend.friendId,
         `你好，我是${content.nickname as string}`,

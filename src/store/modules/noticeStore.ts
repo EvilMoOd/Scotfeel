@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia';
 import type {
   ApplyNotice,
-  CommentNotice,
   ForwardNotice,
   LikeNotice,
   SubscribeNotice,
@@ -18,9 +17,9 @@ const notice = uni.getStorageSync('notice');
 
 export const useNoticeStore = defineStore('notice', {
   state: () => ({
-    applyMessage: notice.applyMessage,
-    applyList: notice.applyList as ApplyNotice[], // 申请列表
-    commentMessage: notice.commentMessage,
+    applyMessage: notice.applyMessage ?? 0,
+    applyList: notice.applyList ?? ([] as ApplyNotice[]), // 申请列表
+    commentMessage: notice.commentMessage ?? 0,
     commentList: [
       {
         momentId: 3,
@@ -141,12 +140,12 @@ export const useNoticeStore = defineStore('notice', {
         createTime: 1653909600987,
       },
     ], // 评论列表
-    likeMessage: notice.likeMessage,
-    likeList: notice.likeList as LikeNotice[], // 点赞列表
-    forwardMessage: notice.forwardMessage,
-    forwardList: notice.forwardList as ForwardNotice[], // 转发列表
-    subscribeMessage: notice.subscribeMessage,
-    subscribeList: notice.subscribeList as SubscribeNotice[], // 订阅列表
+    likeMessage: notice.likeMessage ?? 0,
+    likeList: notice.likeList ?? ([] as LikeNotice[]), // 点赞列表
+    forwardMessage: notice.forwardMessage ?? 0,
+    forwardList: notice.forwardList ?? ([] as ForwardNotice[]), // 转发列表
+    subscribeMessage: notice.subscribeMessage ?? 0,
+    subscribeList: notice.subscribeList ?? ([] as SubscribeNotice[]), // 订阅列表
   }),
   actions: {
     // 被干嘛
@@ -191,6 +190,10 @@ export const useNoticeStore = defineStore('notice', {
     },
     async getMessageInfo() {
       this.applyList = await reqApplyNotice(this.applyList.length);
+    },
+    // 处理申请
+    dealApply(index: number) {
+      this.applyList.splice(index, 1);
     },
   },
   getters: {

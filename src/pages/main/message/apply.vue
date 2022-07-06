@@ -7,11 +7,18 @@
   const success = ref<any>(null);
   const fail = ref<any>(null);
   const noticeStore = useNoticeStore();
+  console.log(noticeStore.$state);
   // 处理好友申请
   async function dealApply(applyId: string, status: 0 | 1 | 2) {
     try {
       await reqDealFriendApply(applyId, status);
-      message.value = '已添加好友';
+      const index = noticeStore.applyList.findIndex((item) => item.applyId === applyId);
+      noticeStore.dealApply(index);
+      if (status === 1) {
+        message.value = '已添加好友';
+      } else if (status === 2) {
+        message.value = '已拒绝';
+      }
       success.value.popUp();
     } catch (err) {
       message.value = err as string;
