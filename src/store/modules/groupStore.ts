@@ -11,6 +11,7 @@ import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import {
   insertGroup,
+  batchInsertGroup,
   selectAllGroupChat,
   updateAvatar,
   updateIsDismissed,
@@ -20,7 +21,10 @@ import {
   updateSpaceId,
   updateSpaceNickname,
 } from '../../server/sql/groupChat';
-import { insertGroupMember } from '../../server/sql/groupChatMember';
+import { 
+  insertGroupMember,
+  batchInsertGroupMember
+   } from '../../server/sql/groupChatMember';
 import { uploadImage } from '../../util/uploadImage';
 
 export interface Group {
@@ -54,33 +58,68 @@ export const useGroupChatStore = defineStore('groupChatStore', {
     loginInit(groupChat: GroupChat[], belongToId: string, groupChatMember: GroupMember[]) {
       this.groupInfo = groupChat;
       // 所有群聊信心载入数据库
-      for (const g of groupChat) {
-        insertGroup(
-          g.groupId,
-          g.nickname,
-          g.avatar,
-          g.memberCount,
-          g.spaceId,
-          g.spaceNickname,
-          g.spaceAvatar,
-          g.noticeFlag,
-          g.isDismissed,
-          belongToId
-        );
+      // for (const g of groupChat) {
+      //   insertGroup(
+      //     g.groupId,
+      //     g.nickname,
+      //     g.avatar,
+      //     g.memberCount,
+      //     g.spaceId,
+      //     g.spaceNickname,
+      //     g.spaceAvatar,
+      //     g.noticeFlag,
+      //     g.isDismissed,
+      //     belongToId
+      //   );
+      // }
+      let sqlStr = `insert into groupChat values `;
+      let length = groupChat.length;
+      var i = 0;
+      //一次插入5000条记录，不然会报request entity too large        
+      for(var i = 0; i * 5000 < length ;i++){
+        for(var x = i * 5000; x < length && x < 5000 * (i+1); x++){
+          let sqlStrTemp = `("${groupChat[x].groupId}","${groupChat[x].nickname}","${groupChat[x].avatar}","${groupChat[x].memberCount}","${groupChat[x].spaceId}",
+          "${groupChat[x].spaceNickname}","${groupChat[x].spaceAvatar}","${groupChat[x].noticeFlag}","${groupChat[x].isDismissed}","${belongToId}")`;
+          if(x != (length -1) && x != (5000 * (i+1) -1)){
+            sqlStrTemp = sqlStrTemp + `,`;
+          }
+          sqlStr = sqlStr + sqlStrTemp;
+        }
+        batchInsertGroup(sqlStr)
+         //复原
+        sqlStr = `insert into groupChat values `;
       }
       // 所有群成员载入数据库
-      for (const g of groupChatMember) {
-        insertGroupMember(
-          g.groupId,
-          g.memberId,
-          g.nickname,
-          g.remarkName,
-          g.avatar,
-          g.role,
-          g.isExited,
-          belongToId
-        );
+      // for (const g of groupChatMember) {
+      //   insertGroupMember(
+      //     g.groupId,
+      //     g.memberId,
+      //     g.nickname,
+      //     g.remarkName,
+      //     g.avatar,
+      //     g.role,
+      //     g.isExited,
+      //     belongToId
+      //   );
+      // }			
+      sqlStr = `insert into groupChatMember values `;
+      length = groupChat.length;
+      i = 0;
+      //一次插入5000条记录，不然会报request entity too large        
+      for(var i = 0; i * 5000 < length ;i++){
+        for(var x = i * 5000; x < length && x < 5000 * (i+1); x++){
+          let sqlStrTemp = `("${groupChatMember[x].groupId}","${groupChatMember[x].memberId}","${groupChatMember[x].nickname}","${groupChatMember[x].remarkName}","${groupChatMember[x].avatar}",
+          "${groupChatMember[x].role}","${groupChatMember[x].isExited}","${belongToId}")`;
+          if(x != (length -1) && x != (5000 * (i+1) -1)){
+            sqlStrTemp = sqlStrTemp + `,`;
+          }
+          sqlStr = sqlStr + sqlStrTemp;
+        }
+        batchInsertGroupMember(sqlStr)
+         //复原
+        sqlStr = `insert into groupChatMember values `;
       }
+
     },
     // 创建或被拉入新的群聊
     newGroup(groupChatInfo: GroupChat, memberInfo: GroupMember[], belongToId: string) {

@@ -47,6 +47,15 @@ export function insertFriend(
 	`);
 }
 
+// 批量插入数据
+export function batchInsertFriend(
+  sql: string
+): void {
+  return executeSql(
+    sql
+  );
+}
+
 // 删除记录
 export function deleteRecord(friendId: string, belongToId: string): void {
   return executeSql(`

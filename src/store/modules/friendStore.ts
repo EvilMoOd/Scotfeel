@@ -3,6 +3,7 @@ import { reqChangeFriendRemark, reqDeleteFriend } from '../../server/api/friend'
 import type { FriendInfo } from '../../server/api/user';
 import {
   insertFriend,
+  batchInsertFriend,
   selectAllFriends,
   updateAccount,
   updateAvatar,
@@ -45,21 +46,38 @@ export const useFriendStore = defineStore('friend', {
     loginInit(friends: FriendInfo[], belongToId: string) {
       this.friendsInfo = friends;
       // eslint-disable-next-line no-restricted-syntax
-      for (const f of friends) {
-        insertFriend(
-          f.friendId,
-          f.nickname,
-          f.remarkName,
-          f.avatar,
-          f.spaceId,
-          f.isDeletedByFriend,
-          f.account,
-          f.backgroundImage,
-          f.signature,
-          f.noticeFlag,
-          belongToId
-        );
-      }
+      // for (const f of friends) {
+      //   insertFriend(
+      //     f.friendId,
+      //     f.nickname,
+      //     f.remarkName,
+      //     f.avatar,
+      //     f.spaceId,
+      //     f.isDeletedByFriend,
+      //     f.account,
+      //     f.backgroundImage,
+      //     f.signature,
+      //     f.noticeFlag,
+      //     belongToId
+      //   );
+      // }
+        let sqlStr = `insert into friend values `;
+        let length = friends.length;
+        var i = 0;
+        //一次插入5000条记录，不然会报request entity too large        
+        for(var i = 0; i * 5000 < length ;i++){
+          for(var x = i * 5000; x < length && x < 5000 * (i+1); x++){
+            let sqlStrTemp = `("${friends[x].friendId}","${friends[x].nickname}","${friends[x].remarkName}","${friends[x].avatar}","${friends[x].spaceId}",
+            "${friends[x].isDeletedByFriend}","${friends[x].account}","${friends[x].backgroundImage}","${friends[x].noticeFlag}","${belongToId}","${friends[x].signature}")`;
+            if(x != (length -1) && x != (5000 * (i+1) -1)){
+              sqlStrTemp = sqlStrTemp + `,`;
+            }
+            sqlStr = sqlStr + sqlStrTemp;
+          }
+           batchInsertFriend(sqlStr)
+           //复原
+          sqlStr = `insert into friend values `;
+        }
     },
     getFriendInfo(friendId: string) {
       const friend = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
