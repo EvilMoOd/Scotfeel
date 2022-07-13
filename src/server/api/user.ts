@@ -184,3 +184,13 @@ export const reqImgData = async (): Promise<ImgData> =>
     url: `/portal/OBS/get/formData`,
     method: 'GET',
   });
+export interface ImData {
+  ip: string;
+  port: number;
+}
+// ws
+export const reqImNode = async (): Promise<ImData> =>
+  request<ImData>({
+    url: `/portal/zookeeper/getBestImNode`,
+    method: 'GET',
+  });

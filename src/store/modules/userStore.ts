@@ -71,8 +71,8 @@ export const useUserStore = defineStore('user', {
         },
         1,
         {
-          width: 48,
-          height: 48,
+          width: 480,
+          height: 480,
         }
       );
     },

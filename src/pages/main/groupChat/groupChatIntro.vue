@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import {
     reqChangeMemberRole,
     reqChangeRemark,
@@ -17,9 +17,13 @@
   } from '../../../server/sql/groupChatMember';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
   import { useUserStore } from '../../../store/modules/userStore';
+  import { imgMitt } from '../../../util/uploadImage';
 
   const userStore = useUserStore();
   const groupStore = useGroupChatStore();
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   // 获取群成员信息
   const group = reactive<{ groupMember: GroupMember[] }>({
     groupMember: [],
@@ -30,6 +34,7 @@
     groupStore.getGroupInfo(sessionId);
     const groupMember = await selectAllMemberInfo(sessionId, userStore.userInfo?.mainId as string);
     group.groupMember = groupMember.filter((item) => item.isExited === 0);
+    console.log(group.groupMember);
   });
 
   // 展示功能块
@@ -60,27 +65,54 @@
     show.isShowConfig = false;
     show.isShow = true;
   }
+  // 修改群聊头像
+  async function changeGroupAvatar() {
+    try {
+      await groupStore.changeAvatar(sessionId);
+      imgMitt.on('groupAvatar', () => {
+        message.value = '头像修改成功';
+        success.value.popUp();
+      });
+    } catch (err) {
+      message.value = '头像修改失败';
+      fail.value.popUp();
+    }
+  }
   // 修改群聊昵称
   const Input = reactive({
     nickname: '',
     remark: '',
   });
-  function changeGroupNickname(e: string) {
-    groupStore.changeNickname(e, sessionId);
-    show.isShowChangeRemark = false;
-    Input.remark = '';
+  async function changeGroupNickname(e: string) {
+    try {
+      await groupStore.changeNickname(e, sessionId);
+      Input.nickname = '';
+      hiddenAll();
+      message.value = '昵称修改成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '昵称修改失败';
+      fail.value.popUp();
+    }
   }
   // 修改我的群聊备注
   const setMyRemark = async (e: string) => {
-    await reqChangeRemark(e, sessionId);
-    show.isShowChangeRemark = false;
-    Input.remark = '';
-    updateGMRemarkName(
-      e,
-      sessionId,
-      userStore.userInfo?.mainId as string,
-      userStore.userInfo?.mainId as string
-    );
+    try {
+      await reqChangeRemark(e, sessionId);
+      hiddenAll();
+      Input.remark = '';
+      updateGMRemarkName(
+        e,
+        sessionId,
+        userStore.userInfo?.mainId as string,
+        userStore.userInfo?.mainId as string
+      );
+      message.value = '昵称修改成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '昵称修改失败';
+      fail.value.popUp();
+    }
   };
   // 解散群聊
   const dismissGroup = async () => {
@@ -166,7 +198,8 @@
         <uni-swipe-action-item v-for="item in group.groupMember" :key="item.groupId">
           <view class="item">
             <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
-            <text>{{ item.nickname }}</text>
+            <text v-if="item.remarkName && item.remarkName !== 'null'">{{ item.remarkName }}</text>
+            <text v-else>{{ item.nickname }}</text>
             <view v-if="item.role === 0" style="float: right; color: #3ea8c2; margin-top: 10rpx">
               群主
             </view>
@@ -222,7 +255,7 @@
       />
     </view>
     <text @tap="showChangeNickname">修改群聊昵称</text>
-    <text @tap="groupStore.changeAvatar(sessionId)">设置头像</text>
+    <text @tap="changeGroupAvatar">设置头像</text>
     <text style="color: #d9001b" @tap="dismissGroup">解散</text>
   </GradientWindow>
   <PopWindow :pop-show="show.isShowChangeNickname">
@@ -233,7 +266,7 @@
       trim
       maxlength="10"
       :styles="{ borderColor: '#fff' }"
-      @confirm="(e:string) => changeGroupNickname"
+      @confirm="changeGroupNickname"
     />
   </PopWindow>
   <PopWindow :pop-show="show.isShowChangeRemark">
@@ -248,6 +281,8 @@
     />
   </PopWindow>
   <Mask :show="show.isShow" :hidden="hiddenAll" />
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

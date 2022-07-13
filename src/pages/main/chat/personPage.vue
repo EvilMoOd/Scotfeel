@@ -43,6 +43,7 @@
       personInfo.pageType = 2;
       personInfo.personPage.userId = friendStore.friendPage.friendId;
       personInfo.personPage.nickname = friendStore.friendPage.nickname;
+      personInfo.personPage.remarkName = friendStore.friendPage.remarkName;
       personInfo.personPage.account = friendStore.friendPage.account;
       personInfo.personPage.avatar = friendStore.friendPage.avatar;
       personInfo.personPage.backgroundImage = `url(${friendStore.friendPage.backgroundImage})`;
@@ -171,7 +172,7 @@
       await friendStore.changeRemark(remark.value, personInfo.personPage.userId);
       message.value = '备注已修改';
       success.value.popUp();
-      message.value.hiddenAll();
+      hiddenAll();
       personInfo.personPage.remarkName = remark.value;
       remark.value = '';
     } catch (err) {
@@ -209,6 +210,7 @@
       url: `/pages/main/chat/addFriends?appliedUserId=${personInfo.personPage.userId}`,
     });
   }
+  console.log(personInfo.personPage.remarkName);
 </script>
 
 <template>
@@ -236,7 +238,7 @@
       <image :src="personInfo.personPage.avatar" mode="scaleToFill" class="avatar" />
       <view>
         <text
-          v-if="personInfo.personPage.remarkName"
+          v-if="personInfo.personPage.remarkName && personInfo.personPage.remarkName !== 'null'"
           style="font-size: 34rpx; font-weight: bold; color: #eee"
         >
           {{ personInfo.personPage.remarkName }}

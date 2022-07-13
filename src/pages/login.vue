@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue';
-  import { reqAuthCode } from '../server/api/user';
+  import { reqAuthCode, reqImNode } from '../server/api/user';
   import { connectWebSocket } from '../server/webSocket';
   import { useUserStore } from '../store/modules/userStore';
 
@@ -34,7 +34,11 @@
       try {
         await userStore.userLogin(user.phone, user.authCode);
         uni.redirectTo({ url: '/pages/main/home' });
-        connectWebSocket(`wss://www.scotfeel.com/wss/`, userStore.token as string);
+        const im = await reqImNode();
+        connectWebSocket(
+          `wss://www.scotfeel.com/wss/${im.ip}${im.port}`,
+          userStore.token as string
+        );
       } catch (error: any) {
         message.value = error;
         fail.value.popUp();

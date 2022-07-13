@@ -159,7 +159,7 @@ export function connectWebSocket(url: string, token: string): void {
       );
     } else if (messageType === 12) {
       // 12、被删除好友
-      // TODO 会话列表移除新好友，好友store移除新好友信息
+      friendStore.beDeleteFriend(content.friendId);
     } else if (messageType === 13) {
       // 13、更新好友头像
       friendStore.updateFriendAvatar(
@@ -204,6 +204,7 @@ export function connectWebSocket(url: string, token: string): void {
       );
     } else if (messageType === 19) {
       // TODO 19、被同意加入群聊
+      console.log(content.groupInfo);
     } else if (messageType === 20) {
       // TODO 20、被移除群聊
     } else if (messageType === 21) {

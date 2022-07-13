@@ -32,7 +32,7 @@ export function insertGroupMember(
   belongToId: string
 ): void {
   return executeSql(`
-				insert into groupChatMember values ("${groupId}","${memberId}","${nickname}","${remarkName}","${avatar}","${role}","${isExited}","${belongToId}")
+				insert into groupChatMember values ("${groupId}","${memberId}","${nickname}","${avatar}","${remarkName}","${role}","${isExited}","${belongToId}")
 			`);
 }
 

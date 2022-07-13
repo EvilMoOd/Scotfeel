@@ -21,7 +21,7 @@ import {
   updateSpaceNickname,
 } from '../../server/sql/groupChat';
 import { insertGroupMember } from '../../server/sql/groupChatMember';
-import { uploadImage } from '../../util/uploadImage';
+import { imgMitt, uploadImage } from '../../util/uploadImage';
 
 export interface Group {
   groupInfo: GroupChat[];
@@ -119,19 +119,10 @@ export const useGroupChatStore = defineStore('groupChatStore', {
     },
     // 修改群聊信息
     async changeNickname(nickname: string, groupId: string) {
-      try {
-        await reqChangeGroupChatNickname(nickname, groupId);
-        const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
-        this.groupInfo[index].nickname = nickname;
-        await updateNickname(nickname, groupId, user.userInfo.mainId);
-        uni.showModal({
-          title: '修改成功',
-        });
-      } catch (err) {
-        uni.showModal({
-          title: '修改失败，请检查网络',
-        });
-      }
+      await reqChangeGroupChatNickname(nickname, groupId);
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo[index].nickname = nickname;
+      await updateNickname(nickname, groupId, user.userInfo.mainId);
     },
     async changeAvatar(groupId: string) {
       const imgData = await reqImgData();
@@ -143,11 +134,12 @@ export const useGroupChatStore = defineStore('groupChatStore', {
           const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
           this.groupInfo[index].avatar = imgUrl;
           await updateAvatar(imgUrl, this.groupInfo[index].groupId, user.userInfo.mainId);
+          imgMitt.emit('groupAvatar');
         },
         1,
         {
-          width: 48,
-          height: 48,
+          width: 480,
+          height: 480,
         }
       );
     },

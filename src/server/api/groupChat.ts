@@ -33,8 +33,9 @@ export const reqDealJoinMessage = async (applyId: string, status: 0 | 1 | 2): Pr
 export const reqUpdateGroupChatAvatar = async (avatar: string, groupId: string): Promise<null> =>
   request<null>({
     url: `/portal/groupChat/update/avatar`,
-    method: 'GET',
+    method: 'POST',
     data: { avatar, groupId },
+    type: 'application/x-www-form-urlencoded',
   });
 // 更新群聊昵称
 export const reqChangeGroupChatNickname = async (

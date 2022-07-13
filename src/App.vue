@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
-  import { reqValidateToken } from './server/api/user';
+  import { reqImNode, reqValidateToken } from './server/api/user';
   import { createChatRecordTable } from './server/sql/chatRecord';
   import { createFriendTable } from './server/sql/friend';
   import { createGroupChatTable } from './server/sql/groupChat';
@@ -48,8 +48,9 @@
       friendStore.init(userStore.userInfo?.mainId as string);
       groupStore.init(userStore.userInfo?.mainId as string);
       spaceStore.init(userStore.userInfo?.mainId as string);
+      const im = await reqImNode();
       setTimeout(() => {
-        connectWebSocket(`wss://www.scotfeel.com/wss/`, token);
+        connectWebSocket(`wss://www.scotfeel.com/wss/${im.ip}${im.port}`, token);
       }, 1000);
     }
   }

@@ -62,7 +62,9 @@ export const useFriendStore = defineStore('friend', {
       }
     },
     getFriendInfo(friendId: string) {
-      const friend = this.friendsInfo.find((item) => item.friendId === friendId) as FriendInfo;
+      const friend = this.friendsInfo.find(
+        (item) => item.friendId === friendId && item.isDeletedByFriend !== 1
+      ) as FriendInfo;
       this.friendPage = friend;
       return friend;
     },
@@ -141,6 +143,12 @@ export const useFriendStore = defineStore('friend', {
       const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
       this.friendsInfo[index].spaceId = spaceId;
       await updateSpaceId(spaceId, friendId, belongToId);
+    },
+    // 被好友删除
+    async beDeleteFriend(friendId: string) {
+      const index = this.friendsInfo.findIndex((item) => item.friendId === friendId);
+      this.friendsInfo[index].isDeletedByFriend = 1;
+      await updateIsDeletedByFriend(1, friendId, user.userInfo.mainId);
     },
   },
   getters: {},

@@ -36,7 +36,10 @@
           @tap="goFriendDetail(friend.friendId)"
         >
           <image :src="friend.avatar" class="avatar" />
-          <text class="nickname">{{ friend.nickname }}</text>
+          <text v-if="friend.remarkName && friend.remarkName !== 'null'" class="nickname">
+            {{ friend.remarkName }}
+          </text>
+          <text v-else class="nickname">{{ friend.nickname }}</text>
         </view>
       </view>
     </view>
