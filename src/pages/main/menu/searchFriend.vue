@@ -43,20 +43,24 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     justify-content: center;
-    font-size: 36rpx;
-    font-weight: bold;
     color: #fff;
+    font-weight: bold;
+    font-size: 36rpx;
+
     .back {
       position: absolute;
       top: 80rpx;
       left: 20rpx;
     }
+
     .title {
       margin-top: 80rpx;
     }
   }
+
   .main {
     .personInfo {
       display: flex;
@@ -64,8 +68,8 @@
       .avatar {
         width: 96rpx;
         height: 96rpx;
-        border-radius: 50%;
         margin: 32rpx;
+        border-radius: 50%;
       }
 
       .personMsg {
@@ -79,8 +83,8 @@
         }
 
         .content {
-          font-size: 22rpx;
           color: #aaa;
+          font-size: 22rpx;
         }
       }
     }

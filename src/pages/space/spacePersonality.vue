@@ -9,25 +9,25 @@
     <view class="item">
       <text>
         设置为私密空间
-        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+        <switch color="#117986" style=" margin: -10rpx -20rpx 0;transform: scale(0.5)" />
       </text>
     </view>
     <view class="item">
       <text>
         设置为私密空间
-        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+        <switch color="#117986" style=" margin: -10rpx -20rpx 0;transform: scale(0.5)" />
       </text>
     </view>
     <view class="item">
       <text>
         设置为私密空间
-        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+        <switch color="#117986" style=" margin: -10rpx -20rpx 0;transform: scale(0.5)" />
       </text>
     </view>
     <view class="item">
       <text>
         设置为私密空间
-        <switch color="#117986" style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx" />
+        <switch color="#117986" style=" margin: -10rpx -20rpx 0;transform: scale(0.5)" />
       </text>
     </view>
   </view>
@@ -36,20 +36,24 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
+    overflow: hidden;
     color: #fff;
     text-align: center;
-    overflow: hidden;
+
     .back {
       position: absolute;
       top: 80rpx;
       left: 20rpx;
     }
+
     .title {
       margin-top: 82rpx;
-      font-size: 40rpx;
       font-weight: bold;
+      font-size: 40rpx;
     }
   }
+
   .main {
     .item {
       padding: 30rpx 50rpx;

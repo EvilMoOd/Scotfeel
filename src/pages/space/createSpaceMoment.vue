@@ -96,20 +96,23 @@
 <style lang="scss" scoped>
   .header {
     @include header;
-    color: #fff;
+
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
-    padding: 30rpx;
+    justify-content: space-between;
     box-sizing: border-box;
+    padding: 30rpx;
+    color: #fff;
   }
+
   .main {
     position: relative;
     padding: 70rpx;
+
     .avatar {
       position: absolute;
-      left: calc(50vw - 24px);
       top: -40rpx;
+      left: calc(50vw - 24px);
     }
   }
 </style>

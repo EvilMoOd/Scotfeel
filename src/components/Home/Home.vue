@@ -13,7 +13,7 @@
 <style lang="scss" scoped>
   .home {
     position: absolute;
-    left: 20rpx;
     top: 60rpx;
+    left: 20rpx;
   }
 </style>

@@ -29,34 +29,39 @@
 <style lang="scss" scoped>
   .pop {
     position: absolute;
-    z-index: 100;
-    top: 0vh;
+    top: 0;
     left: 15vw;
-    width: 70vw;
-    transition: 0.5s;
+    z-index: 100;
     display: flex;
     justify-content: center;
+    width: 70vw;
     padding: 3vw;
     border-radius: 30rpx;
-    box-shadow: 0 3px 8px 6px rgba(7, 17, 27, 0.06);
+    box-shadow: 0 3px 8px 6px rgb(7 17 27 / 6%);
+    transition: 0.5s;
+
     &:hover {
-      box-shadow: 0 3px 8px 6px rgba(7, 17, 27, 0.15);
+      box-shadow: 0 3px 8px 6px rgb(7 17 27 / 15%);
       transition: all 0.3s;
     }
   }
+
   .success {
-    background-color: #e1f3d8;
     color: #b1cf4a;
+    background-color: #e1f3d8;
   }
+
   .fail {
-    background-color: #fde2e2;
     color: #f793a9;
+    background-color: #fde2e2;
   }
+
   .pop-in {
     transform: translateY(100rpx);
     visibility: hidden;
     opacity: 0;
   }
+
   .pop-out {
     transform: translateY(200rpx);
     visibility: visible;

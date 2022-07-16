@@ -57,8 +57,8 @@
     .user-avatar {
       width: 96rpx;
       height: 96rpx;
-      border-radius: 50%;
       margin: 27rpx;
+      border-radius: 50%;
     }
 
     .chat-place {
@@ -73,9 +73,9 @@
       }
 
       .time {
+        float: right;
         color: #797979;
         font-size: 26rpx;
-        float: right;
       }
 
       .content {

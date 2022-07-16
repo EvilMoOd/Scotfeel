@@ -131,14 +131,14 @@
         display: inline-block;
         margin-left: 26rpx;
         margin-top: 86rpx;
-        font-weight: bold;
         font-size: 40rpx;
+        font-weight: bold;
         color: #fff;
       }
 
       .notice {
-        position: absolute;
         top: 86rpx;
+        position: absolute;
         left: 592rpx;
         .msg-tip {
           position: absolute;
@@ -174,7 +174,6 @@
       }
     }
   }
-
   .show-menu {
     visibility: visible;
     opacity: 1;

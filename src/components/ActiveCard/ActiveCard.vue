@@ -89,7 +89,7 @@
     </view>
   </view>
   <PopBottom :pop-show="show.showDeleteMoment">
-    <view style="color: red; margin: 50rpx 0; text-align: center" @tap="deleteMoment">
+    <view style=" margin: 50rpx 0;color: red; text-align: center" @tap="deleteMoment">
       确定删除动态？（该操作不可逆）
     </view>
   </PopBottom>
@@ -99,27 +99,28 @@
   .post {
     // height: 730rpx;
     width: 678rpx;
-    padding: 60rpx 36rpx;
-    border-radius: 15rpx;
-    background-color: #fff;
     margin-bottom: 20rpx;
+    padding: 60rpx 36rpx;
     font-size: 28rpx;
+    background-color: #fff;
+    border-radius: 15rpx;
 
     .user {
-      font-size: 28rpx;
       margin-bottom: 10rpx;
+      font-size: 28rpx;
 
       .avatar {
-        height: 66rpx;
         width: 66rpx;
-        border-radius: 50%;
-        vertical-align: middle;
+        height: 66rpx;
         margin-right: 30rpx;
+        vertical-align: middle;
+        border-radius: 50%;
       }
     }
 
     .image-container {
       position: relative;
+
       .pageindex {
         position: absolute;
         top: 500rpx;
@@ -127,22 +128,24 @@
         z-index: 10;
         width: 82rpx;
         height: 46rpx;
-        background-color: #666060;
-        text-align: center;
-        line-height: 46rpx;
-        border-radius: 30rpx;
         color: #fff;
+        line-height: 46rpx;
+        text-align: center;
+        background-color: #666060;
+        border-radius: 30rpx;
         opacity: 0.5;
       }
+
       .picture {
         height: 566rpx;
         object-fit: cover;
+
         .post-img {
-          height: 100%;
           width: 100%;
-          border-radius: 10rpx;
+          height: 100%;
           margin: 2rpx;
           margin-top: 20rpx;
+          border-radius: 10rpx;
         }
       }
     }
@@ -150,9 +153,9 @@
     .post-state {
       display: flex;
       justify-content: space-between;
+      height: 1.5em;
       margin-top: 20rpx;
       line-height: 1.5em;
-      height: 1.5em;
     }
   }
 </style>

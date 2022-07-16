@@ -110,38 +110,39 @@
 <style lang="scss" scoped>
   // 侧边栏
   .menu {
-    height: 100vh;
-    width: 65%;
     position: absolute;
     z-index: 20;
+    width: 65%;
+    height: 100vh;
     background-color: #fff;
+    transform: translateX(-400rpx);
     visibility: hidden;
     opacity: 0;
-    transform: translateX(-400rpx);
     transition: 0.5s;
+
     .person-top {
       position: absolute;
       z-index: 20;
       width: 100%;
       height: 150rpx;
-      background-color: $color-sf;
       padding-top: 50rpx;
       overflow: hidden;
+      background-color: $color-sf;
 
       .person-place {
         display: flex;
 
         .avatar {
-          margin: 0 30rpx 0 24rpx;
           width: 80rpx;
           height: 80rpx;
+          margin: 0 30rpx 0 24rpx;
           border-radius: 50%;
         }
 
         .person-msg {
+          width: 36.5vw;
           color: #fff;
           font-size: 28rpx;
-          width: 36.5vw;
 
           .idCard {
             color: #fff;
@@ -150,30 +151,31 @@
         }
 
         .icon-erweima {
+          height: 40rpx;
           margin-top: 12rpx;
           font-size: 40rpx;
-          height: 40rpx;
         }
       }
 
       .space {
-        font-size: 24rpx;
         margin-top: 20rpx;
-        color: #fff;
         margin-left: 135rpx;
+        color: #fff;
+        font-size: 24rpx;
 
         .arrow {
           margin-left: 170rpx;
         }
       }
     }
+
     .space-hidden {
       position: absolute;
-      z-index: 10;
       left: 16vw;
+      z-index: 10;
       width: 327rpx;
       height: 800rpx;
-      padding: 10rpx 10rpx 0 10rpx;
+      padding: 10rpx 10rpx 0;
       background-color: #f2f2f2;
       border-radius: 30rpx;
       transform: translateY(-500rpx);
@@ -186,6 +188,7 @@
       transform: translateY(200rpx);
       visibility: visible;
       opacity: 1;
+
       .space-place {
         display: flex;
         flex-wrap: wrap;
@@ -196,16 +199,16 @@
       position: absolute;
       z-index: 5;
       height: 620rpx;
-      padding: 20rpx;
       margin-top: 200rpx;
+      padding: 20rpx;
 
       .function {
         width: 100%;
         border-bottom: 1rpx solid #f2f2f2;
 
         .fuc {
-          font-size: 26rpx;
           padding: 30rpx;
+          font-size: 26rpx;
 
           text {
             margin-right: 40rpx;
@@ -214,8 +217,8 @@
       }
 
       .setup {
-        font-size: 26rpx;
         padding: 30rpx;
+        font-size: 26rpx;
 
         text {
           margin-right: 40rpx;
@@ -225,10 +228,10 @@
 
     .logout {
       margin-top: 880rpx;
-      text-align: center;
+      padding: 80rpx 100rpx;
       color: #f25b6c;
       font-size: 28rpx;
-      padding: 80rpx 100rpx;
+      text-align: center;
     }
   }
 </style>

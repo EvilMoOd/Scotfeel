@@ -162,7 +162,7 @@
         <text>消息免打扰</text>
         <switch
           color="#117986"
-          style="transform: scale(0.5); float: right; margin-top: -10rpx"
+          style=" float: right; margin-top: -10rpx;transform: scale(0.5)"
           :checked="switches.mute"
           @change="changeMute"
         />
@@ -200,16 +200,16 @@
             <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
             <text v-if="item.remarkName && item.remarkName !== 'null'">{{ item.remarkName }}</text>
             <text v-else>{{ item.nickname }}</text>
-            <view v-if="item.role === 0" style="float: right; color: #3ea8c2; margin-top: 10rpx">
+            <view v-if="item.role === 0" style="float: right; margin-top: 10rpx; color: #3ea8c2">
               群主
             </view>
             <view
               v-else-if="item.role === 1"
-              style="float: right; color: #3ea8c2; margin-top: 10rpx"
+              style="float: right; margin-top: 10rpx; color: #3ea8c2"
             >
               管理员
             </view>
-            <view v-else style="float: right; color: #aaa; margin-top: 10rpx">成员</view>
+            <view v-else style="float: right; margin-top: 10rpx; color: #aaa">成员</view>
           </view>
           <template #right>
             <view
@@ -242,14 +242,14 @@
     </view>
   </view>
   <GradientWindow
-    style="right: 1rpx; top: 66rpx; text-align: center; line-height: 60rpx"
+    style=" top: 66rpx;right: 1rpx; line-height: 60rpx; text-align: center"
     :show="show.isShowConfig"
   >
     <view>
       进群审核
       <switch
         color="#117986"
-        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
         :checked="switches.verify"
         @change="changeVerify"
       />
@@ -288,39 +288,41 @@
 <style lang="scss" scoped>
   .page {
     transition: 0.7s;
+
     .header {
       height: 392rpx;
-      background-color: $color-sf;
-      text-align: center;
       color: #fff;
+      text-align: center;
+      background-color: $color-sf;
 
       .back {
         float: left;
-        margin-left: 24rpx;
         margin-top: 60rpx;
+        margin-left: 24rpx;
       }
 
       .more-icon {
         float: right;
-        margin-right: 24rpx;
         margin-top: 60rpx;
+        margin-right: 24rpx;
       }
 
       .head {
         width: 124rpx;
         height: 124rpx;
-        border-radius: 50%;
-        border: 3px solid #fff;
         margin-top: 108rpx;
+        border: 3px solid #fff;
+        border-radius: 50%;
       }
     }
+
     .list {
-      font-size: 28rpx;
       padding: 0 36rpx 0 52rpx;
+      font-size: 28rpx;
 
       .item {
-        border-bottom: 1px solid #f2f2f2;
         padding: 36rpx 0;
+        border-bottom: 1px solid #f2f2f2;
 
         .pencil {
           display: inline-block;
@@ -329,26 +331,30 @@
         }
       }
     }
+
     .br {
       height: 20rpx;
       background-color: #f2f2f2;
     }
+
     .function {
       padding: 0 56rpx;
-      font-size: 28rpx;
       color: #4fb0c8;
+      font-size: 28rpx;
 
       .list2 {
         margin: 24rpx 0;
       }
     }
+
     hr {
       width: 586rpx;
+      height: 1px;
       margin-left: 120rpx;
       background-color: #f2f2f2;
       border: none;
-      height: 1px;
     }
+
     .list3 {
       margin: 24rpx 0;
       padding: 0 56rpx;
@@ -360,27 +366,29 @@
         .avatar-user {
           width: 66rpx;
           height: 66rpx;
-          border-radius: 50%;
-          vertical-align: middle;
           margin-right: 20rpx;
+          vertical-align: middle;
+          border-radius: 50%;
         }
       }
+
       .button-text {
         font-size: 15px;
       }
 
       .slot-button {
         display: flex;
-        height: 100%;
         flex: 1;
         flex-direction: row;
-        justify-content: center;
         align-items: center;
+        justify-content: center;
+        height: 100%;
         padding: 0 20px;
         color: #fff;
       }
     }
   }
+
   .mask {
     @include mask;
   }

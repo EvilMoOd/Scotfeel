@@ -12,18 +12,19 @@
 
 <style lang="scss" scoped>
   .gradient {
-    padding: 18rpx 20rpx;
-    font-size: 26rpx;
-    border-radius: 20rpx;
-    display: flex;
-    flex-direction: column;
     position: absolute;
     z-index: 100;
-    background-color: #fff;
-    box-shadow: 0 0 4rpx $color-sf;
+    display: flex;
+    flex-direction: column;
+    padding: 18rpx 20rpx;
     color: #000;
+    font-size: 26rpx;
+    background-color: #fff;
+    border-radius: 20rpx;
+    box-shadow: 0 0 4rpx $color-sf;
     @include hidden;
   }
+
   .more-show {
     @include show;
   }

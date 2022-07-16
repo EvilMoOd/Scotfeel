@@ -160,84 +160,96 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     align-items: flex-end;
+
     .back {
       margin: 30rpx 20rpx;
     }
+
     .user {
       margin: 20rpx 0;
+
       .avatar {
         width: 80rpx;
         height: 80rpx;
-        border-radius: 50%;
-        vertical-align: middle;
         margin-right: 32rpx;
+        vertical-align: middle;
+        border-radius: 50%;
       }
+
       .nickname {
-        font-size: 36rpx;
         color: #fff;
+        font-size: 36rpx;
       }
     }
+
     .more {
       margin: 30rpx;
       margin-left: auto;
     }
   }
+
   .main {
     height: 78vh;
-    background-color: #f6f6f6;
     font-size: 26rpx;
+    background-color: #f6f6f6;
+
     .chat-friend {
-      margin-top: 20rpx;
-      background-color: #fff;
       width: fit-content;
       max-width: 60vw;
-      border-radius: 0 60rpx 60rpx 60rpx;
-      padding: 16rpx 32rpx;
+      margin-top: 20rpx;
       margin-left: 30rpx;
+      padding: 16rpx 32rpx;
       word-break: break-all;
+      background-color: #fff;
+      border-radius: 0 60rpx 60rpx;
     }
+
     .contain {
       display: flex;
       flex-direction: column;
+
       .chat-me {
-        margin-top: 20rpx;
-        margin-left: auto;
-        background-color: #d5fad3;
         width: fit-content;
         max-width: 60vw;
-        border-radius: 60rpx 0 60rpx 60rpx;
-        padding: 16rpx 32rpx;
+        margin-top: 20rpx;
         margin-right: 30rpx;
+        margin-left: auto;
+        padding: 16rpx 32rpx;
         word-break: break-all;
+        background-color: #d5fad3;
+        border-radius: 60rpx 0 60rpx 60rpx;
       }
+
       .chat-me-img {
         margin-top: 20rpx;
-        margin-left: auto;
         margin-right: 30rpx;
+        margin-left: auto;
       }
     }
   }
+
   .footer {
-    width: 100vw;
-    max-height: 30vh;
-    min-height: 10vh;
     position: fixed;
-    background-color: #eee;
     bottom: 0;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    width: 100vw;
+    min-height: 10vh;
+    max-height: 30vh;
+    background-color: #eee;
 
     .input-msg {
+      width: 620rpx;
       // height: 76rpx;
       max-height: 25vh;
-      width: 620rpx;
       padding: 20rpx;
+      text-indent: 20rpx;
       background-color: #fff;
       border-radius: 50rpx;
-      text-indent: 20rpx;
     }
   }
 </style>

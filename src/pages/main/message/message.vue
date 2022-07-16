@@ -74,16 +74,17 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     justify-content: center;
-    font-size: 36rpx;
-    font-weight: bold;
     color: #fff;
+    font-weight: bold;
+    font-size: 36rpx;
 
     .back {
       position: absolute;
-      left: 10rpx;
       top: 80rpx;
+      left: 10rpx;
     }
 
     .title {
@@ -94,18 +95,19 @@
   .function {
     display: flex;
     justify-content: space-between;
-    padding: 50rpx 80rpx 30rpx 80rpx;
+    padding: 50rpx 80rpx 30rpx;
     font-size: 20rpx;
     text-align: center;
   }
+
   .apply-msg {
     display: flex;
 
     .avatar {
       width: 96rpx;
       height: 96rpx;
-      border-radius: 50%;
       margin: 32rpx;
+      border-radius: 50%;
     }
 
     .apply {
@@ -118,33 +120,34 @@
       }
 
       .content {
-        font-size: 22rpx;
         color: #aaa;
+        font-size: 22rpx;
       }
 
       .btn-accept {
         float: right;
-        margin-top: -20rpx;
-        margin-left: 10rpx;
         width: 90rpx;
         height: 42rpx;
-        border-radius: 30rpx;
-        text-align: center;
-        border: 1px solid $color-sf;
+        margin-top: -20rpx;
+        margin-left: 10rpx;
         color: $color-sf;
         font-size: 24rpx;
+        text-align: center;
+        border: 1px solid $color-sf;
+        border-radius: 30rpx;
       }
+
       .btn-reject {
         float: right;
-        margin-top: -20rpx;
-        margin-left: 10rpx;
         width: 90rpx;
         height: 42rpx;
-        border-radius: 30rpx;
-        text-align: center;
-        border: 1px solid #ef4444;
+        margin-top: -20rpx;
+        margin-left: 10rpx;
         color: #ef4444;
         font-size: 24rpx;
+        text-align: center;
+        border: 1px solid #ef4444;
+        border-radius: 30rpx;
       }
     }
   }

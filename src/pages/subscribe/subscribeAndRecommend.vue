@@ -75,19 +75,22 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     align-items: flex-end;
+
     .back {
       position: absolute;
       top: 80rpx;
       left: 20rpx;
       z-index: 100;
     }
+
     .icon-search {
       position: absolute;
-      z-index: 100;
       top: 82rpx;
       left: 676rpx;
+      z-index: 100;
     }
   }
 </style>

@@ -11,10 +11,10 @@
 
 <style lang="scss" scoped>
   .mask {
-    width: 100vw;
-    height: 100vh;
     position: absolute;
     top: 0;
     z-index: 10;
+    width: 100vw;
+    height: 100vh;
   }
 </style>

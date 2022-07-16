@@ -238,125 +238,146 @@
 <style lang="scss" scoped>
   .page {
     height: 100vh;
+
     .space-body {
       transition: 0.7s;
+
       .header {
         width: 750rpx;
         height: 458rpx;
-        background-image: v-bind('imgUrl');
-        background-size: cover;
         overflow: hidden;
         font-size: 26rpx;
+        background-image: v-bind('imgUrl');
+        background-size: cover;
+
         .back {
           position: absolute;
           top: 62rpx;
           left: 26rpx;
         }
+
         .publicActive {
           position: absolute;
           top: 62rpx;
           left: 580rpx;
         }
+
         .more {
           position: absolute;
           top: 62rpx;
           left: 682rpx;
         }
+
         .space-msg {
+          display: flex;
           margin-top: 136rpx;
           margin-left: 40rpx;
-          display: flex;
+
           .msg {
             margin-left: 20rpx;
           }
         }
+
         .introduction {
-          margin-top: 60rpx;
-          margin-left: 40rpx;
           width: 50%;
           height: 70rpx;
-          font-size: 22rpx;
-          color: #fff;
+          margin-top: 60rpx;
+          margin-left: 40rpx;
           overflow: hidden;
+          color: #fff;
+          font-size: 22rpx;
         }
+
         .subscribe {
           position: absolute;
           top: 374rpx;
-          width: 82rpx;
-          height: 50rpx;
           left: 540rpx;
           display: flex;
-          justify-content: center;
           align-items: center;
+          justify-content: center;
+          width: 82rpx;
+          height: 50rpx;
+          color: #fff;
           background-color: $color-sf;
           border-radius: 10rpx;
-          color: #fff;
+
           &:active {
             background-color: #226068;
           }
         }
+
         .join {
           position: absolute;
           top: 374rpx;
           left: 632rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 96rpx;
           height: 50rpx;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          color: #fff;
           background-color: #fbb148;
           border-radius: 30rpx;
-          color: #fff;
+
           &:active {
             background-color: #ca9230;
           }
         }
+
         .inSpace {
           position: absolute;
           top: 374rpx;
           left: 632rpx;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           width: 96rpx;
           height: 50rpx;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+          color: #fff;
           background-color: #d7d7d7;
           border-radius: 30rpx;
-          color: #fff;
         }
       }
+
       .main {
-        border-radius: 40rpx 40rpx 0 0;
-        margin-top: -30rpx;
         width: 100vw;
         height: 900rpx;
+        margin-top: -30rpx;
         background-color: #fff;
+        border-radius: 40rpx 40rpx 0 0;
+
         .space-sp {
           padding: 10rpx 10rpx 30rpx 520rpx;
-          font-size: 26rpx;
           color: #797979;
+          font-size: 26rpx;
         }
+
         .space-place {
           background-color: #f2f2f2;
         }
       }
     }
   }
+
   .member-list {
-    margin-top: 30rpx;
     height: 336rpx;
+    margin-top: 30rpx;
+
     .member-item {
       padding: 15rpx 0;
       border-bottom: 1px solid #f2f2f2;
+
       .username {
         margin-left: 20rpx;
       }
+
       .leave {
         margin-left: 300rpx;
         color: $color-sf;
       }
     }
   }
+
   .mask {
     filter: blur(3px);
   }

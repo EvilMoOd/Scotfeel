@@ -15,24 +15,26 @@
 
 <style lang="scss" scoped>
   .person {
-    height: 80rpx;
     width: 80rpx;
-    border-radius: 50%;
-    vertical-align: middle;
+    height: 80rpx;
     margin-right: 30rpx;
+    vertical-align: middle;
+    border-radius: 50%;
   }
+
   .space {
     width: 80rpx;
     height: 80rpx;
-    border-radius: 20rpx;
-    vertical-align: middle;
     margin-right: 30rpx;
+    vertical-align: middle;
+    border-radius: 20rpx;
   }
+
   .space-border {
     width: 96rpx;
     height: 96rpx;
-    border-radius: 20rpx;
-    border: 6rpx solid #fff;
     vertical-align: middle;
+    border: 6rpx solid #fff;
+    border-radius: 20rpx;
   }
 </style>

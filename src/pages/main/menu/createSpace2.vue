@@ -82,11 +82,11 @@
 
 <style lang="scss" scoped>
   .header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
     height: 160rpx;
     background-color: $color-sf;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
 
     .next {
       margin: 20rpx;
@@ -95,9 +95,9 @@
     .title {
       display: inline-block;
       margin-bottom: 24rpx;
+      color: #fff;
       font-weight: bold;
       font-size: 38rpx;
-      color: #fff;
     }
   }
 </style>

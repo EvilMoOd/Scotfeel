@@ -25,18 +25,20 @@
 <style lang="scss" scoped>
   .active {
     display: inline-block;
-    height: 100rpx;
     width: 100rpx;
-    border-radius: 50%;
+    height: 100rpx;
     margin-top: 28rpx;
     margin-right: 48rpx;
-    background-image: linear-gradient(#aaf0d8, #2ed);
     padding: 6rpx;
+    background-image: linear-gradient(#aaf0d8, #2ed);
+    border-radius: 50%;
+
     .avatar {
-      height: 100%;
       width: 100%;
+      height: 100%;
       border-radius: 50%;
     }
+
     .username {
       margin-top: 5rpx;
       font-size: 22rpx;

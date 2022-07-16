@@ -17,7 +17,7 @@
 <style lang="scss" scoped>
   .clear {
     height: 200rpx;
-    background-color: $color-sf;
     text-align: center;
+    background-color: $color-sf;
   }
 </style>

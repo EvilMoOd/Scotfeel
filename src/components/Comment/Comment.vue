@@ -95,16 +95,17 @@
     padding-top: 40rpx;
 
     .avatar {
-      margin: 0 30rpx 0 24rpx;
       width: 80rpx;
       height: 80rpx;
+      margin: 0 30rpx 0 24rpx;
       border-radius: 50%;
     }
 
     .person-msg {
+      width: 36.5vw;
       color: #fff;
       font-size: 28rpx;
-      width: 36.5vw;
+
       .name {
         color: #40c4a8;
         font-size: 28rpx;
@@ -117,30 +118,34 @@
     }
 
     .icon-erweima {
+      height: 40rpx;
       margin-top: 12rpx;
       font-size: 40rpx;
-      height: 40rpx;
     }
   }
+
   .content {
     width: 55vw;
     margin-left: 20vw;
     font-size: 28rpx;
     word-break: break-all;
   }
+
   .sub-content-wrap {
     margin: 40rpx 0;
     padding-left: 20vw;
+
     .sub-content-container {
       padding: 40rpx 0;
       border-left: 3px #e9e9e9 solid;
       animation: 0.5s one-in;
 
       .sub-content {
-        font-size: 28rpx;
         padding-left: 18vw;
+        font-size: 28rpx;
         word-break: break-all;
       }
+
       .load {
         color: #9b989a;
         font-size: 28rpx;
@@ -153,6 +158,7 @@
       padding-top: 80rpx;
       opacity: 0;
     }
+
     to {
       padding-top: 40rpx;
       opacity: 1;

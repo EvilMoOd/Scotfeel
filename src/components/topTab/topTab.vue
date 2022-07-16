@@ -53,26 +53,30 @@
 <style lang="scss" scoped>
   .space {
     margin-top: 20rpx;
+
     .tab-name {
       display: flex;
       justify-content: v-bind('bold');
       color: v-bind('fontColor');
       font-weight: bold;
     }
+
     .line {
-      height: 10rpx;
       width: v-bind('lineWidth');
+      height: 10rpx;
       margin-top: 20rpx;
-      border: none;
       background-color: v-bind('lineColor');
+      border: none;
     }
+
     .left {
-      transition: transform 0.5s;
       transform: translate(v-bind('left'));
-    }
-    .right {
       transition: transform 0.5s;
+    }
+
+    .right {
       transform: translate(v-bind('right'));
+      transition: transform 0.5s;
     }
   }
 </style>

@@ -68,15 +68,17 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     text-align: center;
 
     .title {
       display: inline-block;
       margin-top: 70rpx;
+      color: #fff;
       font-weight: bold;
       font-size: 38rpx;
-      color: #fff;
     }
+
     .send-moment {
       position: absolute;
       top: 58rpx;

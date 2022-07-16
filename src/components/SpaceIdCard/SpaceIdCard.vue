@@ -28,31 +28,33 @@
 <style lang="scss" scoped>
   .space-item {
     width: 100rpx;
-    background-color: #fff;
     margin: 10rpx 5rpx;
     padding: 16rpx 26rpx;
     font-size: 16rpx;
     text-align: center;
+    background-color: #fff;
     border-radius: 30rpx;
     box-shadow: 1rpx 3rpx 3rpx #aaaa;
 
     .space-img {
       width: 96rpx;
       height: 96rpx;
-      border-radius: 30rpx;
       margin-bottom: 10rpx;
+      border-radius: 30rpx;
     }
+
     text {
       font-weight: bold;
     }
+
     .identify {
       display: inline-block;
-      padding: 4rpx;
       width: 90rpx;
+      margin: 10rpx 0;
+      padding: 4rpx;
       color: $color-sf;
       border: 1px solid $color-sf;
       border-radius: 30rpx;
-      margin: 10rpx 0;
     }
   }
 </style>

@@ -136,92 +136,108 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     justify-content: center;
+
     .title {
       display: inline-block;
       margin-top: 84rpx;
+      color: #fff;
       font-weight: bold;
       font-size: 46rpx;
-      color: #fff;
     }
   }
+
   .main {
-    padding: 32rpx;
-    margin-top: 20rpx;
     display: flex;
     flex-wrap: wrap;
+    margin-top: 20rpx;
+    padding: 32rpx;
+
     .phone-types {
+      width: 76rpx;
       margin-right: 32rpx;
       padding: 12rpx;
       border-bottom: solid 1px #d7d7d7;
-      width: 76rpx;
     }
+
     .username {
+      width: 514rpx;
       padding: 12rpx;
       border-bottom: solid 1px #d7d7d7;
-      width: 514rpx;
     }
+
     .placeholder {
       color: #d7d7d7;
     }
+
     .code {
+      width: 424rpx;
       margin-top: 40rpx;
       padding: 12rpx;
       border-bottom: solid 1px #d7d7d7;
-      width: 424rpx;
     }
+
     .get-code {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 200rpx;
       height: 60rpx;
       margin-top: 60rpx;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 46rpx;
       border-color: $color-sf;
+      border-radius: 46rpx;
+
       .code-text {
         font-size: 26rpx;
       }
     }
+
     .code-color1 {
       color: $color-sf;
     }
+
     .code-color2 {
       color: #aaa;
     }
+
     .get-code-hover {
       color: #aaa;
     }
   }
+
   .sign-in {
+    position: absolute;
+    top: 1050rpx;
+    left: 600rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 96rpx;
     height: 96rpx;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 50%;
     background-color: $color-sf;
-    position: absolute;
-    left: 600rpx;
-    top: 1050rpx;
+    border-radius: 50%;
     @media screen and (min-height: 896px) {
       top: 1350rpx;
     }
   }
+
   .footer {
-    font-size: 24rpx;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     position: relative;
     top: 800rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
     @media screen and (min-height: 896px) {
       top: 1100rpx;
     }
+
     .agree {
       transform: scale(0.7);
     }
+
     .nav {
       color: $color-sf;
     }

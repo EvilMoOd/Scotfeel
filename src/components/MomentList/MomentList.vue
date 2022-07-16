@@ -32,20 +32,22 @@
 <style lang="scss" scoped>
   .momentList {
     display: flex;
+    justify-content: center;
     height: 190rpx;
     border-bottom: solid 2rpx #f2f2f2;
-    justify-content: center;
+
     .moment {
+      width: 600rpx;
       overflow: hidden;
       white-space: nowrap;
-      width: 600rpx;
     }
+
     .more-active {
       display: inline-block;
       align-self: center;
-      border-radius: 50%;
       margin-left: 28rpx;
       color: $color-sf;
+      border-radius: 50%;
     }
   }
 </style>

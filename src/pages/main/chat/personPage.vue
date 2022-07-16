@@ -239,11 +239,11 @@
       <view>
         <text
           v-if="personInfo.personPage.remarkName && personInfo.personPage.remarkName !== 'null'"
-          style="font-size: 34rpx; font-weight: bold; color: #eee"
+          style=" color: #eee; font-weight: bold;font-size: 34rpx"
         >
           {{ personInfo.personPage.remarkName }}
         </text>
-        <text v-else style="font-size: 34rpx; font-weight: bold; color: #eee">
+        <text v-else style=" color: #eee; font-weight: bold;font-size: 34rpx">
           {{ personInfo.personPage.nickname }}
         </text>
         <br />
@@ -287,7 +287,7 @@
 
   <!-- 个人功能弹窗 -->
   <GradientWindow
-    style="right: 1rpx; top: 66rpx; text-align: center; line-height: 60rpx; width: 150rpx"
+    style=" top: 66rpx;right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
     :show="show.showMyConfig"
   >
     <text @tap="ShowChangeMySignature">个性签名</text>
@@ -319,7 +319,7 @@
   </PopWindow>
   <!-- 朋友功能弹窗 -->
   <GradientWindow
-    style="right: 1rpx; top: 66rpx; text-align: center; line-height: 60rpx; width: 150rpx"
+    style=" top: 66rpx;right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
     :show="show.showConfig"
   >
     <text @tap="showChangeRemark">设置备注</text>
@@ -338,7 +338,7 @@
     />
   </PopWindow>
   <PopBottom :pop-show="show.showDeleteFriend">
-    <view style="color: red; margin: 50rpx 0; text-align: center" @tap="deleteFriend">
+    <view style=" margin: 50rpx 0;color: red; text-align: center" @tap="deleteFriend">
       删除好友
     </view>
   </PopBottom>
@@ -350,13 +350,15 @@
 <style lang="scss" scoped>
   .page {
     transition: 0.7s;
+
     .header {
       height: 304rpx;
       background-image: v-bind('personInfo.personPage.backgroundImage');
+
       .icon-back {
         float: left;
-        margin-left: 26rpx;
         margin-top: 66rpx;
+        margin-left: 26rpx;
       }
 
       .icon-more {
@@ -368,28 +370,30 @@
 
     .id-card {
       position: relative;
-      padding: 0 60rpx;
       top: -64rpx;
       display: flex;
       align-items: center;
+      padding: 0 60rpx;
 
       .avatar {
-        border-radius: 50%;
         width: 128rpx;
         height: 128rpx;
         border: 3px solid #fff;
+        border-radius: 50%;
       }
+
       .send-msg-btn {
+        align-self: flex-end;
         width: 250rpx;
         height: 60rpx;
         margin-left: auto;
+        color: $color-sf;
         line-height: 60rpx;
         text-align: center;
         border: 3px solid $color-sf;
-        color: $color-sf;
         border-radius: 30rpx;
-        align-self: flex-end;
       }
+
       .add-friend-btn {
         @extend .send-msg-btn;
       }
@@ -397,20 +401,23 @@
 
     .introduction {
       margin: -40rpx 96rpx;
-      font-size: 22rpx;
       color: #555;
+      font-size: 22rpx;
     }
+
     .my-space {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
       height: 400rpx;
       padding: 30rpx;
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
     }
+
     .space {
       margin-top: 100rpx;
     }
   }
+
   .mask {
     @include mask;
   }

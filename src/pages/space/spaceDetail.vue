@@ -243,12 +243,12 @@
           >
             <image :src="item.avatar" class="avatar-user" mode="scaleToFill" />
             <text>{{ item.remarkName ? item.remarkName : item.nickName }}</text>
-            <view style="float: right; color: #3ea8c2; margin-top: 10rpx">
+            <view style="float: right; margin-top: 10rpx; color: #3ea8c2">
               {{ item.role === 1 ? '空间主' : item.role === 2 ? '管理员' : '成员' }}
             </view>
             <GradientWindow
               :show="show.showEditMember === index"
-              style="text-align: center; top: -20rpx; left: 400rpx"
+              style=" top: -20rpx; left: 400rpx;text-align: center"
             >
               <view @tap="roleSpaceMaster">设为空间主</view>
               <view @tap="roleSpaceManager">设为管理员</view>
@@ -272,12 +272,12 @@
   </view>
   <GradientWindow
     style="
-      right: 1rpx;
       top: 66rpx;
-      text-align: center;
+      right: 1rpx;
       margin: 10rpx;
-      border-bottom: 5px solid #eee;
       line-height: 60rpx;
+      text-align: center;
+      border-bottom: 5px solid #eee;
     "
     :show="show.showConfig"
   >
@@ -285,7 +285,7 @@
       展示在个人主页
       <switch
         color="#117986"
-        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
         :checked="spaceInfo.displayOnPage"
         @change="changeDisplayOnPersonPage"
       />
@@ -294,7 +294,7 @@
       首页左滑默认空间
       <switch
         color="#117986"
-        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
         :checked="spaceInfo.defaultSpace"
         @change="setDefaultSpace"
       />
@@ -360,11 +360,11 @@
   </PopWindow>
   <PopBottom :pop-show="show.showPrivate">
     <view style="padding-top: 30rpx">
-      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
         设置为私密空间
         <switch
           color="#117986"
-          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
           :checked="spaceInfo.private"
           @change="
             () => {
@@ -374,11 +374,11 @@
           "
         />
       </view>
-      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
         进入空间需要审核
         <switch
           color="#117986"
-          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
           :checked="spaceInfo.verify"
           @change="
             () => {
@@ -388,11 +388,11 @@
           "
         />
       </view>
-      <view style="text-align: center; margin: 10rpx; border-bottom: 5px solid #eee">
+      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
         空间成员只能被邀请
         <switch
           color="#117986"
-          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
           :checked="spaceInfo.invite"
           @change="
             () => {
@@ -402,11 +402,11 @@
           "
         />
       </view>
-      <view style="text-align: center; margin: 10rpx">
+      <view style=" margin: 10rpx;text-align: center">
         是否允许系统推荐给其他用户
         <switch
           color="#117986"
-          style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
           :checked="spaceInfo.recommend"
           @change="
             () => {
@@ -437,38 +437,40 @@
 <style lang="scss" scoped>
   .page {
     transition: 0.7s;
+
     .header {
       height: 392rpx;
-      background-color: $color-sf;
+      color: #fff;
       text-align: center;
+      background-color: $color-sf;
+
       // margin: 10rpx;
       border-bottom: 5px solid #eee;
-      color: #fff;
 
       .back {
         float: left;
-        margin-left: 24rpx;
         margin-top: 60rpx;
+        margin-left: 24rpx;
       }
 
       .more-icon {
         float: right;
-        margin-right: 24rpx;
         margin-top: 60rpx;
+        margin-right: 24rpx;
       }
 
       .avatar {
         width: 144rpx;
         height: 144rpx;
-        border-radius: 30rpx;
-        border: 3px solid #fff;
         margin-top: 108rpx;
+        border: 3px solid #fff;
+        border-radius: 30rpx;
       }
     }
 
     .list {
-      font-size: 28rpx;
       padding: 30rpx 36rpx 30rpx 52rpx;
+      font-size: 28rpx;
 
       .item {
         .pencil {
@@ -486,8 +488,8 @@
 
     .function {
       padding: 0 56rpx;
-      font-size: 28rpx;
       color: #4fb0c8;
+      font-size: 28rpx;
 
       .list2 {
         margin: 24rpx 0;
@@ -496,36 +498,37 @@
 
     hr {
       width: 586rpx;
+      height: 1px;
       margin-left: 120rpx;
       background-color: #f2f2f2;
       border: none;
-      height: 1px;
     }
 
     .member-list {
       box-sizing: border-box;
-      padding: 0 30rpx;
       height: 600rpx;
+      padding: 0 30rpx;
+
       .item {
-        margin: 30rpx 0;
         position: relative;
+        margin: 30rpx 0;
 
         .avatar-user {
           width: 66rpx;
           height: 66rpx;
-          border-radius: 50%;
-          vertical-align: middle;
           margin-right: 20rpx;
+          vertical-align: middle;
+          border-radius: 50%;
         }
       }
     }
 
     .my-space {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
       height: 550rpx;
       padding: 30rpx;
-      display: flex;
-      align-items: flex-start;
-      flex-wrap: wrap;
     }
   }
 

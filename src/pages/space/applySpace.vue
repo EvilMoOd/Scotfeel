@@ -47,7 +47,7 @@
       <text v-else>以空间加入该空间</text>
       <switch
         color="#117986"
-        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
         :checked="applyForm.applicantType"
         @change="
           () => {
@@ -60,7 +60,7 @@
       我是学生
       <switch
         color="#117986"
-        style="transform: scale(0.5); margin: -10rpx -20rpx 0 -20rpx"
+        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
         :checked="applyForm.studentFlag"
         @change="
           () => {
@@ -94,32 +94,38 @@
 <style lang="scss" scoped>
   .header {
     @include header;
+
     display: flex;
     justify-content: center;
-    font-size: 36rpx;
-    font-weight: bold;
     color: #fff;
+    font-weight: bold;
+    font-size: 36rpx;
+
     .back {
       position: absolute;
       top: 80rpx;
       left: 20rpx;
     }
+
     .title {
       margin-top: 80rpx;
     }
   }
+
   .main {
     padding: 50rpx;
+
     .applyReason {
       margin-top: 20rpx;
+      padding: 20rpx;
       background-color: #f2f2f2;
       border-radius: 40rpx;
-      padding: 20rpx;
     }
+
     .determine {
-      margin: 100rpx 500rpx;
       width: 120rpx;
       height: 120rpx;
+      margin: 100rpx 500rpx;
     }
   }
 </style>
