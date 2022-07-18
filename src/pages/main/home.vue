@@ -8,6 +8,7 @@
   import { useSessionListStore } from '../../store/modules/sessionListStore';
   import { useUserStore } from '../../store/modules/userStore';
   import FunctionList from './functionList.vue';
+  import MomentList from '../../components/MomentList/MomentList.vue';
 
   const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
@@ -129,27 +130,30 @@
 
       .title {
         display: inline-block;
-        margin-left: 26rpx;
         margin-top: 86rpx;
-        font-size: 40rpx;
-        font-weight: bold;
+        margin-left: 26rpx;
         color: #fff;
+        font-weight: bold;
+        font-size: 40rpx;
       }
 
       .notice {
-        top: 86rpx;
         position: absolute;
+        top: 86rpx;
         left: 592rpx;
+
         .msg-tip {
           position: absolute;
           top: -12rpx;
           left: 25rpx;
         }
       }
+
       .new-apply {
         position: absolute;
         top: 83rpx;
         left: 502rpx;
+
         .msg-tip2 {
           position: absolute;
           top: -12rpx;
@@ -174,30 +178,32 @@
       }
     }
   }
+
   .show-menu {
+    transform: translateX(0);
     visibility: visible;
     opacity: 1;
-    transform: translateX(0);
   }
 
-  //订阅空间
+  // 订阅空间
   .subscribe {
+    position: fixed;
+    right: 100rpx;
+    bottom: 20rpx;
+    z-index: 2;
     width: 80rpx;
     height: 80rpx;
     background-color: $color-sf;
     border-radius: 50%;
-    position: fixed;
-    z-index: 2;
-    bottom: 20rpx;
-    right: 100rpx;
 
     .icon-arrow {
-      font-size: 100rpx;
-      color: #fff;
       margin-top: -10rpx;
       margin-left: -10rpx;
+      color: #fff;
+      font-size: 100rpx;
     }
   }
+
   .mask {
     @include mask;
   }

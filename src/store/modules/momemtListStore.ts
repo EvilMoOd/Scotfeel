@@ -1,24 +1,25 @@
 import { defineStore } from 'pinia';
 
-export interface MomentList {
-  momentListInfo: MomentListInfo[];
-  momentList: string[];
-}
 export interface MomentListInfo {
-  id?: number; // 自增主键;
   friendId: string; // 朋友ID，如果是我发的动态的话，这个id也会是我的id
-  noticeCount: 0 | 1; // 是否已读，具体事件就是用户是否单击了动态头像，0：否，1：是
-  belongToId: string; // 用户id，标记这条记录是属于哪个用户的，因为可能会有多个账户在这台设备中登录
-  createTime: number; // 用户发动态时间
+  momentId: string; // 加载的动态id
+  read: 0 | 1; // 是否已读，具体事件就是用户是否单击了动态头像，0：否，1：是
+  updateTime: number; // 用户发动态时间
 }
+const momentList = uni.getStorageSync('momentList');
 export const useMomentListStore = defineStore('momentListStore', {
-  state: (): MomentList => ({
-    momentListInfo: [],
-    momentList: ['4c157fb2bffb4e48b8068dead4d379c7'],
+  state: () => ({
+    momentList: (momentList as MomentListInfo[]) ?? ([] as MomentListInfo[]),
   }),
   actions: {
-    updateMomentList(friendId: string) {
-      this.momentList.unshift(friendId);
+    // 朋友更新动态
+    updateMomentList(friendId: string, momentId: string) {
+      this.momentList.unshift({
+        friendId,
+        momentId,
+        read: 0,
+        updateTime: Date.now(),
+      });
     },
   },
   getters: {},

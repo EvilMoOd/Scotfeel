@@ -2,7 +2,7 @@
   import { useMomentListStore } from '../../store/modules/momemtListStore';
   import Active from './Active.vue';
   // 朋友动态栏
-  const momentList = useMomentListStore();
+  const momentListStore = useMomentListStore();
   function goAllMoment() {
     uni.redirectTo({ url: '/pages/main/moment/moment?all=1' });
   }
@@ -13,13 +13,13 @@
 
 <template>
   <!-- 朋友动态栏 -->
-  <view class="momentList">
+  <view class="moment-list">
     <view class="moment">
       <!-- 可能有bug这里 -->
       <scroll-view scroll-x="true">
         <Active
-          v-for="list in momentList.momentListInfo"
-          :key="list.id"
+          v-for="(list, index) in momentListStore.momentList"
+          :key="index"
           :list="list"
           @tap="goMoment(list.friendId)"
         />
@@ -30,7 +30,7 @@
 </template>
 
 <style lang="scss" scoped>
-  .momentList {
+  .moment-list {
     display: flex;
     justify-content: center;
     height: 190rpx;

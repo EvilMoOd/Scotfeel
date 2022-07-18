@@ -131,7 +131,7 @@ export function connectWebSocket(url: string, token: string): void {
       }, 1000)();
     } else if (messageType === 5) {
       // 5、朋友动态列表
-      momentStore.updateMomentList(content.firendId);
+      momentStore.updateMomentList(content.firendId, content.momentId);
     } else if (messageType === 6) {
       // 6、有申请请求
       // TODO 系统app弹窗

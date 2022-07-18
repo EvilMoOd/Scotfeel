@@ -9,6 +9,7 @@
   import { connectWebSocket } from './server/webSocket';
   import { useFriendStore } from './store/modules/friendStore';
   import { useGroupChatStore } from './store/modules/groupStore';
+  import { useMomentListStore } from './store/modules/momemtListStore';
   import { useNoticeStore } from './store/modules/noticeStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
   import { useSubscribeSpaceStore } from './store/modules/spaceStore';
@@ -17,6 +18,7 @@
   const userStore = useUserStore();
   const noticeStore = useNoticeStore();
   const sessionListStore = useSessionListStore();
+  const momentListStore = useMomentListStore();
   const friendStore = useFriendStore();
   const groupStore = useGroupChatStore();
   const spaceStore = useSubscribeSpaceStore();
@@ -35,6 +37,10 @@
     // 持久化消息库
     noticeStore.$subscribe((mutation, state) => {
       uni.setStorageSync('notice', state);
+    });
+    // 持久化动态列表
+    noticeStore.$subscribe((mutation, state) => {
+      uni.setStorageSync('momentList', state);
     });
     // 初始化用户信息
     if (!userStore.token) {

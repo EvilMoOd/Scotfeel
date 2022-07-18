@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useUserStore } from './userStore';
 import { insertSession, selectAllSession, updateSession } from '../../server/sql/sessionList';
 import { useFriendStore } from './friendStore';
 import { selectOneMemberInfo } from '../../server/sql/groupChatMember';
@@ -20,6 +19,7 @@ export interface SessionListInfo {
   groupChatAvatar?: string;
   groupChatNickname?: string;
 }
+const user = uni.getStorageSync('user');
 export const useSessionListStore = defineStore('sessionListStore', {
   state: () => ({
     sessionListInfo: [] as SessionListInfo[],
@@ -37,7 +37,6 @@ export const useSessionListStore = defineStore('sessionListStore', {
       type: 1 | 2,
       chatorId = ''
     ) {
-      const user = useUserStore();
       // 查找朋友信息
       const friendStore = useFriendStore();
       const friendInfo = friendStore.friendsInfo.find((item) => item.friendId === sessionId);
@@ -87,7 +86,7 @@ export const useSessionListStore = defineStore('sessionListStore', {
         this.sessionListInfo[0].content = content;
         this.sessionListInfo[0].contentType = contentType;
         // this.sessionListInfo[0].chatorName = chatorName;
-        this.sessionListInfo[0].unReadCount++;
+        this.sessionListInfo[0].unReadCount += 1;
         this.sessionListInfo[0].updateTime = date;
         updateSession(
           chatorName,

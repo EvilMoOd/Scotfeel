@@ -36,6 +36,15 @@ export function insertGroupMember(
 			`);
 }
 
+// 批量插入数据
+export function batchInsertGroupMember(
+  sql: string
+): void {
+  return executeSql(
+    sql
+  );
+}
+
 // 删除记录
 export function deleteMember(groupId: string, memberId: string, belongToId: string): void {
   return executeSql(`

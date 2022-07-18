@@ -39,7 +39,7 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
   //   uni.redirectTo({ url: '/pages/login' });
   // }
   // 响应拦截请求
-  return await new Promise<T>((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     uni.request({
       url: (import.meta.env.VITE_API_URL as string) + config.url, // 默认地址
       data: config.data,
