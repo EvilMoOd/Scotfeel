@@ -8,6 +8,7 @@
   let spaceId: string;
   onLoad((params: any) => {
     spaceId = params.spaceId;
+    console.log('🚀这段DEBUG在applySpace的第11行🚀 🦴变量是spaceId🦴', spaceId);
   });
 
   const applyForm = reactive({
@@ -24,7 +25,7 @@
       spaceId,
       userStore.userInfo?.mainId as string,
       applyForm.content,
-      0,
+      1,
       applyForm.applicantType ? 1 : 0
     );
     uni.navigateTo({ url: '/pages/space/space' });
@@ -41,13 +42,13 @@
   </view>
   <view class="main">
     <text>申请理由</text>
-    <textarea v-model="applyForm.content" class="applyReason" cols="30" rows="10"></textarea>
+    <textarea v-model="applyForm.content" class="apply-reason" cols="30" rows="10"></textarea>
     <view>
       <text v-if="applyForm.applicantType">以个人加入该空间</text>
       <text v-else>以空间加入该空间</text>
       <switch
         color="#117986"
-        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+        style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
         :checked="applyForm.applicantType"
         @change="
           () => {
@@ -60,7 +61,7 @@
       我是学生
       <switch
         color="#117986"
-        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+        style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
         :checked="applyForm.studentFlag"
         @change="
           () => {
@@ -115,7 +116,7 @@
   .main {
     padding: 50rpx;
 
-    .applyReason {
+    .apply-reason {
       margin-top: 20rpx;
       padding: 20rpx;
       background-color: #f2f2f2;

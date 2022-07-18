@@ -1,3 +1,6 @@
+<!-- eslint-disable guard-for-in -->
+<!-- eslint-disable no-restricted-syntax -->
+<!-- eslint-disable no-await-in-loop -->
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive } from 'vue';
@@ -7,6 +10,7 @@
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
 
   let space: any;
+  const spaceStore = useSubscribeSpaceStore();
   const moment = reactive({
     content: '',
     photos: [] as string[],
@@ -17,7 +21,6 @@
     moment.spaceId = params.spaceId as string;
     space = spaceStore.subscribeSpace.find((item) => moment.spaceId === item.spaceId);
   });
-  const spaceStore = useSubscribeSpaceStore();
 
   function chooseImg({ tempFilePaths }: { tempFilePaths: string[] }) {
     moment.photos.push(...tempFilePaths);

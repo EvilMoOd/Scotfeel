@@ -248,7 +248,7 @@
             </view>
             <GradientWindow
               :show="show.showEditMember === index"
-              style=" top: -20rpx; left: 400rpx;text-align: center"
+              style="top: -20rpx; left: 400rpx; text-align: center"
             >
               <view @tap="roleSpaceMaster">设为空间主</view>
               <view @tap="roleSpaceManager">设为管理员</view>
@@ -264,7 +264,7 @@
             :key="index"
             :avatar="item.avatar"
             :space-id="item.spaceId"
-            :nick-name="item.nickName"
+            :nick-name="item.nickname"
           />
         </view>
       </template>
@@ -285,7 +285,7 @@
       展示在个人主页
       <switch
         color="#117986"
-        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+        style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
         :checked="spaceInfo.displayOnPage"
         @change="changeDisplayOnPersonPage"
       />
@@ -294,7 +294,7 @@
       首页左滑默认空间
       <switch
         color="#117986"
-        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+        style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
         :checked="spaceInfo.defaultSpace"
         @change="setDefaultSpace"
       />
@@ -360,11 +360,11 @@
   </PopWindow>
   <PopBottom :pop-show="show.showPrivate">
     <view style="padding-top: 30rpx">
-      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
+      <view style="margin: 10rpx; text-align: center; border-bottom: 5px solid #eee">
         设置为私密空间
         <switch
           color="#117986"
-          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+          style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
           :checked="spaceInfo.private"
           @change="
             () => {
@@ -374,11 +374,11 @@
           "
         />
       </view>
-      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
+      <view style="margin: 10rpx; text-align: center; border-bottom: 5px solid #eee">
         进入空间需要审核
         <switch
           color="#117986"
-          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+          style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
           :checked="spaceInfo.verify"
           @change="
             () => {
@@ -388,11 +388,11 @@
           "
         />
       </view>
-      <view style=" margin: 10rpx;text-align: center; border-bottom: 5px solid #eee">
+      <view style="margin: 10rpx; text-align: center; border-bottom: 5px solid #eee">
         空间成员只能被邀请
         <switch
           color="#117986"
-          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+          style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
           :checked="spaceInfo.invite"
           @change="
             () => {
@@ -402,11 +402,11 @@
           "
         />
       </view>
-      <view style=" margin: 10rpx;text-align: center">
+      <view style="margin: 10rpx; text-align: center">
         是否允许系统推荐给其他用户
         <switch
           color="#117986"
-          style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+          style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
           :checked="spaceInfo.recommend"
           @change="
             () => {

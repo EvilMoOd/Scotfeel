@@ -14,10 +14,12 @@ import { OBS_URL } from '../../server/http';
 import { deleteFriendTable } from '../../server/sql/friend';
 import { deleteGroupTable } from '../../server/sql/groupChat';
 import { deleteGroupMemberTable } from '../../server/sql/groupChatMember';
+import { deleteSpaceTable } from '../../server/sql/subscribedSpace';
 import { logoutCloseWebsocket } from '../../server/webSocket';
 import { imgMitt, uploadImage } from '../../util/uploadImage';
 import { useFriendStore } from './friendStore';
 import { useGroupChatStore } from './groupStore';
+import { useSubscribeSpaceStore } from './spaceStore';
 
 // 从本地仓库捞数据
 const user: User = uni.getStorageSync('user');
@@ -31,27 +33,30 @@ export const useUserStore = defineStore('user', {
   actions: {
     // 登录
     async userLogin(phone: string, authCode: string) {
-      const { userInfo, token, friend, groupChat, groupChatMember } = await reqUserLogin(
-        phone,
-        authCode
-      );
+      const { userInfo, token, friend, groupChat, groupChatMember, subscribedSpace } =
+        await reqUserLogin(phone, authCode);
       this.userInfo = userInfo;
       this.token = token;
       const friendStore = useFriendStore();
       const groupStore = useGroupChatStore();
+      const spaceStore = useSubscribeSpaceStore();
       friendStore.loginInit(friend, userInfo?.mainId as string);
       groupStore.loginInit(groupChat, userInfo?.mainId as string, groupChatMember);
+      spaceStore.loginInit(subscribedSpace);
     },
     // 退出登录
     async userLogout() {
       await reqUserLogout();
       this.userInfo = undefined;
       this.token = undefined;
+      uni.removeStorageSync('user');
       uni.removeStorageSync('notice');
+      uni.removeStorageSync('momentList');
       logoutCloseWebsocket();
       deleteFriendTable();
       deleteGroupTable();
       deleteGroupMemberTable();
+      deleteSpaceTable();
     },
     // 修改昵称
     async changeNickname(nickname: string) {

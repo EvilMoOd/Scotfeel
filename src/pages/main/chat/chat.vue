@@ -247,6 +247,7 @@
 
     .input-msg {
       width: 620rpx;
+
       // height: 76rpx;
       max-height: 25vh;
       padding: 20rpx;

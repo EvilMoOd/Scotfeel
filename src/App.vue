@@ -6,6 +6,7 @@
   import { createGroupChatTable } from './server/sql/groupChat';
   import { createGroupMemberTable } from './server/sql/groupChatMember';
   import { createSessionListTable } from './server/sql/sessionList';
+  import { createSubscribeTable } from './server/sql/subscribedSpace';
   import { connectWebSocket } from './server/webSocket';
   import { useFriendStore } from './store/modules/friendStore';
   import { useGroupChatStore } from './store/modules/groupStore';
@@ -30,6 +31,7 @@
     createGroupMemberTable();
     createSessionListTable();
     createChatRecordTable();
+    createSubscribeTable();
     // 持久化用户库
     userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
@@ -39,7 +41,7 @@
       uni.setStorageSync('notice', state);
     });
     // 持久化动态列表
-    noticeStore.$subscribe((mutation, state) => {
+    momentListStore.$subscribe((mutation, state) => {
       uni.setStorageSync('momentList', state);
     });
     // 初始化用户信息

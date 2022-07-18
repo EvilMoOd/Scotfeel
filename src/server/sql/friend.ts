@@ -48,12 +48,8 @@ export function insertFriend(
 }
 
 // 批量插入数据
-export function batchInsertFriend(
-  sql: string
-): void {
-  return executeSql(
-    sql
-  );
+export function batchInsertFriend(sql: string): void {
+  return executeSql(sql);
 }
 
 // 删除记录

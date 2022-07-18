@@ -1,6 +1,7 @@
+<!-- eslint-disable @typescript-eslint/no-unused-expressions -->
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { ref } from 'vue';
+  import { reactive, ref } from 'vue';
   import { useMomentStore, noMore } from '../../../store/modules/momentStore';
 
   const momentStore = useMomentStore();
@@ -13,6 +14,12 @@
     momentStore.momentInfo[index].likeStatus === 1
       ? momentStore.cancelLike(index)
       : momentStore.like(index);
+  }
+  const show = reactive({
+    comment: false,
+  });
+  function comment() {
+    show.comment = true;
   }
   // 前往发布动态页
   function goSendMoment() {
@@ -61,6 +68,9 @@
     </view>
     <view></view>
   </scroll-view>
+  <!-- <PopBottom :pop-show="show.comment">
+    <Comment />
+  </PopBottom> -->
   <PopMessage ref="success" success>动态已删除</PopMessage>
   <PopMessage ref="fail">动态删除失败</PopMessage>
 </template>

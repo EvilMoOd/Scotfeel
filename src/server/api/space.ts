@@ -47,11 +47,11 @@ export const reqSetDefaultSpace = async (spaceId: string): Promise<null> =>
     type: 'application/x-www-form-urlencoded',
   });
 // 更新昵称
-export const reqUpdateNickname = async (nickName: string, spaceId: string): Promise<null> =>
+export const reqUpdateNickname = async (nickname: string, spaceId: string): Promise<null> =>
   request<null>({
     url: `/space/space/updateNickName`,
     method: 'POST',
-    data: { nickName, spaceId },
+    data: { nickname, spaceId },
     type: 'application/x-www-form-urlencoded',
   });
 // 更改介绍
@@ -94,7 +94,7 @@ export const reqIdentify = async (
 export interface UserMember {
   userId: string;
   avatar: string;
-  nickName: string;
+  nickname: string;
   role: number;
   remarkName: string;
 }
@@ -107,7 +107,7 @@ export const reqUserMember = async (spaceId: string): Promise<UserMember[]> =>
 // 获取空间的空间成员
 export interface SpaceMember {
   spaceId: string;
-  nickName: string;
+  nickname: string;
   avatar: string;
 }
 export const reqSpaceMember = async (spaceId: string): Promise<SpaceMember[]> =>
@@ -172,7 +172,7 @@ export const reqUpdateRemark = async (remarkName: string, spaceId: string): Prom
   });
 export interface SubscribedSpaceInfo {
   spaceId: string; // 空间id
-  nickName: string; // 空间昵称
+  nickname: string; // 空间昵称
   avatar: string; // 空间头像
   role: 0 | 1 | 2 | 3 | 4; // 角色：1：空间主，2：管理员，3：普通成员，4：订阅者
 }
@@ -322,8 +322,8 @@ export const reqGetOneLevelComment = async (
   momentId: number,
   spaceId: string,
   offset: number
-): Promise<Comments> =>
-  request<Comments>({
+): Promise<Comments[]> =>
+  request<Comments[]>({
     url: `/spaceMoment/get/comments`,
     method: 'GET',
     data: { momentId, spaceId, offset },
@@ -334,8 +334,8 @@ export const reqGetSecondLevelComment = async (
   spaceId: string,
   offset: number,
   secondCommentIndex: string
-): Promise<Comments> =>
-  request<Comments>({
+): Promise<Comments[]> =>
+  request<Comments[]>({
     url: `/spaceMoment/get/comments`,
     method: 'GET',
     data: { momentId, spaceId, offset, secondCommentIndex },

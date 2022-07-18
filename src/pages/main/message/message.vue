@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { useNoticeStore } from '../../../store/modules/noticeStore';
+  import Comment from '../../../components/Comment/Comment.vue';
 
   const currentTab = ref(0);
   const tab = [
@@ -60,7 +61,7 @@
       </scroll-view>
     </swiper-item>
     <swiper-item>
-      <scroll-view scroll-y style="height: 200px">123</scroll-view>
+      <scroll-view scroll-y style="height: 200px">111</scroll-view>
     </swiper-item>
     <swiper-item>
       <scroll-view scroll-y style="height: 200px">123</scroll-view>

@@ -8,6 +8,8 @@
   import { useUserStore } from '../../../store/modules/userStore';
   import { useSubscribeSpaceStore } from '../../../store/modules/spaceStore';
   import { imgMitt } from '../../../util/uploadImage';
+  import type { SubscribedSpaceInfo } from '../../../server/api/space';
+  import { reqSubscribedSpace } from '../../../server/api/space';
 
   const userStore = useUserStore();
   const friendStore = useFriendStore();
@@ -17,28 +19,36 @@
   const fail = ref(null);
   // 加载个人页信息
   let sessionId: string;
-  const personInfo = reactive<{ personPage: PersonMessage; pageType: 0 | 1 | 2 | 3 }>({
+  const personInfo = reactive<{
+    personPage: PersonMessage;
+    subscribeSpace: SubscribedSpaceInfo[];
+    pageType: 0 | 1 | 2 | 3;
+  }>({
     personPage: {
-      userId: '7d5e7e76a4534db78b79d80b221df2ae',
-      nickname: '用户02',
+      userId: '',
+      nickname: '',
       remarkName: undefined,
-      account: 'SF_W0mWG6bK',
-      avatar: 'http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null',
-      backgroundImage: 'http://obs.scotfeel.com/0d82c86036e94549a04060b250bb7391.jpeg',
-      signature: '喜欢写代码',
+      account: '',
+      avatar: '',
+      backgroundImage: '',
+      signature: '',
     },
+    subscribeSpace: [],
     pageType: 0, // 页面类型，1为本人，2为朋友，3为陌生人
   });
   onLoad(async (params) => {
     sessionId = params.sessionId as string;
     if (sessionId === userStore.userInfo?.mainId) {
       personInfo.pageType = 1;
+      // 个人信息
       personInfo.personPage.userId = userStore.userInfo.mainId;
       personInfo.personPage.nickname = userStore.userInfo.nickname;
       personInfo.personPage.account = userStore.userInfo.account;
       personInfo.personPage.avatar = userStore.userInfo.avatar;
       personInfo.personPage.backgroundImage = `url(${userStore.userInfo.backgroundImage})`;
       personInfo.personPage.signature = userStore.userInfo.signature;
+      // 订阅空间
+      personInfo.subscribeSpace.push(...spaceStore.subscribeSpace);
     } else if (friendStore.getFriendInfo(sessionId)) {
       personInfo.pageType = 2;
       personInfo.personPage.userId = friendStore.friendPage.friendId;
@@ -48,15 +58,20 @@
       personInfo.personPage.avatar = friendStore.friendPage.avatar;
       personInfo.personPage.backgroundImage = `url(${friendStore.friendPage.backgroundImage})`;
       personInfo.personPage.signature = friendStore.friendPage.signature;
+      const spaceData = await reqSubscribedSpace(personInfo.personPage.userId);
+      console.log('🚀这段DEBUG在personPage的第62行🚀 🦴变量是spaceData🦴', spaceData);
+      personInfo.subscribeSpace.push(...spaceData);
     } else {
       personInfo.pageType = 3;
       personInfo.personPage = await reqPersonMessage(sessionId);
       const backgroundImg = personInfo.personPage.backgroundImage;
       personInfo.personPage.backgroundImage = `url(${backgroundImg})`;
+      const spaceData = await reqSubscribedSpace(personInfo.personPage.userId);
+      personInfo.subscribeSpace.push(...spaceData);
     }
   });
 
-  // 展示功能块
+  // #region  展示功能块
   const show = reactive({
     showMask: false,
     showMyConfig: false,
@@ -76,8 +91,9 @@
     show.showChangeNickname = false;
     show.showDeleteFriend = false;
   }
-  //
-  // 我的信息修改
+  // #endregion
+
+  // #region 我的信息修改
   function showMyConfig() {
     show.showMask = true;
     show.showMyConfig = true;
@@ -152,8 +168,9 @@
       fail.value.popUp();
     }
   }
-  //
-  // 好友信息修改
+  // #endregion
+
+  // #region 好友信息修改
   function showConfig() {
     show.showMask = true;
     show.showConfig = true;
@@ -166,7 +183,6 @@
   }
   // 修改备注
   const remark = ref('');
-
   async function changeRemark() {
     try {
       await friendStore.changeRemark(remark.value, personInfo.personPage.userId);
@@ -198,11 +214,12 @@
       fail.value.popUp();
     }
   }
+  // #endregion
+
   // 发送消息
   function sendMessage() {
     uni.navigateTo({ url: `/pages/main/chat/chat?sessionId=${sessionId}` });
   }
-  //
   // 非好友
   // 前往添加好友申请
   function goAddFriends() {
@@ -210,7 +227,6 @@
       url: `/pages/main/chat/addFriends?appliedUserId=${personInfo.personPage.userId}`,
     });
   }
-  console.log(personInfo.personPage.remarkName);
 </script>
 
 <template>
@@ -239,11 +255,11 @@
       <view>
         <text
           v-if="personInfo.personPage.remarkName && personInfo.personPage.remarkName !== 'null'"
-          style=" color: #eee; font-weight: bold;font-size: 34rpx"
+          style="color: #eee; font-weight: bold; font-size: 34rpx"
         >
           {{ personInfo.personPage.remarkName }}
         </text>
-        <text v-else style=" color: #eee; font-weight: bold;font-size: 34rpx">
+        <text v-else style="color: #eee; font-weight: bold; font-size: 34rpx">
           {{ personInfo.personPage.nickname }}
         </text>
         <br />
@@ -269,10 +285,10 @@
       <template #s1>
         <view class="my-space">
           <SpaceIdCard
-            v-for="item in spaceStore.subscribeSpace"
+            v-for="item in personInfo.subscribeSpace"
             :key="item.spaceId"
             :avatar="item.avatar"
-            :nick-name="item.nickName"
+            :nickname="item.nickname"
             :space-id="item.spaceId"
           />
         </view>
@@ -287,7 +303,7 @@
 
   <!-- 个人功能弹窗 -->
   <GradientWindow
-    style=" top: 66rpx;right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
+    style="top: 66rpx; right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
     :show="show.showMyConfig"
   >
     <text @tap="ShowChangeMySignature">个性签名</text>
@@ -319,7 +335,7 @@
   </PopWindow>
   <!-- 朋友功能弹窗 -->
   <GradientWindow
-    style=" top: 66rpx;right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
+    style="top: 66rpx; right: 1rpx; width: 150rpx; line-height: 60rpx; text-align: center"
     :show="show.showConfig"
   >
     <text @tap="showChangeRemark">设置备注</text>
@@ -338,7 +354,7 @@
     />
   </PopWindow>
   <PopBottom :pop-show="show.showDeleteFriend">
-    <view style=" margin: 50rpx 0;color: red; text-align: center" @tap="deleteFriend">
+    <view style="margin: 50rpx 0; color: red; text-align: center" @tap="deleteFriend">
       删除好友
     </view>
   </PopBottom>
@@ -395,6 +411,7 @@
       }
 
       .add-friend-btn {
+        /* stylelint-disable-next-line scss/at-extend-no-missing-placeholder */
         @extend .send-msg-btn;
       }
     }

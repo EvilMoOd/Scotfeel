@@ -42,7 +42,7 @@
   </view>
   <view class="main">
     <text>发送添加邀请</text>
-    <textarea v-model="apply.content" class="applyReason" cols="30" rows="10"></textarea>
+    <textarea v-model="apply.content" class="apply-reason" cols="30" rows="10"></textarea>
     <image
       src="@/assets/images/determine.jpg"
       class="determine"
@@ -78,7 +78,7 @@
   .main {
     padding: 50rpx;
 
-    .applyReason {
+    .apply-reason {
       margin-top: 20rpx;
       padding: 20rpx;
       background-color: #f2f2f2;

@@ -6,6 +6,7 @@
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
   import type { Comments, SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
   import {
+    reqApplyJoinSpace,
     reqGetOneLevelComment,
     reqCancelSubscribeSpace,
     reqSubscribeSpace,
@@ -14,10 +15,12 @@
     reqSpaceInfo,
     reqASpaceMoment,
   } from '../../server/api/space';
+  import { useUserStore } from '../../store/modules/userStore';
 
   // 判断该空间是否为用户订阅的空间
   const spaceStore = useSubscribeSpaceStore();
   let spaceId: string;
+  const userStore = useUserStore();
   // 空间信息
   const space = reactive({
     spaceInfo: {
@@ -37,7 +40,7 @@
     },
     inSpace: {
       spaceId: '25606d2bb91c4638a84cc9109444d666',
-      nickName: '田敏',
+      nickname: '田敏',
       avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
       role: 4,
     } as SubscribedSpaceInfo,
@@ -63,8 +66,12 @@
     await reqCancelSubscribeSpace(spaceId);
   }
   // 加入空间
-  function joinSpace() {
-    uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
+  async function joinSpace() {
+    if (space.spaceInfo.verifyFlag === 1) {
+      uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
+    } else {
+      await reqApplyJoinSpace(spaceId, userStore.userInfo?.mainId as string, '', 1, 1);
+    }
   }
   function goSpaceDetail() {
     uni.navigateTo({
@@ -137,7 +144,9 @@
     show.showMask = true;
     // TODO offset
     momentId.value = space.spaceMoment[index]._id;
-    await reqGetOneLevelComment(momentId.value, spaceId, 0);
+    const commentData = await reqGetOneLevelComment(momentId.value, spaceId, 0);
+    commentInfo.length = 0;
+    commentInfo.push(...commentData);
   }
   function hiddenAll() {
     show.showMask = false;
@@ -155,7 +164,7 @@
           type="camera"
           color="#fff"
           size="4vh"
-          class="publicActive"
+          class="public-active"
           @tap="goCreateSpaceMoment"
         />
         <uni-icons type="bars" color="#fff" size="4vh" class="more" @tap="showMember" />
@@ -171,7 +180,7 @@
         <view v-if="!space.inSpace" class="subscribe" @tap="subscribe">订阅</view>
         <view
           v-if="space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3"
-          class="inSpace"
+          class="in-space"
           @tap="cancelSubscribe"
         >
           已加入
@@ -256,7 +265,7 @@
           left: 26rpx;
         }
 
-        .publicActive {
+        .public-active {
           position: absolute;
           top: 62rpx;
           left: 580rpx;
@@ -324,7 +333,7 @@
           }
         }
 
-        .inSpace {
+        .in-space {
           position: absolute;
           top: 374rpx;
           left: 632rpx;

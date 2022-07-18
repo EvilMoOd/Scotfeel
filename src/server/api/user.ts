@@ -24,10 +24,11 @@ export interface UserInfo {
 }
 export interface SubscribedSpace {
   spaceId: string;
-  belongToId: string;
+  belongToId?: string;
   nickname: string;
+  remarkName?: string;
   avatar: string;
-  role: number;
+  role: 0 | 1 | 2 | 3 | 4;
 }
 export interface GroupMember {
   memberId: string; // 联系人id

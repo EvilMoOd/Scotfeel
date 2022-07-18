@@ -55,9 +55,7 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
       firstIpv4: false,
       success(response) {
         const { code, message, data } = response.data as AnyObject;
-        if (code === OK_CODE) {
-          resolve(data);
-        } else if (code === ERROR_CODE) {
+        if (code === ERROR_CODE) {
           reject(message);
         } else if (code === NO_TOKEN) {
           reject(message);
@@ -68,7 +66,7 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
         } else if (code === QUERRY_ERROR_CODE) {
           reject(message);
         } else {
-          reject(message);
+          resolve({ code, data, message });
         }
       },
       fail(err) {

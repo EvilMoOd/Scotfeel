@@ -68,7 +68,7 @@
           :key="space.spaceId"
           :avatar="space.avatar"
           :space-id="space.spaceId"
-          :nick-name="space.nickName"
+          :nickname="space.nickname"
           :role="space.role"
         />
       </view>

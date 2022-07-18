@@ -21,7 +21,7 @@
 </script>
 
 <template>
-  <!-- 朋友动态卡片 -->
+  <!-- 空间动态卡片 -->
   <view class="post">
     <view v-if="spaceMoment.posterUserInfo.length > 0" class="user">
       <image :src="spaceMoment.posterUserInfo[0].avatar" class="avatar" />

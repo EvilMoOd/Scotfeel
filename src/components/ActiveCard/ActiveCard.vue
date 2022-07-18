@@ -5,6 +5,7 @@
   import type { MomentInfo } from '../../server/api/moment';
   import 'dayjs/locale/zh-cn';
   import { useMomentStore } from '../../store/modules/momentStore';
+  import PopBottom from '../PopBottom/PopBottom.vue';
 
   day.extend(relativeTime);
   day.locale('zh-cn');
@@ -89,7 +90,7 @@
     </view>
   </view>
   <PopBottom :pop-show="show.showDeleteMoment">
-    <view style=" margin: 50rpx 0;color: red; text-align: center" @tap="deleteMoment">
+    <view style="margin: 50rpx 0; color: red; text-align: center" @tap="deleteMoment">
       确定删除动态？（该操作不可逆）
     </view>
   </PopBottom>

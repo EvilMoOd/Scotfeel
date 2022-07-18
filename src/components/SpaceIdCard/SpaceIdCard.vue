@@ -3,7 +3,7 @@
   const props = defineProps<{
     avatar: string;
     spaceId: string;
-    nickName: string;
+    nickname: string;
     role?: 1 | 2 | 3 | 4;
   }>();
 
@@ -18,7 +18,7 @@
   <view class="space-item" @tap="goSpace">
     <image :src="avatar" class="space-img" />
     <br />
-    <text>{{ nickName }}</text>
+    <text>{{ nickname }}</text>
     <view v-if="role" class="identify">
       {{ role === 1 ? '空间主' : role === 2 ? '管理员' : role === 3 ? '成员' : '订阅者' }}
     </view>
