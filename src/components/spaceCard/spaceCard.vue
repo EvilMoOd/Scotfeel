@@ -11,7 +11,7 @@
     index: number;
     spaceMoment: SpaceMoment;
     changeLikeStatus: (index: number) => void;
-    showComment: () => void;
+    showComment: (index: number) => void;
   }>();
 
   const pageIndex = ref(0);

@@ -15,9 +15,9 @@
   const friendStore = useFriendStore();
   const spaceStore = useSubscribeSpaceStore();
   const message = ref('');
-  const success = ref(null);
-  const fail = ref(null);
-  // 加载个人页信息
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
+  // #region 加载个人页信息
   let sessionId: string;
   const personInfo = reactive<{
     personPage: PersonMessage;
@@ -59,7 +59,6 @@
       personInfo.personPage.backgroundImage = `url(${friendStore.friendPage.backgroundImage})`;
       personInfo.personPage.signature = friendStore.friendPage.signature;
       const spaceData = await reqSubscribedSpace(personInfo.personPage.userId);
-      console.log('🚀这段DEBUG在personPage的第62行🚀 🦴变量是spaceData🦴', spaceData);
       personInfo.subscribeSpace.push(...spaceData);
     } else {
       personInfo.pageType = 3;
@@ -70,6 +69,7 @@
       personInfo.subscribeSpace.push(...spaceData);
     }
   });
+  // #endregion
 
   // #region  展示功能块
   const show = reactive({

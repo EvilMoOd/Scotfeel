@@ -47,16 +47,12 @@ export function insertGroup(
 }
 
 // 批量插入数据
-export function batchInsertGroup(
-  sql: string
-): void {
-  return executeSql(
-    sql
-  );
+export function batchInsertGroup(sql: string): void {
+  return executeSql(sql);
 }
 
-// 删除记录
-export function deleteGRecord(groupId: string, belongToId: string): void {
+// 删除群聊
+export function deleteGroup(groupId: string, belongToId: string): void {
   return executeSql(`
 				delete from groupChat where groupId = "${groupId}" and belongToId = "${belongToId}"
 			`);

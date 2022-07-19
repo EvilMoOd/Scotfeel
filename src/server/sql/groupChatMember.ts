@@ -37,12 +37,8 @@ export function insertGroupMember(
 }
 
 // 批量插入数据
-export function batchInsertGroupMember(
-  sql: string
-): void {
-  return executeSql(
-    sql
-  );
+export function batchInsertGroupMember(sql: string): void {
+  return executeSql(sql);
 }
 
 // 删除记录

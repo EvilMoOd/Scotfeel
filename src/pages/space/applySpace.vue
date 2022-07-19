@@ -1,9 +1,12 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
-  import { reactive } from 'vue';
+  import { reactive, ref } from 'vue';
   import { reqApplyJoinSpace } from '../../server/api/space';
   import { useUserStore } from '../../store/modules/userStore';
 
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   const userStore = useUserStore();
   let spaceId: string;
   onLoad((params: any) => {
@@ -21,14 +24,21 @@
   });
 
   async function enterInSpace() {
-    await reqApplyJoinSpace(
-      spaceId,
-      userStore.userInfo?.mainId as string,
-      applyForm.content,
-      1,
-      applyForm.applicantType ? 1 : 0
-    );
-    uni.navigateTo({ url: '/pages/space/space' });
+    try {
+      await reqApplyJoinSpace(
+        spaceId,
+        userStore.userInfo?.mainId as string,
+        applyForm.content,
+        1,
+        applyForm.applicantType ? 1 : 0
+      );
+      uni.navigateBack({ delta: 1 });
+      message.value = '申请发送成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '申请失败';
+      fail.value.popUp();
+    }
   }
   function chooseImg({ tempFilePaths }: { tempFilePaths: string[] }) {
     applyForm.photos.push(...tempFilePaths);
@@ -90,6 +100,8 @@
       @tap="enterInSpace"
     />
   </view>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

@@ -14,6 +14,7 @@
     moment: MomentInfo;
     index: number;
     changeLikeStatus: (index: number) => void;
+    showComment: (index: number) => void;
     success: () => void;
     fail: () => void;
   }>();
@@ -72,7 +73,7 @@
     </view>
 
     <view class="post-state">
-      <view>
+      <view @tap="showComment(props.index)">
         <uni-icons type="chat" size="3vh" color="#117986"></uni-icons>
         评论{{ props.moment.commentedCount }}
       </view>

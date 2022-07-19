@@ -55,7 +55,7 @@ export const request = async <T>(config: HTTPConfig): Promise<T> => {
       firstIpv4: false,
       success(response) {
         const { code, message, data } = response.data as AnyObject;
-        if (code === OK_CODE) {
+        if (code === OK_CODE || code === 210) {
           resolve(data);
         } else if (code === ERROR_CODE) {
           reject(message);

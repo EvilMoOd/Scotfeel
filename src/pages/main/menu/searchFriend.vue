@@ -26,11 +26,11 @@
     <uni-easyinput v-model="searchText" placeholder="搜索好友" @confirm="search"></uni-easyinput>
     <view
       v-if="searchInfo.personInfo"
-      class="personInfo"
+      class="person-info"
       @tap="goFriendPerson(searchInfo.personInfo?.userId as string)"
     >
       <image :src="searchInfo.personInfo?.avatar" class="avatar" />
-      <view class="personMsg">
+      <view class="person-msg">
         <view>
           <text class="nickname">{{ searchInfo.personInfo?.nickname }}</text>
         </view>
@@ -62,7 +62,7 @@
   }
 
   .main {
-    .personInfo {
+    .person-info {
       display: flex;
 
       .avatar {
@@ -72,7 +72,7 @@
         border-radius: 50%;
       }
 
-      .personMsg {
+      .person-msg {
         width: 560rpx;
         padding: 32rpx;
         padding-left: 0;

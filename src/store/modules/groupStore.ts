@@ -7,7 +7,7 @@ import {
   reqDismissGroupChat,
   reqUpdateGroupChatAvatar,
 } from '../../server/api/groupChat';
-import type { GroupChat, GroupMember } from '../../server/api/user';
+import type { GroupChat, GroupMember, User } from '../../server/api/user';
 import { reqImgData } from '../../server/api/user';
 import { OBS_URL } from '../../server/http';
 import {
@@ -21,16 +21,21 @@ import {
   updateSpaceAvatar,
   updateSpaceId,
   updateSpaceNickname,
+  deleteGroup,
 } from '../../server/sql/groupChat';
 import { imgMitt, uploadImage } from '../../util/uploadImage';
-import { insertGroupMember, batchInsertGroupMember } from '../../server/sql/groupChatMember';
+import {
+  insertGroupMember,
+  batchInsertGroupMember,
+  updateIsExited,
+} from '../../server/sql/groupChatMember';
 
 export interface Group {
   groupInfo: GroupChat[];
   groupPage: GroupChat;
 }
 
-const user = uni.getStorageSync('user');
+const user: User = uni.getStorageSync('user');
 export const useGroupChatStore = defineStore('groupChatStore', {
   state: (): Group => ({
     groupInfo: [],
@@ -178,6 +183,14 @@ export const useGroupChatStore = defineStore('groupChatStore', {
       );
     },
     // ws更新群聊信息
+    removeGroupMember(groupId: string, memberId: string) {
+      updateIsExited(1, groupId, memberId, user.userInfo?.mainId as string);
+    },
+    removeGroupMemberButMe(groupId: string) {
+      const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
+      this.groupInfo.splice(index, 1);
+      deleteGroup(groupId, user.userInfo?.mainId as string);
+    },
     updateGroupChatAvatar(groupId: string, avatar: string) {
       const index = this.groupInfo.findIndex((item) => item.groupId === groupId);
       this.groupInfo[index].avatar = avatar;

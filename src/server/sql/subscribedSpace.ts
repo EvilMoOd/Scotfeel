@@ -18,8 +18,8 @@ export function createSubscribeTable(config = { name: 'scotfeel', path: '_doc/ch
     },
   });
 }
-// 插入数据
-export function insert(
+// 插入空间
+export function insertSpace(
   spaceId: string,
   nickname: string,
   avatar: string,
@@ -31,7 +31,7 @@ export function insert(
 			`);
 }
 
-// 删除记录
+// 删除空间
 export function deleteSpace(spaceId: string, belongToId: string): void {
   return executeSql(`
 				delete from subscribedSpace where spaceId = "${spaceId}" and belongToId = "${belongToId}"

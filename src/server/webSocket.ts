@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-use-before-define */
@@ -13,12 +14,14 @@ import { insertRecord } from './sql/chatRecord';
 import { createUUID } from './utils/uuid';
 import { useGroupChatStore } from '../store/modules/groupStore';
 import {
+  insertGroupMember,
   updateGMAvatar,
   updateGMNickname,
   updateGMRemarkName,
   updateGMRole,
   updateIsExited,
 } from './sql/groupChatMember';
+import { useSubscribeSpaceStore } from '../store/modules/spaceStore';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: number;
@@ -33,6 +36,7 @@ export function connectWebSocket(url: string, token: string): void {
   const noticeStore = useNoticeStore();
   const friendStore = useFriendStore();
   const groupStore = useGroupChatStore();
+  const spaceStore = useSubscribeSpaceStore();
   connectSocket();
   // 连接socket
   function connectSocket(): void {
@@ -69,7 +73,7 @@ export function connectWebSocket(url: string, token: string): void {
   function _onMessage(res: any): void {
     const data = JSON.parse(res.data);
     const { content, messageType, sequenceId } = data;
-    console.log(content);
+    console.log(`收到第${messageType}类ws消息，内容是`, content);
     // 回复ACK表示接受到信息
     if (messageType !== 1 && messageType !== 2) {
       _sendMessage(
@@ -203,10 +207,18 @@ export function connectWebSocket(url: string, token: string): void {
         user.userInfo?.mainId as string
       );
     } else if (messageType === 19) {
-      // TODO 19、被同意加入群聊
+      // 19、被同意加入群聊
+      groupStore.newGroup(
+        content.groupChatInfo,
+        content.memberInfo,
+        user.userInfo?.mainId as string
+      );
       console.log(content.groupInfo);
     } else if (messageType === 20) {
-      // TODO 20、被移除群聊
+      // 20、被移除群聊
+      content.memberId === user.userInfo?.mainId
+        ? groupStore.removeGroupMemberButMe(content.groupId)
+        : groupStore.removeGroupMember(content.groupId, content.memberId);
     } else if (messageType === 21) {
       // 21、更新群聊头像
       groupStore.updateGroupChatAvatar(content.groupId, content.avatar);
@@ -226,7 +238,17 @@ export function connectWebSocket(url: string, token: string): void {
       // 26、更新群绑定的空间的头像
       groupStore.updateGroupSpaceAvatar(content.groupId, content.spaceAvatar);
     } else if (messageType === 27) {
-      // TODO27、有群新成员加入
+      // 27、有群新成员加入
+      insertGroupMember(
+        content.groupId,
+        content.memberId,
+        content.nickname,
+        content.memberRemark,
+        content.avatar,
+        content.role,
+        0,
+        user.userInfo?.mainId as string
+      );
     } else if (messageType === 28) {
       // 28、群成员头像更新
       updateGMAvatar(
@@ -267,34 +289,44 @@ export function connectWebSocket(url: string, token: string): void {
       groupStore.groupBreakOut(content.groupId);
       console.log('群聊解散');
     } else if (messageType === 34) {
-      // TODO 34、被同意加入空间
+      // 34、被同意加入空间
+      spaceStore.addSpace(content.Space);
     } else if (messageType === 35) {
-      // TODO 35、更新空间昵称
+      // 35、更新空间昵称
+      spaceStore.updateSpaceNickname(content.spaceId, content.nickname);
     } else if (messageType === 36) {
-      // TODO 36、更新空间头像
+      // 36、更新空间头像
+      spaceStore.updateSpaceAvatar(content.spaceId, content.avatar);
     } else if (messageType === 37) {
-      // TODO 37、空间内的角色更新
+      // 37、空间内的角色更新
+      spaceStore.updateSpaceRole(content.spaceId, content.role);
     } else if (messageType === 38) {
-      // TODO 38、空间被设为私密空间
+      // 38、空间被设为私密空间
+      spaceStore.removeSpace(content.spaceId);
     } else if (messageType === 39) {
       // TODO 39、kickout
     } else if (messageType === 40) {
       // TODO 40、用户二维码更新
     } else if (messageType === 41) {
-      // 41、创建群聊
+      // 41、在线获取新群聊信息
       groupStore.newGroup(
         content.groupChatInfo,
         content.memberInfo,
         user.userInfo?.mainId as string
       );
     } else if (messageType === 42) {
-      // TODO 42、创建空间
+      // 42、订阅或加入空间时获取空间信息
+      spaceStore.addSpace(content.Space);
     } else if (messageType === 43) {
       // console.log('绑定连接成功');
       _sendHeart(); // 连接服务端成功后开始发送心跳
       _closeConn(); // 并打开心跳回复检测
     } else if (messageType === 44) {
       // TODO 44、动态被转发
+    } else if (messageType === 45) {
+      // TODO 45、加入群聊获得群聊信息
+    } else if (messageType === 46) {
+      // TODO 46、加入空间获取空间信息
     }
   }
   // 监听关闭
@@ -325,7 +357,7 @@ export function connectWebSocket(url: string, token: string): void {
       time: Date.now(),
       sequenceId: createUUID(),
     };
-    sendHeartTime = setInterval(function () {
+    sendHeartTime = setInterval(() => {
       _sendMessage(JSON.stringify(messageFromClient));
       // console.log('客户端发送心跳ping');
     }, 5000);
@@ -335,7 +367,7 @@ export function connectWebSocket(url: string, token: string): void {
     // console.log('进入reconnect准备重新连接');
     if (reconnectFlag) {
       // console.log('重连----------------------');
-      setTimeout(function () {
+      setTimeout(() => {
         connectSocket();
       }, 3000);
     }
@@ -362,7 +394,7 @@ export function logoutCloseWebsocket(): void {
 // 10秒后如未收到服务器的回复心跳则断开
 export function _closeConn(): void {
   // console.log('开启检测服务器10秒内是否在线定时任务');
-  closeConnTime = setTimeout(function () {
+  closeConnTime = setTimeout(() => {
     _close();
   }, 10000);
 }

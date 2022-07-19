@@ -1,6 +1,6 @@
 $color-sf: #117986;
 
-//头部
+// 头部
 @mixin header {
   width: 750rpx;
   height: 160rpx;
@@ -23,7 +23,7 @@ $uni-bg-color: #f7f7f7;
 @mixin mask {
   filter: blur(3px);
 }
-@mixin flexbox{
+@mixin flexbox {
   display: flex;
   align-items: center;
   justify-content: center;

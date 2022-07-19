@@ -5,6 +5,9 @@
   import { useFriendStore } from '../../../store/modules/friendStore';
   import { useUserStore } from '../../../store/modules/userStore';
 
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   const userStore = useUserStore();
   const friendStore = useFriendStore();
 
@@ -22,8 +25,6 @@
     return InfoArr;
   });
   // 创建群聊
-  const success = ref(null);
-  const fail = ref(null);
   let timer: any;
   async function done() {
     try {
@@ -35,6 +36,7 @@
         },
         ...createInfo.value,
       ]);
+      message.value = '群聊创建成功';
       success.value.popUp();
       timer = setTimeout(() => {
         uni.navigateBack({
@@ -42,6 +44,7 @@
         });
       }, 3000);
     } catch (err) {
+      message.value = '群聊创建失败';
       fail.value.popUp();
     }
   }
@@ -81,8 +84,8 @@
       </view>
     </view>
   </scroll-view>
-  <PopMessage ref="success" success>群聊创建成功</PopMessage>
-  <PopMessage ref="fail">群聊创建失败</PopMessage>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

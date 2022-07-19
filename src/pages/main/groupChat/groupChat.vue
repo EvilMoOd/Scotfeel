@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { onLoad } from '@dcloudio/uni-app';
   import { ref, reactive, nextTick } from 'vue';
+  import { debounce } from 'lodash-es';
   import type { ChatRecord } from '../../../server/sql/chatRecord';
   import { selectGroupChat, insertRecord } from '../../../server/sql/chatRecord';
   import { personMsg, _sendMessage } from '../../../server/webSocket';
   import { createUUID } from '../../../server/utils/uuid';
   import type { GroupChat } from '../../../server/api/user';
   import { useSessionListStore } from '../../../store/modules/sessionListStore';
-  import { debounce } from 'lodash-es';
   import { useUserStore } from '../../../store/modules/userStore';
   import { useGroupChatStore } from '../../../store/modules/groupStore';
   import { selectAllMemberInfo } from '../../../server/sql/groupChatMember';
@@ -51,6 +51,7 @@
     sessionId = params.sessionId;
     // 初始化朋友信息
     const groupInfo = groupStore.groupInfo.find((item) => item.groupId === sessionId);
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     init(groupInfo);
     // 监听页面实时消息
     personMsg.on('gMsg', (e: any) => {
@@ -80,7 +81,7 @@
   // 发送消息
   function submitMessage(e: any) {
     const newMsg: ChatRecord = {
-      sessionId: sessionId,
+      sessionId,
       userId: userStore.userInfo?.mainId as string,
       belongToId: userStore.userInfo?.mainId as string,
       content: e.detail.value,
@@ -112,7 +113,9 @@
     debounce(() => {
       sessionListStore.newMessage(sessionId, e.detail.value, 0, Date.now(), 2);
     }, 1000)();
-    nextTick(() => (scroll.value += 10000));
+    nextTick(() => {
+      scroll.value += 10000;
+    });
   }
 </script>
 
@@ -244,6 +247,7 @@
 
     .input-msg {
       width: 620rpx;
+
       // height: 76rpx;
       max-height: 25vh;
       padding: 20rpx;

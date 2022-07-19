@@ -13,13 +13,14 @@
     apply.appliedUserId = params.appliedUserId as string;
   });
   // 添加好友
-  type PopMessageType = InstanceType<typeof PopMessage>;
-  const success = ref<PopMessageType>();
-  const fail = ref<PopMessageType>();
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   let timer: number;
   async function addFriend() {
     try {
       await reqAddFriend(apply.content, apply.appliedUserId);
+      message.value = '好友添加成功';
       success.value.popUp();
       timer = setTimeout(() => {
         uni.navigateBack({
@@ -27,6 +28,7 @@
         });
       }, 3000);
     } catch (err) {
+      message.value = '好友添加失败';
       fail.value.popUp();
     }
   }
@@ -50,8 +52,8 @@
       @tap="addFriend"
     />
   </view>
-  <PopMessage ref="success" success>添加好友成功</PopMessage>
-  <PopMessage ref="fail">添加好友失败</PopMessage>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
 </template>
 
 <style lang="scss" scoped>

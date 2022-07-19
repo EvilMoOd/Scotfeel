@@ -3,7 +3,18 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { reactive, ref } from 'vue';
   import { useMomentStore, noMore } from '../../../store/modules/momentStore';
+  import ActiveCard from '../../../components/ActiveCard/ActiveCard.vue';
+  import MomentList from '../../../components/MomentList/MomentList.vue';
+  import Home from '../../../components/Home/Home.vue';
+  import PopMessage from '../../../components/PopMessage/PopMessage.vue';
+  import type { Comment as CommentType } from '../../../server/api/moment';
+  import { reqAddComment } from '../../../server/api/moment';
+  import Comment from '../../../components/Comment/Comment.vue';
+  import Mask from '../../../components/Mask/Mask.vue';
 
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   const momentStore = useMomentStore();
   onLoad((params) => {
     momentStore.init(params);
@@ -17,9 +28,28 @@
   }
   const show = reactive({
     comment: false,
+    mask: false,
   });
-  function comment() {
+  function hiddenAll() {
     show.comment = true;
+    show.mask = true;
+  }
+  const momentId = ref<number>();
+  const commentInfo = reactive<CommentType[]>([]);
+  const commentInput = ref('');
+  async function sendComment(e: string) {
+    await reqAddComment({
+      content: e,
+      momentId: momentId.value as number,
+      commentType: 0,
+    });
+  }
+  async function showComment(index: number) {
+    show.comment = true;
+    show.mask = true;
+    // TODO offset
+    commentInfo.length = 0;
+    commentInfo.push(...momentStore.momentInfo[index].comments);
   }
   // 前往发布动态页
   function goSendMoment() {
@@ -35,13 +65,13 @@
     });
   }
 
-  const success = ref(null);
-  const fail = ref(null);
-
+  // 动态删除
   function successDelete() {
+    message.value = '动态已删除';
     success.value.popUp();
   }
   function failDelete() {
+    message.value = '删除失败';
     fail.value.popUp();
   }
 </script>
@@ -61,6 +91,7 @@
         :moment="item"
         :index="index"
         :change-like-status="changeLikeStatus"
+        :show-comment="showComment"
         :success="successDelete"
         :fail="failDelete"
       />
@@ -68,11 +99,28 @@
     </view>
     <view></view>
   </scroll-view>
-  <!-- <PopBottom :pop-show="show.comment">
-    <Comment />
-  </PopBottom> -->
-  <PopMessage ref="success" success>动态已删除</PopMessage>
-  <PopMessage ref="fail">动态删除失败</PopMessage>
+  <PopBottom :pop-show="show.comment">
+    <Comment
+      v-for="(item, index) in commentInfo"
+      :key="index"
+      :one-comment="item"
+      :moment-id="(momentId as number)"
+    />
+    <textarea
+      v-model="commentInput"
+      placeholder="评论一下~"
+      class="input-msg"
+      auto-height
+      auto-blur
+      maxlength="-1"
+      confirm-type="send"
+      confirm-hold
+      @confirm="sendComment"
+    />
+  </PopBottom>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
+  <Mask :show="show.mask" :hidden="hiddenAll" />
 </template>
 
 <style lang="scss" scoped>
@@ -99,5 +147,20 @@
   .main {
     height: 980rpx;
     background-color: #f2f2f2;
+  }
+
+  .input-msg {
+    width: 620rpx;
+
+    // height: 76rpx;
+    max-height: 25vh;
+    padding: 20rpx;
+    text-indent: 20rpx;
+    background-color: #fff;
+    border-radius: 50rpx;
+  }
+
+  .mask {
+    filter: blur(3px);
   }
 </style>

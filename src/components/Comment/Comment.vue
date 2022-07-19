@@ -12,39 +12,10 @@
   const props = defineProps<{
     oneComment: Comments;
     momentId: number;
-    spaceId: string;
+    spaceId?: string;
   }>();
 
-  const towComment = reactive<Comments[]>([
-    {
-      spaceMemberFlag: 1,
-      content:
-        'adipisicingipsumelitnisicillumsssssssaaaaaaadadadadadadssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
-      commentedUserInfo: [
-        {
-          _id: '0d94b112969e4c0abfbd94464795a9a2',
-          nickname: 'sdfs',
-          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-        },
-      ],
-      commentedUserRemarkName: [],
-      commenterInfo: [
-        {
-          _id: '0d94b112969e4c0abfbd94464795a9a2',
-          nickname: 'sdfs',
-          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-        },
-      ],
-      commenterRemarkName: [
-        {
-          remarkName: undefined,
-        },
-      ],
-      secondCommentIndex:
-        'adipisicingipsumelitnisicillumsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
-      createTime: 1653908215942,
-    },
-  ]);
+  const towComment = reactive<Comments[]>([]);
 
   const loading = ref('more');
   async function loadMore() {
@@ -69,6 +40,7 @@
     </view>
   </view>
   <view class="content">{{ oneComment.content }}</view>
+  <!-- 二级评论区 -->
   <view class="sub-content-wrap">
     <view v-for="(item, index) in towComment" :key="index" class="sub-content-container">
       <view class="person-place">
@@ -81,8 +53,9 @@
       <view class="sub-content">{{ item.content }}</view>
     </view>
     <uni-load-more
+      v-if="oneComment.commentCount !== 0"
       :status="loading"
-      :content-text="{ contentdown: '展开更多评论' }"
+      :content-text="{ contentdown: `展开${oneComment.commentCount}条评论` }"
       class="load"
       @click-load-more="loadMore"
     ></uni-load-more>

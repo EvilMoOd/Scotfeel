@@ -162,7 +162,7 @@
         <text>消息免打扰</text>
         <switch
           color="#117986"
-          style=" float: right; margin-top: -10rpx;transform: scale(0.5)"
+          style="float: right; margin-top: -10rpx; transform: scale(0.5)"
           :checked="switches.mute"
           @change="changeMute"
         />
@@ -242,14 +242,14 @@
     </view>
   </view>
   <GradientWindow
-    style=" top: 66rpx;right: 1rpx; line-height: 60rpx; text-align: center"
+    style="top: 66rpx; right: 1rpx; line-height: 60rpx; text-align: center"
     :show="show.isShowConfig"
   >
     <view>
       进群审核
       <switch
         color="#117986"
-        style=" margin: -10rpx -20rpx 0;transform: scale(0.5)"
+        style="margin: -10rpx -20rpx 0; transform: scale(0.5)"
         :checked="switches.verify"
         @change="changeVerify"
       />

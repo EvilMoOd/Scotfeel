@@ -185,38 +185,44 @@ export const reqSubscribedSpace = async (userId: string): Promise<SubscribedSpac
   });
 // 空间动态
 // 获取一个空间的动态
-export interface PosterUserInfo {
+
+export interface SpaceMoment {
+  _id: number;
+  posterUserInfo: Info[];
+  posterUserRemarkName: PosterUserRemarkName[];
+  posterSpaceInfo: Info[];
+  content: string;
+  likedCount: number;
+  likeStatus: number;
+  commentedCount: number;
+  repostedCount: number;
+  photos: string[];
+  createTime: number;
+  repostedMomentId: number;
+  repostedMomentSpaceId: string;
+  repostedMomentPosterUserInfo: Info[];
+  repostedMomentPosterSpaceInfo: Info[];
+  repostedMomentPosterType: number;
+  isReposted: number;
+  repostedMomentInfo: RepostedMomentInfo[];
+}
+
+export interface Info {
   _id: string;
   nickname: string;
   avatar: string;
+  private_flag?: number;
 }
 
 export interface PosterUserRemarkName {
   remarkName: string;
 }
 
-export interface SpaceMoment {
-  _id: number;
-  spaceInfo?: any;
-  posterUserInfo: PosterUserInfo[];
-  posterUserRemarkName: PosterUserRemarkName[];
-  posterSpaceInfo: any[];
-  posterType: number;
+export interface RepostedMomentInfo {
   content: string;
   photos: string[];
-  repostedCount: number;
-  likedCount: number;
-  commentedCount: number;
-  likeStatus: number;
-  repostedMomentId: number;
-  repostedMomentSpaceId: string;
-  repostedMomentPosterUserInfo: any[];
-  repostedMomentPosterSpaceInfo: any[];
-  repostedMomentPosterType: number;
-  repostedMomentInfo: any[];
-  isReposted: number;
-  createTime: number;
 }
+
 export const reqASpaceMoment = async (
   spaceId: string,
   lastMomentId: number
@@ -277,12 +283,13 @@ export const reqCancelLike = async (momentId: number): Promise<null> =>
     data: { momentId },
   });
 export interface AddComment {
-  commentedUserId: string; // 被评论者ID
-  commentType: number; // 评论类型，0：对动态直接评论，1：回复评论
   content: string; // 评论内容
   momentId: number; // 评论所在的动态ID
-  secondCommentIndex: string; // 如果是对评论进行评论，则需要传入这条评论所在一级评论的哪个索引
+  spaceId: string;
   spaceMemberFlag: number; // 是否为该动态所发布在空间的成员，0：否，1：是
+  commentType: number; // 评论类型，0：对动态直接评论，1：回复评论
+  commentedUserId?: string; // 被评论者ID
+  secondCommentIndex?: string; // 如果是对评论进行评论，则需要传入这条评论所在一级评论的哪个索引
 }
 // 添加评论
 export const reqAddComment = async (comment: AddComment): Promise<null> =>
@@ -315,6 +322,7 @@ export interface Comments {
   commenterInfo: CommenterInfo[];
   commenterRemarkName: CommenterRemarkName[];
   secondCommentIndex: string;
+  commentCount: number;
   createTime: number;
 }
 // 获取一级评论
@@ -373,6 +381,22 @@ export const reqDealApply = async (messageId: string, status: 0 | 1 | 2): Promis
     url: `/space/spaceApply/verify`,
     method: 'POST',
     data: { messageId, status },
+    type: 'application/x-www-form-urlencoded',
+  });
+// 用户退出空间
+export const reqExitSpace = async (spaceId: string): Promise<null> =>
+  request<null>({
+    url: `/space/spaceApply/userMemberExit`,
+    method: 'POST',
+    data: { spaceId },
+    type: 'application/x-www-form-urlencoded',
+  });
+// 用户的空间退出该空间
+export const reqExitMySpace = async (spaceId: string, spaceMemberId: string): Promise<null> =>
+  request<null>({
+    url: `/space/spaceApply/spaceMemberId`,
+    method: 'POST',
+    data: { spaceId, spaceMemberId },
     type: 'application/x-www-form-urlencoded',
   });
 // 用户订阅空间

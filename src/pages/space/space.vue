@@ -4,8 +4,17 @@
   import { onLoad } from '@dcloudio/uni-app';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import PopBottom from '../../components/PopBottom/PopBottom.vue';
-  import type { Comments, SpaceMoment, SubscribedSpaceInfo } from '../../server/api/space';
+  import type {
+    Comments,
+    SpaceMember,
+    SpaceMoment,
+    SubscribedSpaceInfo,
+  } from '../../server/api/space';
   import {
+    reqAddComment,
+    reqExitMySpace,
+    reqExitSpace,
+    reqSpaceMember,
     reqApplyJoinSpace,
     reqGetOneLevelComment,
     reqCancelSubscribeSpace,
@@ -15,13 +24,22 @@
     reqSpaceInfo,
     reqASpaceMoment,
   } from '../../server/api/space';
+
   import { useUserStore } from '../../store/modules/userStore';
+  import Comment from '../../components/Comment/Comment.vue';
+  import PopMessage from '../../components/PopMessage/PopMessage.vue';
+  import Mask from '../../components/Mask/Mask.vue';
+  import SpaceCard from '../../components/SpaceCard/SpaceCard.vue';
+  import Back from '../../components/Back/Back.vue';
 
   // 判断该空间是否为用户订阅的空间
-  const spaceStore = useSubscribeSpaceStore();
+  const message = ref('');
+  const success = ref<any>(null);
+  const fail = ref<any>(null);
   let spaceId: string;
+  const spaceStore = useSubscribeSpaceStore();
   const userStore = useUserStore();
-  // 空间信息
+  // #region 空间信息
   const space = reactive({
     spaceInfo: {
       mainId: '25606d2bb91c4638a84cc9109444d666',
@@ -39,11 +57,12 @@
       recommendFlag: 0, // 是否允许系统推荐给其它用户，0：否，1：是
     },
     inSpace: {
-      spaceId: '25606d2bb91c4638a84cc9109444d666',
-      nickname: '田敏',
-      avatar: `http://obs.scotfeel.com/61b0b7cc5af7a0db2c245f213bfa637b.jpeg?versionId=null`,
-      role: 4,
+      spaceId: '',
+      nickname: '',
+      avatar: ``,
+      role: 0,
     } as SubscribedSpaceInfo,
+    spaceMember: [] as SpaceMember[],
     spaceMoment: [] as SpaceMoment[],
   });
   const imgUrl = computed(() => {
@@ -54,35 +73,100 @@
     space.spaceInfo = await reqSpaceInfo(spaceId);
     space.inSpace = spaceStore.getSpace(space.spaceInfo.mainId) as SubscribedSpaceInfo;
     space.spaceMoment = await reqASpaceMoment(space.spaceInfo.mainId, 1652471824095);
+    // 我的空间在此空间作为空间成员
+    const spaceMember = await reqSpaceMember(spaceId);
+    const mySpace = spaceStore.subscribeSpace.filter((item) => item.role === 1);
+    const spaceIdArray = mySpace.map((item) => item.spaceId);
+    space.spaceMember = spaceMember.filter((item) => spaceIdArray.includes(item.spaceId));
   });
+  // #endregion
 
-  // 功能区
+  // #region 展示区
+  const show = reactive({
+    showMask: false,
+    showComment: false,
+    showMember: false,
+  });
+  function showMember() {
+    show.showMember = true;
+    show.showMask = true;
+  }
+
+  function hiddenAll() {
+    show.showMask = false;
+    show.showMember = false;
+    show.showComment = false;
+  }
+  // #endregion
+  // #region 空间操作
   // 订阅空间
   async function subscribe() {
-    await reqSubscribeSpace(spaceId);
+    try {
+      await reqSubscribeSpace(spaceId);
+      message.value = '已订阅该空间';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '订阅失败';
+      fail.value.popUp();
+    }
   }
   // 取消订阅
   async function cancelSubscribe() {
-    await reqCancelSubscribeSpace(spaceId);
+    try {
+      await reqCancelSubscribeSpace(spaceId);
+      spaceStore.removeSpace(spaceId);
+      message.value = '已取消订阅';
+      space.inSpace.role = 0;
+      success.value.popUp();
+    } catch (err) {
+      message.value = '取订失败';
+      fail.value.popUp();
+    }
   }
   // 加入空间
   async function joinSpace() {
     if (space.spaceInfo.verifyFlag === 1) {
       uni.navigateTo({ url: `/pages/space/applySpace?spaceId=${space.spaceInfo.mainId}` });
     } else {
-      await reqApplyJoinSpace(spaceId, userStore.userInfo?.mainId as string, '', 1, 1);
+      try {
+        await reqApplyJoinSpace(spaceId, userStore.userInfo?.mainId as string, '', 1, 1);
+        space.inSpace.role = 3;
+        message.value = '加入成功';
+        success.value.popUp();
+      } catch (err) {
+        message.value = '加入失败';
+        fail.value.popUp();
+      }
     }
   }
-  function goSpaceDetail() {
-    uni.navigateTo({
-      url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}&privateFlag=${space.spaceInfo.privateFlag}&verifyFlag=${space.spaceInfo.verifyFlag}&inviteFlag=${space.spaceInfo.inviteFlag}&recommendFlag=${space.spaceInfo.recommendFlag}&nickname=${space.spaceInfo.nickname}&avatar=${space.spaceInfo.avatar}`,
-    });
+  // 退出空间
+  async function exitSpace() {
+    try {
+      await reqExitSpace(spaceId);
+      spaceStore.updateSpaceRole(spaceId, 4);
+      space.inSpace.role = 4;
+      message.value = '退出成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '退出失败';
+      fail.value.popUp();
+    }
   }
-  // 前往发布动态页
-  function goCreateSpaceMoment() {
-    uni.navigateTo({ url: `/pages/space/createSpaceMoment?spaceId=${space.spaceInfo.mainId}` });
+  async function exitMySpace(spaceMemberId: string) {
+    try {
+      await reqExitMySpace(spaceId, spaceMemberId);
+      const index = space.spaceMember.findIndex((item) => item.spaceId === spaceMemberId);
+      space.spaceMember.splice(index, 1);
+      message.value = '退出成功';
+      success.value.popUp();
+    } catch (err) {
+      message.value = '退出失败';
+      fail.value.popUp();
+    }
   }
-  // 动态区
+  // #endregion
+
+  // #region 动态区
   // 点赞
   async function changeLikeStatus(index: number) {
     if (space.spaceMoment[index].likeStatus === 1) {
@@ -99,45 +183,16 @@
   }
   // 评论
   const momentId = ref<number>();
-  const commentInfo = reactive<Comments[]>([
-    {
-      spaceMemberFlag: 1,
-      content:
-        'b8SzITadipisicingipsumelitnisicillumsssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss',
-      commentedUserInfo: [
-        {
-          _id: '0d94b112969e4c0abfbd94464795a9a2',
-          nickname: '用户02',
-          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-        },
-      ],
-      commentedUserRemarkName: [],
-      commenterInfo: [
-        {
-          _id: '0d94b112969e4c0abfbd94464795a9a2',
-          nickname: '用户02',
-          avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-        },
-      ],
-      commenterRemarkName: [
-        {
-          remarkName: '232fds',
-        },
-      ],
-      secondCommentIndex: 'adipisicingipsumelitnisicillum',
-      createTime: 1653908215942,
-    },
-  ]);
-
-  // 展示区
-  const show = reactive({
-    showMask: false,
-    showComment: false,
-    showMember: false,
-  });
-  function showMember() {
-    show.showMember = true;
-    show.showMask = true;
+  const commentInfo = reactive<Comments[]>([]);
+  const commentInput = ref('');
+  async function sendComment(e: string) {
+    await reqAddComment({
+      content: e,
+      momentId: momentId.value as number,
+      spaceId,
+      commentType: 0,
+      spaceMemberFlag: space.inSpace ? 1 : 0,
+    });
   }
   async function showComment(index: number) {
     show.showComment = true;
@@ -148,10 +203,16 @@
     commentInfo.length = 0;
     commentInfo.push(...commentData);
   }
-  function hiddenAll() {
-    show.showMask = false;
-    show.showMember = false;
-    show.showComment = false;
+  // #endregion
+
+  function goSpaceDetail() {
+    uni.navigateTo({
+      url: `/pages/space/spaceDetail?spaceId=${space.spaceInfo.mainId}&privateFlag=${space.spaceInfo.privateFlag}&verifyFlag=${space.spaceInfo.verifyFlag}&inviteFlag=${space.spaceInfo.inviteFlag}&recommendFlag=${space.spaceInfo.recommendFlag}&nickname=${space.spaceInfo.nickname}&avatar=${space.spaceInfo.avatar}`,
+    });
+  }
+  // 前往发布动态页
+  function goCreateSpaceMoment() {
+    uni.navigateTo({ url: `/pages/space/createSpaceMoment?spaceId=${space.spaceInfo.mainId}` });
   }
 </script>
 
@@ -181,7 +242,6 @@
         <view
           v-if="space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3"
           class="in-space"
-          @tap="cancelSubscribe"
         >
           已加入
         </view>
@@ -212,35 +272,42 @@
         v-for="(item, index) in commentInfo"
         :key="index"
         :one-comment="item"
-        :moment-id="momentId"
+        :moment-id="(momentId as number)"
         :space-id="spaceId"
       />
     </scroll-view>
+    <uni-easyinput />
+    <textarea
+      v-model="commentInput"
+      placeholder="评论一下~"
+      class="input-msg"
+      auto-height
+      auto-blur
+      maxlength="-1"
+      confirm-type="send"
+      confirm-hold
+      @confirm="sendComment"
+    />
   </PopBottom>
   <PopBottom :pop-show="show.showMember">
     <scroll-view scroll-y class="member-list">
-      <view class="member-item">
-        <Avatar img-src="/src/assets/images/img3.png" :type="1" />
-        <text class="username">里尔</text>
-        <text class="leave">退出</text>
+      <!-- 我 -->
+      <view v-if="space.inSpace.role !== 0" class="member-item">
+        <Avatar :img-src="userStore.userInfo?.avatar" :type="1" />
+        <text class="username">{{ userStore.userInfo?.nickname }}</text>
+        <text v-if="space.inSpace.role === 4" class="leave" @tap="cancelSubscribe">取订</text>
+        <text v-else class="leave" @tap="exitSpace">退出</text>
       </view>
-      <view class="member-item">
-        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-        <text class="username">里尔</text>
-        <text class="leave">退出</text>
-      </view>
-      <view class="member-item">
-        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-        <text class="username">里尔</text>
-        <text class="leave">退出</text>
-      </view>
-      <view class="member-item">
-        <Avatar img-src="/src/assets/images/img3.png" :type="2" />
-        <text class="username">里尔</text>
-        <text class="leave">退出</text>
+      <!-- 我的空间在此空间作为空间成员 -->
+      <view v-for="(item, index) in space.spaceMember" :key="index" class="member-item">
+        <Avatar :img-src="item.avatar" :type="2" />
+        <text class="username">{{ item.nickname }}</text>
+        <text class="leave" @tap="exitMySpace(item.spaceId)">退出</text>
       </view>
     </scroll-view>
   </PopBottom>
+  <PopMessage ref="success" success>{{ message }}</PopMessage>
+  <PopMessage ref="fail">{{ message }}</PopMessage>
   <Mask :show="show.showMask" :hidden="hiddenAll" />
 </template>
 
@@ -385,6 +452,17 @@
         color: $color-sf;
       }
     }
+  }
+
+  .input-msg {
+    width: 620rpx;
+
+    // height: 76rpx;
+    max-height: 25vh;
+    padding: 20rpx;
+    text-indent: 20rpx;
+    background-color: #fff;
+    border-radius: 50rpx;
   }
 
   .mask {
