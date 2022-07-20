@@ -22,7 +22,6 @@ export function createSubscribeNoticeTable(config = { name: 'scotfeel', path: '_
 
 // 插入数据
 export function insertSubscribeNotice(
-    id: number, 
     userId: string,
     nickname: string,
     avatar: string,
