@@ -1,120 +1,167 @@
+/* eslint-disable no-underscore-dangle */
 import { defineStore } from 'pinia';
-import type {
-  ApplyNotice,
-  ForwardNotice,
-  LikeNotice,
-  SubscribeNotice,
-} from '../../server/api/notice';
+import type { User } from '../../server/api/user';
 import {
-  reqSubscribeNotice,
-  reqForwardNotice,
-  reqLikeNotice,
-  reqCommentsNotice,
-  reqApplyNotice,
-} from '../../server/api/notice';
+  insertInteractionNotice,
+  selectInteractionNotice,
+} from '../../server/sql/interactionNotice';
+import { insertApplyNotice, selectApplyNotice } from '../../server/sql/applyNotice';
+import type { NoticeApply, InteractionNotice, NewSubscribe } from '../../server/webSocketType';
+import { useFriendStore } from './friendStore';
+import { insertSubscribeNotice, selectSubscribeNotice } from '../../server/sql/subscribeNotice';
 
-const notice = uni.getStorageSync('notice');
+const user: User = uni.getStorageSync('user');
 
 export const useNoticeStore = defineStore('notice', {
   state: () => ({
-    applyMessage: notice.applyMessage ?? 0,
-    applyList: notice.applyList ?? ([] as ApplyNotice[]), // 申请列表
-    commentMessage: notice.commentMessage ?? 0,
-    commentList: [
+    applyList: [
       {
-        momentId: 3,
-        momentType: 0,
-        content: 'gitGji',
-        commenterInfo: [
-          {
-            _id: '0d94b112969e4c0abfbd94464795a9a2',
-            nickname: '用户02',
-            avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-          },
-        ],
-        commenterFriendRemark: [],
-        userMomentInfo: [],
-        spaceMomentInfo: [],
-        commentType: 0,
-        createTime: 1653833113530,
+        applyId: '16',
+        applicantId: '79',
+        content: 'nostrud minim commodo aliqua',
+        applicantSpaceId: '54',
+        userAvatar: 'http://dummyimage.com/100x100',
+        userNickname: '石洋',
+        applyType: 32,
+        status: 13,
+        updateTime: 1111111111,
       },
       {
-        momentId: 3,
-        momentType: 0,
-        content: 'gitGji',
-        commenterInfo: [
-          {
-            _id: '0d94b112969e4c0abfbd94464795a9a2',
-            nickname: '用户02',
-            avatar: 'https://p.qqan.com/up/2021-2/16137992359659254.jpg',
-          },
-        ],
-        commenterFriendRemark: [],
-        userMomentInfo: [],
-        spaceMomentInfo: [],
-        commentType: 1,
-        createTime: 1653833141007,
+        applyId: '47',
+        applicantId: '31',
+        content: 'culpa minim dolor Ut',
+        applicantSpaceId: '79',
+        groupId: '73',
+        userAvatar: 'http://dummyimage.com/100x100',
+        userNickname: '苏磊',
+        groupChatNickname: '董勇',
+        applyType: 70,
+        status: 48,
+        updateTime: 1111111111,
       },
-    ], // 评论列表
-    likeMessage: notice.likeMessage ?? 0,
-    likeList: notice.likeList ?? ([] as LikeNotice[]), // 点赞列表
-    forwardMessage: notice.forwardMessage ?? 0,
-    forwardList: notice.forwardList ?? ([] as ForwardNotice[]), // 转发列表
-    subscribeMessage: notice.subscribeMessage ?? 0,
-    subscribeList: notice.subscribeList ?? ([] as SubscribeNotice[]), // 订阅列表
+      {
+        applyId: '33',
+        applicantId: '92',
+        content: 'qui officia in',
+        spaceApplicantType: 76,
+        spaceId: '26',
+        applicantSpaceId: '33',
+        photo: 'http://dummyimage.com/400x400',
+        studentFlag: 17,
+        studentNumber: '12',
+        graduateTime: 621171550476,
+        userAvatar: 'http://dummyimage.com/100x100',
+        userNickname: '余杰',
+        spaceNickname: '刘静',
+        applicantSpaceAvatar: 'http://dummyimage.com/100x100',
+        applicantSpaceNickname: '姚洋',
+        applyType: 93,
+        status: 18,
+        updateTime: 1111111111,
+      },
+    ] as NoticeApply[], // 申请列表
+    interactionList: [] as InteractionNotice[], // 转发列表
+    subscribeList: [] as NewSubscribe[], // 订阅列表
   }),
   actions: {
-    // 被干嘛
-    async beApply() {
-      const data = await reqApplyNotice(this.applyList.length);
-      this.applyList.unshift(...data);
-      this.applyMessage += 1;
+    async init() {
+      this.applyList = await selectApplyNotice(0, user.userInfo?.mainId as string);
+      this.interactionList = await selectInteractionNotice(0, user.userInfo?.mainId as string);
+      this.subscribeList = await selectSubscribeNotice(0, user.userInfo?.mainId as string);
     },
-    async beComment() {
-      const data = await reqCommentsNotice(this.commentList[0].createTime);
-      this.commentList.unshift(...data);
-      this.commentMessage += 1;
+    // 新通知
+    async newApply(application: NoticeApply) {
+      insertApplyNotice(
+        application.applyId,
+        application.applicantId,
+        application.content,
+        application.spaceApplicantType,
+        application.spaceId,
+        application.applicantSpaceId,
+        application.groupId,
+        application.photo,
+        application.studentFlag,
+        application.studentNumber,
+        application.graduateTime,
+        application.userAvatar,
+        application.userNickname,
+        application.groupChatNickname,
+        application.spaceNickname,
+        application.applicantSpaceAvatar,
+        application.applicantSpaceNickname,
+        application.applyType,
+        application.status,
+        application.updateTime,
+        user.userInfo?.mainId as string
+      );
     },
-    async beLike() {
-      const data = await reqLikeNotice(this.likeList[0].createTime);
-      this.likeList.unshift(...data);
-      this.likeMessage += 1;
+    async newInteraction(interation: InteractionNotice, noticeType: 1 | 2 | 3) {
+      const friendStore = useFriendStore();
+      let friend;
+      if (noticeType === 1) {
+        friend = friendStore.friendsInfo.find(
+          (item) => interation.likerInfo[0]._id === item.friendId
+        );
+      } else if (noticeType === 2) {
+        friend = friendStore.friendsInfo.find(
+          (item) => interation.reposterInfo[0]._id === item.friendId
+        );
+      } else {
+        friend = friendStore.friendsInfo.find(
+          (item) => interation.commenterInfo[0]._id === item.friendId
+        );
+      }
+      insertInteractionNotice(
+        interation.momentId,
+        interation.momentType,
+        interation?.spaceId,
+        interation.likerInfo?.[0]._id,
+        interation.likerInfo?.[0].nickname,
+        interation.likerInfo?.[0].avatar,
+        friend?.remarkName as string,
+        interation.spaceLikerRemarkName?.[0].remarkName,
+        interation.content,
+        interation.secondCommentIndex,
+        interation.commentedUserInfo?.[0]._id,
+        interation.commentedUserInfo?.[0].nickname,
+        interation.commentedUserInfo?.[0].avatar,
+        interation.commentedUserInfo?.[0].nickname,
+        interation.spaceCommentedUserRemarkName?.[0].remarkName,
+        interation.commenterInfo?.[0]._id,
+        interation.commenterInfo?.[0].nickname,
+        interation.commenterInfo?.[0].avatar,
+        friend?.remarkName as string,
+        interation.spaceCommentedUserRemarkName?.[0].remarkName,
+        interation.commentType,
+        interation.reposterInfo?.[0]._id,
+        interation.reposterInfo?.[0].nickname,
+        interation.reposterInfo?.[0].avatar,
+        friend?.remarkName as string,
+        interation.spaceUserRemarkName?.[0].remarkName,
+        interation.userMomentInfo?.[0].content,
+        interation.userMomentInfo?.[0].photos?.[0],
+        interation.spaceMomentInfo?.[0].content,
+        interation.spaceMomentInfo?.[0].photos?.[0],
+        noticeType,
+        interation.createTime,
+        user.userInfo?.mainId as string
+      );
     },
-    async beForward() {
-      const data = await reqForwardNotice(this.forwardList[0].createTime);
-      this.forwardList.unshift(...data);
-      this.forwardMessage += 1;
-    },
-    async beSubscribe() {
-      const data = await reqSubscribeNotice(0);
-      this.subscribeList.unshift(...data);
-      this.subscribeMessage += 1;
-    },
-    // 已读
-    messageRead() {
-      this.commentMessage = 0;
-      this.likeMessage = 0;
-      this.subscribeMessage = 0;
-      this.forwardMessage = 0;
-    },
-    applyRead() {
-      this.applyMessage = 0;
-    },
-    // 获取申请
-    async getApplyInfo() {
-      this.applyList = await reqApplyNotice(this.applyList.length);
-    },
-    async getMessageInfo() {
-      this.applyList = await reqApplyNotice(this.applyList.length);
+    async beSubscribe(subscribeMesssage: NewSubscribe) {
+      insertSubscribeNotice(
+        subscribeMesssage.userId,
+        subscribeMesssage.nickname,
+        subscribeMesssage.avatar,
+        subscribeMesssage.spaceId,
+        subscribeMesssage.spaceNickname,
+        subscribeMesssage.spaceAvatar,
+        subscribeMesssage.createTime,
+        user.userInfo?.mainId as string
+      );
     },
     // 处理申请
     dealApply(index: number) {
       this.applyList.splice(index, 1);
-    },
-  },
-  getters: {
-    totalMessage(state) {
-      return state.commentMessage + state.likeMessage + state.subscribeMessage;
     },
   },
 });

@@ -1,11 +1,14 @@
+import type { NewSubscribe } from '../webSocketType';
 import { executeSql, openDB, selectSql } from './baseSql';
 
 // 新建订阅通知表
-export function createSubscribeNoticeTable(config = { name: 'scotfeel', path: '_doc/chat.db' }): void {
+export function createSubscribeNoticeTable(
+  config = { name: 'scotfeel', path: '_doc/chat.db' }
+): void {
   if (!plus.sqlite.isOpenDatabase(config)) {
     // 2.如果没打开先打开
     openDB(config);
-  }  
+  }
   plus.sqlite.executeSql({
     name: 'scotfeel',
     sql:
@@ -22,14 +25,14 @@ export function createSubscribeNoticeTable(config = { name: 'scotfeel', path: '_
 
 // 插入数据
 export function insertSubscribeNotice(
-    userId: string,
-    nickname: string,
-    avatar: string,
-    spaceId: string,
-    spaceNickname: string,
-    spaceAvatar: string,
-    createTime: number,
-    belongToId: string
+  userId: string,
+  nickname: string,
+  avatar: string,
+  spaceId: string,
+  spaceNickname: string,
+  spaceAvatar: string,
+  createTime: number,
+  belongToId: string
 ): void {
   return executeSql(`
 		insert into subscribeNotice values (null,"${userId}","${nickname}","${avatar}","${spaceId}","${spaceNickname}","${spaceAvatar}","${createTime}","${belongToId}")
@@ -40,7 +43,7 @@ export function insertSubscribeNotice(
 export async function selectSubscribeNotice(
   lastId: number,
   belongToId: string
-): Promise<null> { //TODO 接口不知道放哪，没写，暂时用null替代
+): Promise<NewSubscribe[]> {
   return selectSql(`
 	select * from subscribeNotice 
 		where belongToId = "${belongToId}" and id < "${lastId}"

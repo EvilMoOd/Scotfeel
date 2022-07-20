@@ -51,7 +51,7 @@
         <image :src="userStore.userInfo?.avatar" class="avatar" />
         <view class="person-msg">
           <view class="name">{{ userStore.userInfo?.nickname }}</view>
-          <view class="idCard">{{ userStore.userInfo?.account }}</view>
+          <view class="id-card">{{ userStore.userInfo?.account }}</view>
         </view>
         <uni-icons type="scan" class="icon-erweima" color="#fff" size="24" />
       </view>
@@ -144,7 +144,7 @@
           color: #fff;
           font-size: 28rpx;
 
-          .idCard {
+          .id-card {
             color: #fff;
             font-size: 20rpx;
           }

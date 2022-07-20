@@ -22,6 +22,7 @@ import {
   updateIsExited,
 } from './sql/groupChatMember';
 import { useSubscribeSpaceStore } from '../store/modules/spaceStore';
+import { useNoticeCountStore } from '../store/modules/noticeCountStore';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: number;
@@ -34,6 +35,7 @@ export function connectWebSocket(url: string, token: string): void {
   const momentStore = useMomentListStore();
   const sessionListStore = useSessionListStore();
   const noticeStore = useNoticeStore();
+  const noticeCountStore = useNoticeCountStore();
   const friendStore = useFriendStore();
   const groupStore = useGroupChatStore();
   const spaceStore = useSubscribeSpaceStore();
@@ -141,16 +143,20 @@ export function connectWebSocket(url: string, token: string): void {
       // TODO 系统app弹窗
     } else if (messageType === 7) {
       // 7、被评论消息
-      noticeStore.beComment();
+      noticeStore.newInteraction(content, 3);
+      noticeCountStore.newInteraction();
     } else if (messageType === 8) {
       // 8、被点赞消息
-      noticeStore.beLike();
+      noticeStore.newInteraction(content, 1);
+      noticeCountStore.newInteraction();
     } else if (messageType === 9) {
       // 9、被订阅消息
-      noticeStore.beSubscribe();
+      noticeStore.beSubscribe(content);
+      noticeCountStore.newInteraction();
     } else if (messageType === 10) {
       // 10、被申请添加朋友
-      noticeStore.beApply();
+      noticeStore.newApply(content);
+      noticeCountStore.newApply();
     } else if (messageType === 11) {
       // 11、被同意添加好友
       friendStore.agreeFriend(content);
@@ -322,11 +328,17 @@ export function connectWebSocket(url: string, token: string): void {
       _sendHeart(); // 连接服务端成功后开始发送心跳
       _closeConn(); // 并打开心跳回复检测
     } else if (messageType === 44) {
-      // TODO 44、动态被转发
+      // 44、动态被转发
+      noticeStore.newInteraction(content, 2);
+      noticeCountStore.newInteraction();
     } else if (messageType === 45) {
-      // TODO 45、加入群聊获得群聊信息
+      //  45、加入群聊获得群聊信息
+      noticeStore.newApply(content);
+      noticeCountStore.newApply();
     } else if (messageType === 46) {
-      // TODO 46、加入空间获取空间信息
+      //  46、加入空间获取空间信息
+      noticeStore.newApply(content);
+      noticeCountStore.newApply();
     }
   }
   // 监听关闭

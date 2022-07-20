@@ -1,28 +1,23 @@
 <script setup lang="ts">
   import { ref } from 'vue';
+  import day from 'dayjs';
+  import relativeTime from 'dayjs/plugin/relativeTime';
   import { useNoticeStore } from '../../../store/modules/noticeStore';
-  import Comment from '../../../components/Comment/Comment.vue';
+  import 'dayjs/locale/zh-cn';
 
+  day.extend(relativeTime);
+  day.locale('zh-cn');
   const currentTab = ref(0);
   const tab = [
     {
       icon: 'chat',
-      title: '评论',
-    },
-    {
-      icon: 'redo',
-      title: '转发',
-    },
-    {
-      icon: 'heart',
-      title: '点赞',
+      title: '互动',
     },
     {
       icon: 'star',
       title: '订阅',
     },
   ];
-
   const noticeStore = useNoticeStore();
 </script>
 
@@ -40,34 +35,104 @@
   <swiper :current="currentTab" style="height: 1000rpx">
     <swiper-item>
       <scroll-view scroll-y style="height: 1000rpx">
-        <view v-for="(item, index) in noticeStore.commentList" :key="index" class="apply-msg">
-          <image :src="item.commenterInfo[0].avatar" class="avatar" />
-          <view class="apply">
-            <view>
-              <text class="nickname">{{ item.commenterInfo[0].nickname }}</text>
+        <view v-for="(item, index) in noticeStore.interactionList" :key="index">
+          <!-- 点赞 -->
+          <view v-if="item.noticeType === 1" class="apply-msg">
+            <image :src="item.likerInfo?.[0].avatar" class="avatar" />
+            <view class="apply">
+              <view>
+                <text class="nickname">{{ item.likerInfo?.[0].nickname }}</text>
+              </view>
+              <text class="content">点赞了</text>
+              <image
+                v-if="
+                  item.userMomentInfo?.[0]?.photos.length !== 0 ||
+                  item.userMomentInfo?.[0]?.photos.length !== 0
+                "
+                :src="
+                  item.momentType === 0
+                    ? item.userMomentInfo?.[0]?.photos?.[0]
+                    : item.spaceMomentInfo?.[0]?.photos?.[0]
+                "
+                mode="aspectFill"
+                class="moment-img"
+              />
+              <view v-else class="moment-text">
+                {{ item.userMomentInfo?.[0].content || item.spaceMomentInfo?.[0].content }}
+              </view>
+              <text class="time">{{ day().from(day(item.createTime)) }}</text>
             </view>
-            <text class="content">{{ item.content }}</text>
-            <!-- TODO 处理评论图片和没图片问题 -->
-            <image
-              :src="
-                item.momentType === 0
-                  ? item.userMomentInfo[0]?.photos[0]
-                  : item.spaceMomentInfo[0]?.photos[0]
-              "
-              mode="scaleToFill"
-            />
+          </view>
+          <!-- 转发 -->
+          <view v-else-if="item.noticeType === 2" class="apply-msg">
+            <image :src="item.reposterInfo?.[0].avatar" class="avatar" />
+            <view class="apply">
+              <view>
+                <text class="nickname">{{ item.reposterInfo?.[0].nickname }}</text>
+              </view>
+              <text class="content">转发了</text>
+              <image
+                v-if="
+                  item.userMomentInfo?.[0]?.photos.length !== 0 ||
+                  item.userMomentInfo?.[0]?.photos.length !== 0
+                "
+                :src="item.spaceMomentInfo?.[0].photos?.[0]"
+                mode="aspectFill"
+                class="moment-img"
+              />
+              <view v-else class="moment-text">
+                {{ item.userMomentInfo?.[0].content || item.spaceMomentInfo?.[0].content }}
+              </view>
+              <text class="time">{{ day().from(day(item.createTime)) }}</text>
+            </view>
+          </view>
+          <!-- 评论 -->
+          <view v-else-if="item.noticeType === 3" class="apply-msg">
+            <image :src="item.commenterInfo?.[0].avatar" class="avatar" />
+            <view class="apply">
+              <view>
+                <text class="nickname">{{ item.commenterInfo?.[0].nickname }}</text>
+              </view>
+              <text class="content">{{ item.content }}</text>
+              <image
+                v-if="
+                  item.userMomentInfo?.[0]?.photos.length !== 0 ||
+                  item.userMomentInfo?.[0]?.photos.length !== 0
+                "
+                :src="
+                  item.momentType === 0
+                    ? item.userMomentInfo?.[0]?.photos?.[0]
+                    : item.spaceMomentInfo?.[0]?.photos?.[0]
+                "
+                mode="aspectFill"
+                class="moment-img"
+              />
+              <view v-else class="moment-text">
+                {{ item.userMomentInfo?.[0].content || item.spaceMomentInfo?.[0].content }}
+              </view>
+              <text class="time">{{ day().from(day(item.createTime)) }}</text>
+            </view>
           </view>
         </view>
       </scroll-view>
     </swiper-item>
     <swiper-item>
-      <scroll-view scroll-y style="height: 200px">111</scroll-view>
-    </swiper-item>
-    <swiper-item>
-      <scroll-view scroll-y style="height: 200px">123</scroll-view>
-    </swiper-item>
-    <swiper-item>
-      <scroll-view scroll-y style="height: 200px">123</scroll-view>
+      <scroll-view scroll-y style="height: 1000rpx">
+        <view v-for="(item, index) in noticeStore.subscribeList" :key="index">
+          <view class="apply-msg">
+            <image :src="item.avatar" class="avatar" />
+            <view class="apply" style="display: flex; align-items: center">
+              <view>
+                <text class="nickname">
+                  {{ item.nickname }}
+                  <text style="color: #117986">订阅了</text>
+                  {{ item.spaceNickname }}
+                </text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
     </swiper-item>
   </swiper>
 </template>
@@ -96,7 +161,7 @@
   .function {
     display: flex;
     justify-content: space-between;
-    padding: 50rpx 80rpx 30rpx;
+    padding: 50rpx 180rpx 30rpx;
     font-size: 20rpx;
     text-align: center;
   }
@@ -125,30 +190,28 @@
         font-size: 22rpx;
       }
 
-      .btn-accept {
+      .time {
         float: right;
-        width: 90rpx;
-        height: 42rpx;
-        margin-top: -20rpx;
-        margin-left: 10rpx;
-        color: $color-sf;
+        margin-top: 10rpx;
+        margin-right: 10rpx;
+        color: #aaa;
         font-size: 24rpx;
-        text-align: center;
-        border: 1px solid $color-sf;
-        border-radius: 30rpx;
       }
 
-      .btn-reject {
+      .moment-img {
         float: right;
-        width: 90rpx;
-        height: 42rpx;
-        margin-top: -20rpx;
-        margin-left: 10rpx;
-        color: #ef4444;
-        font-size: 24rpx;
-        text-align: center;
-        border: 1px solid #ef4444;
-        border-radius: 30rpx;
+        width: 100rpx;
+        height: 100rpx;
+        margin-top: -20px;
+      }
+
+      .moment-text {
+        float: right;
+        width: 100rpx;
+        height: 80rpx;
+        margin-top: -20px;
+        overflow: hidden;
+        font-size: 28rpx;
       }
     }
   }

@@ -4,13 +4,13 @@
   import { selectAllFriends } from '../../server/sql/friend';
   import { selectAllGroupChat } from '../../server/sql/groupChat';
   import { selectAllSession } from '../../server/sql/sessionList';
-  import { useNoticeStore } from '../../store/modules/noticeStore';
   import { useSessionListStore } from '../../store/modules/sessionListStore';
   import { useUserStore } from '../../store/modules/userStore';
   import FunctionList from './functionList.vue';
   import MomentList from '../../components/MomentList/MomentList.vue';
+  import { useNoticeCountStore } from '../../store/modules/noticeCountStore';
 
-  const noticeStore = useNoticeStore();
+  const noticeCountStore = useNoticeCountStore();
   const sessionListStore = useSessionListStore();
   const userStore = useUserStore();
 
@@ -74,16 +74,21 @@
     <view class="header">
       <text class="title" @tap="displayPerson">Scotfeel</text>
       <view class="notice" @tap="goMessage">
-        <uni-icons type="notification" size="4vh" color="#fff"></uni-icons>
-        <uni-badge :text="noticeStore.totalMessage" size="small" class="msg-tip"></uni-badge>
+        <uni-icons
+          type="notification"
+          size="4vh"
+          color="#fff"
+          @tap="noticeCountStore.messageRead"
+        ></uni-icons>
+        <uni-badge :text="noticeCountStore.totalMessage" size="small" class="msg-tip"></uni-badge>
       </view>
       <view class="new-apply" @tap="goApply">
-        <uni-icons type="person" color="#fff" size="4vh" @tap="noticeStore.applyRead" />
+        <uni-icons type="person" color="#fff" size="4vh" @tap="noticeCountStore.applyRead" />
         <uni-badge
-          :text="noticeStore.applyMessage"
+          :text="noticeCountStore.applyCount"
           size="small"
           class="msg-tip2"
-          @tap="noticeStore.messageRead"
+          @tap="noticeCountStore.messageRead"
         ></uni-badge>
       </view>
       <uni-icons

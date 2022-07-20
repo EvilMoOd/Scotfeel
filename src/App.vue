@@ -1,23 +1,26 @@
 <script setup lang="ts">
   import { onLaunch, onShow, onHide } from '@dcloudio/uni-app';
   import { reqImNode, reqValidateToken } from './server/api/user';
+  import { createApplyNoticeTable } from './server/sql/applyNotice';
   import { createChatRecordTable } from './server/sql/chatRecord';
   import { createFriendTable } from './server/sql/friend';
   import { createGroupChatTable } from './server/sql/groupChat';
   import { createGroupMemberTable } from './server/sql/groupChatMember';
+  import { createInteractionNoticeTable } from './server/sql/interactionNotice';
   import { createSessionListTable } from './server/sql/sessionList';
   import { createSubscribeTable } from './server/sql/subscribedSpace';
+  import { createSubscribeNoticeTable } from './server/sql/subscribeNotice';
   import { connectWebSocket } from './server/webSocket';
   import { useFriendStore } from './store/modules/friendStore';
   import { useGroupChatStore } from './store/modules/groupStore';
   import { useMomentListStore } from './store/modules/momemtListStore';
-  import { useNoticeStore } from './store/modules/noticeStore';
+  import { useNoticeCountStore } from './store/modules/noticeCountStore';
   import { useSessionListStore } from './store/modules/sessionListStore';
   import { useSubscribeSpaceStore } from './store/modules/spaceStore';
   import { useUserStore } from './store/modules/userStore';
 
   const userStore = useUserStore();
-  const noticeStore = useNoticeStore();
+  const NoticeCountStore = useNoticeCountStore();
   const sessionListStore = useSessionListStore();
   const momentListStore = useMomentListStore();
   const friendStore = useFriendStore();
@@ -25,6 +28,7 @@
   const spaceStore = useSubscribeSpaceStore();
 
   async function init() {
+    let WSTimer: number;
     // 初始化数据库
     createFriendTable();
     createGroupChatTable();
@@ -32,12 +36,15 @@
     createSessionListTable();
     createChatRecordTable();
     createSubscribeTable();
+    createApplyNoticeTable();
+    createInteractionNoticeTable();
+    createSubscribeNoticeTable();
     // 持久化用户库
     userStore.$subscribe((mutation, state) => {
       uni.setStorageSync('user', state);
     });
     // 持久化消息库
-    noticeStore.$subscribe((mutation, state) => {
+    NoticeCountStore.$subscribe((mutation, state) => {
       uni.setStorageSync('notice', state);
     });
     // 持久化动态列表
@@ -56,10 +63,13 @@
       friendStore.init(userStore.userInfo?.mainId as string);
       groupStore.init(userStore.userInfo?.mainId as string);
       spaceStore.init(userStore.userInfo?.mainId as string);
-      const im = await reqImNode();
-      setTimeout(() => {
-        connectWebSocket(`wss://www.scotfeel.com/wss/${im.ip}${im.port}`, token);
-      }, 1000);
+      WSTimer = setInterval(async () => {
+        const im = await reqImNode();
+        setTimeout(() => {
+          connectWebSocket(`wss://www.scotfeel.com/wss/${im.ip}${im.port}`, token);
+          clearInterval(WSTimer);
+        }, 0);
+      }, 20000);
     }
   }
   onLaunch(() => {
