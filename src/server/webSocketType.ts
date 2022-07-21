@@ -269,3 +269,33 @@ export interface NoticeApply {
   userNickname: string;
 }
 // #endregion
+
+// #region 新动态
+export interface MomentList {
+  /**
+   * 朋友id
+   */
+   friendId: string;
+  /**
+   * 多少条消息通知，默认为1，这条动态中每一个有关自己的评论或点赞都会+1，当用户点击这个头像时数字变为0，且头像变环将变暗。
+   */
+   noticeCount: number;
+
+   /**
+    * 动态id
+    */
+   momentId: number;
+  /**
+   * 朋友昵称
+   */
+   nickname: string;
+  /**
+   * 朋友备注
+   */
+   remarkName: number;
+  /**
+   * 朋友头像
+   */
+   avatar: number;
+}
+// #endregion
