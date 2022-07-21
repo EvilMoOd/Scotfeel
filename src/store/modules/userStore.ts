@@ -37,14 +37,12 @@ export const useUserStore = defineStore('user', {
         await reqUserLogin(phone, authCode);
       this.userInfo = userInfo;
       this.token = token;
-      // #ifdef APP-PLUS
       const friendStore = useFriendStore();
       const groupStore = useGroupChatStore();
       const spaceStore = useSubscribeSpaceStore();
       friendStore.loginInit(friend, userInfo?.mainId as string);
       groupStore.loginInit(groupChat, userInfo?.mainId as string, groupChatMember);
       spaceStore.loginInit(subscribedSpace);
-      // #endif
     },
     // 退出登录
     async userLogout() {
@@ -53,7 +51,6 @@ export const useUserStore = defineStore('user', {
       this.token = undefined;
       uni.removeStorageSync('user');
       uni.removeStorageSync('notice');
-      uni.removeStorageSync('momentList');
       logoutCloseWebsocket();
       // #ifdef APP-PLUS
       deleteFriendTable();

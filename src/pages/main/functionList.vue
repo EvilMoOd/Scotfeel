@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import { useSubscribeSpaceStore } from '../../store/modules/spaceStore';
   import { useUserStore } from '../../store/modules/userStore';
+import SpaceIdCard from '../../components/SpaceIdCard/SpaceIdCard.vue';
 
   const userStore = useUserStore();
   const spaceStore = useSubscribeSpaceStore();

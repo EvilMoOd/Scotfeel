@@ -4,7 +4,7 @@
     avatar: string;
     spaceId: string;
     nickname: string;
-    role?: 1 | 2 | 3 | 4;
+    role: 0 | 1 | 2 | 3 | 4;
   }>();
 
   // 前往订阅空间

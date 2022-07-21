@@ -23,6 +23,7 @@ import {
 } from './sql/groupChatMember';
 import { useSubscribeSpaceStore } from '../store/modules/spaceStore';
 import { useNoticeCountStore } from '../store/modules/noticeCountStore';
+import { reqImNode } from './api/user';
 
 let reconnectFlag = true; // 是否需要重新连接，用户退出登录后不需要，应用进入后台后不需要
 let sendHeartTime: number;
@@ -71,7 +72,7 @@ export function connectWebSocket(url: string, token: string): void {
     };
     _sendMessage(JSON.stringify(messageFromClient));
   }
-  // 监听接收消息
+  // #region 监听接收消息
   function _onMessage(res: any): void {
     const data = JSON.parse(res.data);
     const { content, messageType, sequenceId } = data;
@@ -341,6 +342,8 @@ export function connectWebSocket(url: string, token: string): void {
       noticeCountStore.newApply();
     }
   }
+  // #endregion
+
   // 监听关闭
   function _onClose(): void {
     // 用户下线
@@ -380,7 +383,7 @@ export function connectWebSocket(url: string, token: string): void {
     if (reconnectFlag) {
       // console.log('重连----------------------');
       setTimeout(() => {
-        connectSocket();
+        connectScotfeel(token);
       }, 3000);
     }
   }
@@ -411,7 +414,7 @@ export function _closeConn(): void {
   }, 10000);
 }
 // 关闭连接，不需要重连
-function _close(): void {
+export function _close(): void {
   // console.log('正在手动断开连接...');
   socketTask.close({
     success() {
@@ -424,4 +427,13 @@ function _close(): void {
   clearInterval(sendHeartTime); // 关掉心跳任务
   clearTimeout(closeConnTime); // 关掉定时任务
   socketTask = null;
+}
+
+export async function connectScotfeel(token: string) {
+  try {
+    const im = await reqImNode();
+    connectWebSocket(`wss://www.scotfeel.com/wss/${im.ip}${im.port}`, token);
+  } catch (error) {
+    connectScotfeel(token);
+  }
 }

@@ -46,22 +46,7 @@ export const useFriendStore = defineStore('friend', {
     // 登录初始化
     loginInit(friends: FriendInfo[], belongToId: string) {
       this.friendsInfo = friends;
-      // eslint-disable-next-line no-restricted-syntax
-      // for (const f of friends) {
-      //   insertFriend(
-      //     f.friendId,
-      //     f.nickname,
-      //     f.remarkName,
-      //     f.avatar,
-      //     f.spaceId,
-      //     f.isDeletedByFriend,
-      //     f.account,
-      //     f.backgroundImage,
-      //     f.signature,
-      //     f.noticeFlag,
-      //     belongToId
-      //   );
-      // }
+      // #ifdef APP-PLUS
       let sqlStr = `insert into friend values `;
       const { length } = friends;
       // 一次插入5000条记录，不然会报request entity too large
@@ -78,6 +63,7 @@ export const useFriendStore = defineStore('friend', {
         // 复原
         sqlStr = `insert into friend values `;
       }
+      // #endif
     },
     getFriendInfo(friendId: string) {
       const friend = this.friendsInfo.find(

@@ -31,6 +31,7 @@
   import Mask from '../../components/Mask/Mask.vue';
   import SpaceCard from '../../components/SpaceCard/SpaceCard.vue';
   import Back from '../../components/Back/Back.vue';
+  import Wave from '../../components/Wave/Wave.vue';
 
   // 判断该空间是否为用户订阅的空间
   const message = ref('');
@@ -86,6 +87,7 @@
     showMask: false,
     showComment: false,
     showMember: false,
+    showSJ: false,
   });
   function showMember() {
     show.showMember = true;
@@ -232,26 +234,25 @@
         <view class="space-msg">
           <Avatar :img-src="space.spaceInfo.avatar" :type="3" @tap="goSpaceDetail" />
           <view class="msg">
-            <text style="color: #fff">{{ space.spaceInfo.nickname }}</text>
-            <br />
-            <text style="color: #aaa; font-size: 24rpx">{{ space.spaceInfo.account }}</text>
+            <text style="margin-left: 19vw; color: #fff; font-size: 36rpx">
+              {{ space.spaceInfo.nickname }}
+            </text>
           </view>
         </view>
         <view class="introduction">{{ space.spaceInfo.introduction }}</view>
-        <view v-if="!space.inSpace" class="subscribe" @tap="subscribe">订阅</view>
-        <view
-          v-if="space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3"
-          class="in-space"
-        >
-          已加入
+        <Wave />
+        <view class="space-sp">
+          <text>
+            <text style="color: #fff">{{ space.spaceInfo.countSubscriber }}</text>
+            订阅&nbsp;&nbsp;
+          </text>
+          <text>
+            <text style="color: #fff">{{ space.spaceInfo.countMember }}</text>
+            成员
+          </text>
         </view>
-        <view v-else class="join" @click="joinSpace">加入</view>
       </view>
       <view class="main">
-        <view class="space-sp">
-          <text>{{ space.spaceInfo.countSubscriber }}订阅&nbsp;&nbsp;</text>
-          <text>{{ space.spaceInfo.countMember }}成员</text>
-        </view>
         <view class="space-place">
           <SpaceCard
             v-for="(item, index) in space.spaceMoment"
@@ -261,6 +262,30 @@
             :change-like-status="changeLikeStatus"
             :show-comment="showComment"
           />
+        </view>
+      </view>
+      <view class="footer">
+        <view v-show="show.showSJ">
+          <view v-if="!space.inSpace" class="subscribe" @tap="subscribe">订阅</view>
+          <view
+            v-if="
+              space.inSpace?.role === 1 || space.inSpace?.role === 2 || space.inSpace?.role === 3
+            "
+            class="in-space"
+          >
+            已加入
+          </view>
+          <view v-else class="join" @click="joinSpace">加入</view>
+        </view>
+        <view
+          class="button"
+          @tap="
+            () => {
+              show.showSJ = !show.showSJ;
+            }
+          "
+        >
+          +
         </view>
       </view>
     </scroll-view>
@@ -364,15 +389,40 @@
           font-size: 22rpx;
         }
 
+        .space-sp {
+          margin-top: -200rpx;
+          margin-left: 40vw;
+          color: #797979;
+          font-size: 26rpx;
+        }
+      }
+
+      .main {
+        width: 100vw;
+        height: 900rpx;
+        margin-top: -30rpx;
+        background-color: #fff;
+
+        .space-place {
+          background-color: #f2f2f2;
+        }
+      }
+
+      .footer {
+        position: absolute;
+        top: 974rpx;
+        left: 540rpx;
+        width: 120rpx;
+        height: 200rpx;
+        transition: 0.5s;
+
         .subscribe {
-          position: absolute;
-          top: 374rpx;
-          left: 540rpx;
           display: flex;
           align-items: center;
           justify-content: center;
           width: 82rpx;
           height: 50rpx;
+          margin: 10rpx auto;
           color: #fff;
           background-color: $color-sf;
           border-radius: 10rpx;
@@ -383,14 +433,12 @@
         }
 
         .join {
-          position: absolute;
-          top: 374rpx;
-          left: 632rpx;
           display: flex;
           align-items: center;
           justify-content: center;
           width: 96rpx;
           height: 50rpx;
+          margin: 10rpx auto;
           color: #fff;
           background-color: #fbb148;
           border-radius: 30rpx;
@@ -409,27 +457,23 @@
           justify-content: center;
           width: 96rpx;
           height: 50rpx;
+          margin: 10rpx auto;
           color: #fff;
           background-color: #d7d7d7;
           border-radius: 30rpx;
         }
-      }
 
-      .main {
-        width: 100vw;
-        height: 900rpx;
-        margin-top: -30rpx;
-        background-color: #fff;
-        border-radius: 40rpx 40rpx 0 0;
-
-        .space-sp {
-          padding: 10rpx 10rpx 30rpx 520rpx;
-          color: #797979;
-          font-size: 26rpx;
-        }
-
-        .space-place {
-          background-color: #f2f2f2;
+        .button {
+          width: 55rpx;
+          height: 55rpx;
+          margin: 10rpx auto;
+          color: #fff;
+          font-weight: bolder;
+          font-size: 50rpx;
+          line-height: 50rpx;
+          text-align: center;
+          background-color: #1f98a8;
+          border-radius: 50%;
         }
       }
     }

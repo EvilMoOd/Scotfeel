@@ -6,10 +6,9 @@ export interface MomentListInfo {
   read: 0 | 1; // 是否已读，具体事件就是用户是否单击了动态头像，0：否，1：是
   updateTime: number; // 用户发动态时间
 }
-const momentList = uni.getStorageSync('momentList');
 export const useMomentListStore = defineStore('momentListStore', {
   state: () => ({
-    momentList: (momentList as MomentListInfo[]) ?? ([] as MomentListInfo[]),
+    momentList: [] as MomentListInfo[],
   }),
   actions: {
     // 朋友更新动态

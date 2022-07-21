@@ -60,21 +60,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
     },
     loginInit(groupChat: GroupChat[], belongToId: string, groupChatMember: GroupMember[]) {
       this.groupInfo = groupChat;
-      // 所有群聊信心载入数据库
-      // for (const g of groupChat) {
-      //   insertGroup(
-      //     g.groupId,
-      //     g.nickname,
-      //     g.avatar,
-      //     g.memberCount,
-      //     g.spaceId,
-      //     g.spaceNickname,
-      //     g.spaceAvatar,
-      //     g.noticeFlag,
-      //     g.isDismissed,
-      //     belongToId
-      //   );
-      // }
+      // #ifdef APP-PLUS
       let sqlStr = `insert into groupChat values `;
       let { length } = groupChat;
       // 一次插入5000条记录，不然会报request entity too large
@@ -92,18 +78,6 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         sqlStr = `insert into groupChat values `;
       }
       // 所有群成员载入数据库
-      // for (const g of groupChatMember) {
-      //   insertGroupMember(
-      //     g.groupId,
-      //     g.memberId,
-      //     g.nickname,
-      //     g.remarkName,
-      //     g.avatar,
-      //     g.role,
-      //     g.isExited,
-      //     belongToId
-      //   );
-      // }
       sqlStr = `insert into groupChatMember values `;
       length = groupChat.length;
       // 一次插入5000条记录，不然会报request entity too large
@@ -120,6 +94,7 @@ export const useGroupChatStore = defineStore('groupChatStore', {
         // 复原
         sqlStr = `insert into groupChatMember values `;
       }
+      // #endif
     },
     // 创建或被拉入新的群聊
     newGroup(groupChatInfo: GroupChat, memberInfo: GroupMember[], belongToId: string) {

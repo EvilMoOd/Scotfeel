@@ -15,9 +15,11 @@ export const useSubscribeSpaceStore = defineStore('subscribeDSpace', {
     async loginInit(subscribedSpace: SubscribedSpace[]) {
       this.subscribeSpace = subscribedSpace;
       // eslint-disable-next-line no-restricted-syntax
+      // #ifdef APP-PLUS
       for (const s of subscribedSpace) {
         insertSpace(s.spaceId, s.nickname, s.avatar, s.role, user.userInfo?.mainId as string);
       }
+      // #endif
     },
     getSpace(spaceId: string) {
       return this.subscribeSpace.find((item) => {
