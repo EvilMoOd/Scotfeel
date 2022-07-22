@@ -45,7 +45,7 @@ export async function selectMomentList(
   from momentList m
   left join friend f on (m.friendId = f.friendId and f.belongToId = "${belongToId}")
        where m.belongToId = "${belongToId}"
-     order by m.noticeCount , m.createTime desc
+     order by m.noticeCount desc, m.createTime desc
      limit 10 offset "${offset}"
 `);
 }
